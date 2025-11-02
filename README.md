@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="ChronoViewLogo.png" alt="ChronoView Logo" width="200"/>
+</p>
+
+<h1 align="center">ChronoView</h1>
+
 # ChronoView
 
 **ChronoView** is a minimalist photo timeline viewer built with **WinUI 3** and **C# (MVVM pattern)**.  
