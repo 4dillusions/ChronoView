@@ -32,7 +32,7 @@ jobs:
         run: dotnet restore "${{ env.SOLUTION_PATH }}"
 
       - name: Build (${{ matrix.configuration }})
-        run: dotnet build "${{ env.SOLUTION_PATH }}" --configuration ${{ matrix.configuration }} --no-restore -p:Platform=x64 -p:ContinuousIntegrationBuild=true
+        run: dotnet build "${{ env.SOLUTION_PATH }}" --configuration ${{ matrix.configuration }} --no-restore -p:ContinuousIntegrationBuild=true
 
   # --- 2) MAC + LINUX: Core/portable solution ---
   cross-build:
