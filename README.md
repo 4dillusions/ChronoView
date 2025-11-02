@@ -2,7 +2,14 @@
   <img src="ChronoViewLogo.png" alt="ChronoView Logo" width="200"/>
 </p>
 
-<h1 align="center">ChronoView</h1>
+<h1 align="center">ChronoView </br></br>
+
+<img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"> <!--<img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0"> 
+-->
+<img src="https://img.shields.io/badge/-.NET%209.0-blueviolet">
+[![Azure Static Web Apps CI/CD](https://github.com/4dillusions/ChronoView/actions/workflows/dotnet.yml/badge.svg)](https://github.com/4dillusions/ChronoView/actions/workflows/dotnet-desktop.yml)
+
+</h1>
 
 ChronoView is a minimalist photo timeline viewer built with **WinUI 3** and **C# (MVVM pattern)**.  
 It lets you explore your images through time — smooth, responsive, and focused on clean UI and intuitive interaction.
