@@ -4,9 +4,7 @@
 
 <h1 align="center">ChronoView</h1>
 
-# ChronoView
-
-**ChronoView** is a minimalist photo timeline viewer built with **WinUI 3** and **C# (MVVM pattern)**.  
+ChronoView is a minimalist photo timeline viewer built with **WinUI 3** and **C# (MVVM pattern)**.  
 It lets you explore your images through time — smooth, responsive, and focused on clean UI and intuitive interaction.
 
 ---
