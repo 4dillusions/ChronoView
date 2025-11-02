@@ -2,12 +2,12 @@ name: ChronoView CI
 
 on:
   push:
-    branches: [ "main", "V1" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-# --- 1) WINDOWS-ONLY: App4di.Dotnet.ChronoView.Windows.sln ---
 jobs:
+  # --- 1) WINDOWS ONLY: WinUI/Windows solution ---
   windows-build:
     name: Windows build (WinUI solution)
     runs-on: windows-latest
@@ -16,7 +16,7 @@ jobs:
         configuration: [Debug, Release]
     env:
       DOTNET_VERSION: 9.0.x
-      SOLUTION_PATH: App4di.Dotnet.ChronoView.Windows.sln
+      SOLUTION_PATH: Project/App4di.Dotnet.ChronoView.Windows.sln
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,10 +32,9 @@ jobs:
         run: dotnet restore "${{ env.SOLUTION_PATH }}"
 
       - name: Build (${{ matrix.configuration }})
-        # WinUI/Windows csomag miatt explicit x64
         run: dotnet build "${{ env.SOLUTION_PATH }}" --configuration ${{ matrix.configuration }} --no-restore -p:Platform=x64 -p:ContinuousIntegrationBuild=true
 
-# --- 2) MAC+LINUX: App4di.Dotnet.ChronoView.sln ---
+  # --- 2) MAC + LINUX: Core/portable solution ---
   cross-build:
     name: Cross-platform build (Core solution)
     runs-on: ${{ matrix.os }}
@@ -45,7 +44,7 @@ jobs:
         configuration: [Debug, Release]
     env:
       DOTNET_VERSION: 9.0.x
-      SOLUTION_PATH: App4di.Dotnet.ChronoView.sln
+      SOLUTION_PATH: Project/App4di.Dotnet.ChronoView.sln
     steps:
       - name: Checkout
         uses: actions/checkout@v4
