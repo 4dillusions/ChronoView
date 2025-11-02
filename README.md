@@ -50,4 +50,4 @@ It also serves as a small demonstration of **WinUI + MVVM structure** in a moder
 
 1. Clone this repository  
    ```bash
-   git clone https://github.com/yourusername/ChronoView.git
+   git clone https://github.com/4dillusions/ChronoView.git

@@ -1,0 +1,29 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8
+MinimumVisualStudioVersion = 10.0.40219.1
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App4di.Dotnet.ChronoView.Infrastructure", "App4di.Dotnet.ChronoView.Infrastructure\App4di.Dotnet.ChronoView.Infrastructure.csproj", "{F9F30021-50EC-4426-A814-49944AD585EF}"
+EndProject
+
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9F30021-50EC-4426-A814-49944AD585EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9F30021-50EC-4426-A814-49944AD585EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9F30021-50EC-4426-A814-49944AD585EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9F30021-50EC-4426-A814-49944AD585EF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BCF3CA9D-BA35-4673-887A-B3A047D0CF26}
+	EndGlobalSection
+EndGlobal
