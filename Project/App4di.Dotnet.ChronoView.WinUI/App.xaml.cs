@@ -35,6 +35,7 @@ namespace App4di.Dotnet.ChronoView.WinUI
         public App()
         {
             InitializeComponent();
+            RequestedTheme = ApplicationTheme.Dark;
         }
 
         /// <summary>

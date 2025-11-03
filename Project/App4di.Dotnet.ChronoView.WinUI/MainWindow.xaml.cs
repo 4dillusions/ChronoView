@@ -1,4 +1,4 @@
-/*
+﻿/*
 4di .NET ChronoView application
 Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
@@ -6,7 +6,9 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using System;
 using Windows.Graphics;
+using Muxc = Microsoft.UI.Xaml.Controls;
 
 namespace App4di.Dotnet.ChronoView.WinUI;
 
@@ -34,5 +36,24 @@ public sealed partial class MainWindow : Window
             p.PreferredMinimumHeight = height;
         }
 
+        ContentFrame.Navigate(typeof(Views.HomePage));
+    }
+
+    private void NavigationView_SelectionChanged(Muxc.NavigationView sender, Muxc.NavigationViewSelectionChangedEventArgs args)
+    {
+        if (args.SelectedItem is Muxc.NavigationViewItem nvi && nvi.Tag is string tag)
+        {
+            Type page = tag switch
+            {
+                "home" => typeof(Views.HomePage),
+                "tech" => typeof(Views.TechnologyPage),
+                "contact" => typeof(Views.ContactPage),
+                "about" => typeof(Views.AboutPage),
+                _ => typeof(Views.HomePage)
+            };
+
+            if (ContentFrame.CurrentSourcePageType != page)
+                ContentFrame.Navigate(page);
+        }
     }
 }
