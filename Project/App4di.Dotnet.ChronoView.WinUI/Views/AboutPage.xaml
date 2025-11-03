@@ -5,12 +5,23 @@
 
     <Grid Padding="20">
         <Border Style="{StaticResource CardStyle}">
-            <StackPanel Spacing="8">
-                <TextBlock Text="About" Style="{StaticResource HeadlineTextStyle}"/>
-                
-                <TextBlock Style="{StaticResource SubtleTextStyle}"
-                           Text="About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum"/>
-            </StackPanel>
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="ℹ️" Style="{StaticResource CardIconStyle}"/>
+
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="About" Style="{StaticResource HeadlineTextStyle}"/>
+
+                    <TextBlock Style="{StaticResource SubtleTextStyle}"
+                           Text="ChronoView visualizes JPEG images from a selected folder along a horizontal timeline.
+Each photo is positioned based on its creation date, allowing you to scroll or zoom through your visual history.
+The main viewer dynamically updates to display the image corresponding to the center point of the timeline."/>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>

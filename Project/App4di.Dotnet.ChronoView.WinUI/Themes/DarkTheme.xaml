@@ -40,12 +40,19 @@
 
     <Style x:Key="HeadlineTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{ThemeResource App.AccentBrush}"/>
-        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontSize" Value="28"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{ThemeResource App.OnSurfaceBrush}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style x:Key="MainTextStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+    <Style x:Key="HyperlinkTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
     </Style>
     <Style x:Key="SubtleTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{ThemeResource App.SubtleTextBrush}"/>
@@ -59,6 +66,12 @@
         <Setter Property="BorderBrush" Value="{ThemeResource App.SurfaceBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="12"/>
+    </Style>
+
+    <Style x:Key="CardIconStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="140"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="4,0,0,0"/>
     </Style>
 
     <Style TargetType="Button">

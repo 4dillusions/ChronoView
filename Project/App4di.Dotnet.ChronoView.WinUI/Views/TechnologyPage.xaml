@@ -5,12 +5,23 @@
 
     <Grid Padding="20">
         <Border Style="{StaticResource CardStyle}">
-            <StackPanel Spacing="8">
-                <TextBlock Text="Technology" Style="{StaticResource HeadlineTextStyle}"/>
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                <TextBlock Style="{StaticResource SubtleTextStyle}"
-                   Text="lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum About lorem ipsum"/>
-            </StackPanel>
+                <TextBlock Text="🖥️" Style="{StaticResource CardIconStyle}"/>
+
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Technology" Style="{StaticResource HeadlineTextStyle}"/>
+
+                    <TextBlock Style="{StaticResource SubtleTextStyle}"
+                   Text="ChronoView is a personal exploration of temporal storytelling through images.
+It combines simple data binding and reactive UI concepts with a focus on clean design and user flow.
+It also serves as a small demonstration of WinUI + MVVM structure in a modern desktop context."/>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>
