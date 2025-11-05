@@ -4,7 +4,7 @@ Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
-namespace App4di.Dotnet.ChronoView.Infrastructure.Helpers;
+namespace App4di.Dotnet.ChronoView.Infrastructure.Helper;
 
 public static class SettingsManager
 {

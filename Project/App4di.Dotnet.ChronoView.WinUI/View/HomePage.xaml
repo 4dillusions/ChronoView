@@ -1,7 +1,7 @@
 <Page
-    x:Class="App4di.Dotnet.ChronoView.WinUI.Views.HomePage"
+    x:Class="App4di.Dotnet.ChronoView.WinUI.View.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Controls">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Control">
 
     <Grid>
         <Grid.RowDefinitions>

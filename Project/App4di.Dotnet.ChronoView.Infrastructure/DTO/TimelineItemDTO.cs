@@ -1,4 +1,4 @@
-﻿namespace App4di.Dotnet.ChronoView.Infrastructure.DTOs;
+﻿namespace App4di.Dotnet.ChronoView.Infrastructure.DTO;
 
 public class TimelineItemDTO
 {

@@ -13,12 +13,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Controls\TimelineControl.xaml" />
-    <None Remove="Themes\DarkTheme.xaml" />
-    <None Remove="Views\AboutPage.xaml" />
-    <None Remove="Views\ContactPage.xaml" />
-    <None Remove="Views\HomePage.xaml" />
-    <None Remove="Views\TechnologyPage.xaml" />
+    <None Remove="Control\TimelineControl.xaml" />
+    <None Remove="Theme\DarkTheme.xaml" />
+    <None Remove="View\AboutPage.xaml" />
+    <None Remove="View\ContactPage.xaml" />
+    <None Remove="View\HomePage.xaml" />
+    <None Remove="View\TechnologyPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,32 +51,32 @@
     <ProjectReference Include="..\App4di.Dotnet.ChronoView.Infrastructure\App4di.Dotnet.ChronoView.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\ContactPage.xaml">
+    <Page Update="View\ContactPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\TechnologyPage.xaml">
+    <Page Update="View\TechnologyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\HomePage.xaml">
+    <Page Update="View\HomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Themes\DarkTheme.xaml">
+    <Page Update="Theme\DarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\AboutPage.xaml">
+    <Page Update="View\AboutPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Controls\TimelineControl.xaml">
+    <Page Update="Control\TimelineControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

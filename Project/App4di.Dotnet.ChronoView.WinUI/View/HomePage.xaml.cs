@@ -4,15 +4,15 @@ Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
-using App4di.Dotnet.ChronoView.Infrastructure.DTOs;
-using App4di.Dotnet.ChronoView.Infrastructure.Helpers;
+using App4di.Dotnet.ChronoView.Infrastructure.DTO;
+using App4di.Dotnet.ChronoView.Infrastructure.Helper;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.ObjectModel;
 
-namespace App4di.Dotnet.ChronoView.WinUI.Views;
+namespace App4di.Dotnet.ChronoView.WinUI.View;
 
 public sealed partial class HomePage : Page
 {

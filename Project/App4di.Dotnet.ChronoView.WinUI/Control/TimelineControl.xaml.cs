@@ -4,7 +4,7 @@ Copyright (c) 2025 by 22 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
-using App4di.Dotnet.ChronoView.Infrastructure.DTOs;
+using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -18,7 +18,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Windows.System;
 
-namespace App4di.Dotnet.ChronoView.WinUI.Controls;
+namespace App4di.Dotnet.ChronoView.WinUI.Control;
 
 public sealed partial class TimelineControl : UserControl
 {

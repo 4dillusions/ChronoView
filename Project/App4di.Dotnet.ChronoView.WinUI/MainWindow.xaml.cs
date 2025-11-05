@@ -4,7 +4,7 @@ Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
-using App4di.Dotnet.ChronoView.Infrastructure.Helpers;
+using App4di.Dotnet.ChronoView.Infrastructure.Helper;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
@@ -37,7 +37,7 @@ public sealed partial class MainWindow : Window
             p.PreferredMinimumHeight = height;
         }
 
-        ContentFrame.Navigate(typeof(Views.HomePage));
+        ContentFrame.Navigate(typeof(View.HomePage));
     }
 
     private void NavigationView_SelectionChanged(Muxc.NavigationView sender, Muxc.NavigationViewSelectionChangedEventArgs args)
@@ -46,11 +46,11 @@ public sealed partial class MainWindow : Window
         {
             Type page = tag switch
             {
-                "home" => typeof(Views.HomePage),
-                "tech" => typeof(Views.TechnologyPage),
-                "contact" => typeof(Views.ContactPage),
-                "about" => typeof(Views.AboutPage),
-                _ => typeof(Views.HomePage)
+                "home" => typeof(View.HomePage),
+                "tech" => typeof(View.TechnologyPage),
+                "contact" => typeof(View.ContactPage),
+                "about" => typeof(View.AboutPage),
+                _ => typeof(View.HomePage)
             };
 
             if (ContentFrame.CurrentSourcePageType != page)
