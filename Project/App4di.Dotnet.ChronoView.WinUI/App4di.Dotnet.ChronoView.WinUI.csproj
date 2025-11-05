@@ -13,6 +13,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\TimelineControl.xaml" />
     <None Remove="Themes\DarkTheme.xaml" />
     <None Remove="Views\AboutPage.xaml" />
     <None Remove="Views\ContactPage.xaml" />
@@ -47,6 +48,9 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\App4di.Dotnet.ChronoView.Infrastructure\App4di.Dotnet.ChronoView.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\ContactPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -68,6 +72,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\AboutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\TimelineControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

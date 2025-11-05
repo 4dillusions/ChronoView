@@ -1,12 +1,12 @@
 <Page
     x:Class="App4di.Dotnet.ChronoView.WinUI.Views.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Controls">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="200" />
         </Grid.RowDefinitions>
         <!-- Image view -->
         <Border Grid.Row="0" Margin="8" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
@@ -61,8 +61,13 @@
         </Border>
         
         <!-- Timeline view -->
-        <Border Grid.Row="1" Margin="8" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-            <StackPanel Spacing="8"/>
+        <Border Grid.Row="1" 
+         Margin="8" 
+         CornerRadius="12" 
+         Background="{ThemeResource App.SurfaceBrush}"
+         BorderBrush="{ThemeResource App.SurfaceBorderBrush}"
+         BorderThickness="1">
+            <Controls:TimelineControl x:Name="Timeline" Margin="8"/>
         </Border>
     </Grid>
 </Page>

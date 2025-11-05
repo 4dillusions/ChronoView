@@ -4,10 +4,13 @@ Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
+using App4di.Dotnet.ChronoView.Infrastructure.DTOs;
+using App4di.Dotnet.ChronoView.Infrastructure.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
+using System.Collections.ObjectModel;
 
 namespace App4di.Dotnet.ChronoView.WinUI.Views;
 
@@ -15,13 +18,25 @@ public sealed partial class HomePage : Page
 {
     private double currentAngle = 0;
 
-    private const float MinZoom = 0.5f;
-    private const float MaxZoom = 8.0f;
-    private const float ZoomStep = 1.25f;
-
     public HomePage()
     {
         InitializeComponent();
+
+        this.Loaded += (s, e) =>
+        {
+            if (Timeline != null)
+            {
+                Timeline.Items = new ObservableCollection<TimelineItemDTO>
+                {
+                    new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-30), ImageName = "test1.jpg" },
+                    new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-20), ImageName = "test2.jpg" },
+                    new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-10), ImageName = "test3.jpg" },
+                    new TimelineItemDTO { Timestamp = DateTime.Now, ImageName = "test4.jpg" }
+                };
+
+                Timeline.RedrawTimeline();
+            }
+        };
     }
 
     private void RotateBtn_Click(object sender, RoutedEventArgs e)
@@ -49,7 +64,7 @@ public sealed partial class HomePage : Page
     private void ZoomIn_Click(object sender, RoutedEventArgs e)
     {
         var current = ImageScroller.ZoomFactor;
-        var target = Math.Min(current * ZoomStep, MaxZoom);
+        var target = Math.Min(current * SettingsManager.ZoomStep, SettingsManager.MaxZoom);
 
         ZoomTo(target);
     }
@@ -57,7 +72,7 @@ public sealed partial class HomePage : Page
     private void ZoomOut_Click(object sender, RoutedEventArgs e)
     {
         var current = ImageScroller.ZoomFactor;
-        var target = Math.Max(current / ZoomStep, MinZoom);
+        var target = Math.Max(current / SettingsManager.ZoomStep, SettingsManager.MinZoom);
 
         ZoomTo(target);
     }
@@ -71,5 +86,4 @@ public sealed partial class HomePage : Page
     {
         ZoomTo(1);
     }
-
 }

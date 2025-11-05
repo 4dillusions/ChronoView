@@ -4,6 +4,7 @@ Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
+using App4di.Dotnet.ChronoView.Infrastructure.Helpers;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
@@ -20,8 +21,8 @@ public sealed partial class MainWindow : Window
 
         var appWindow = this.AppWindow;
 
-        int width = 1280;
-        int height = 768;
+        const int width = SettingsManager.MinWidth;
+        const int height = SettingsManager.MinHeight;
 
         var displayArea = DisplayArea.GetFromWindowId(appWindow.Id, DisplayAreaFallback.Primary);
         var workArea = displayArea.WorkArea;

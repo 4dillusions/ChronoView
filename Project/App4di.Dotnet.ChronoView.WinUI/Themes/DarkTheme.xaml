@@ -2,7 +2,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Controls">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
@@ -10,11 +11,16 @@
             <SolidColorBrush x:Key="App.AccentBrush.Darker" Color="#005A9E"/>
             <SolidColorBrush x:Key="App.BackgroundBrush" Color="#F3F3F3"/>
             <SolidColorBrush x:Key="App.SurfaceBrush" Color="#FFFFFF"/>
+            
             <SolidColorBrush x:Key="App.SurfaceBorderBrush" Color="#E0E0E0"/>
             <SolidColorBrush x:Key="App.OnSurfaceBrush" Color="#1A1A1A"/>
             <SolidColorBrush x:Key="App.SubtleTextBrush" Color="#5C5C5C"/>
             <SolidColorBrush x:Key="App.NavBackgroundBrush" Color="#202225"/>
             <SolidColorBrush x:Key="App.NavForegroundBrush" Color="#FFFFFF"/>
+
+            <SolidColorBrush x:Key="Timeline.MarkerBrush" Color="DodgerBlue"/>
+            <SolidColorBrush x:Key="Timeline.HoverBrush" Color="Black"/>
+            <SolidColorBrush x:Key="Timeline.SelectedBrush" Color="White"/>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
@@ -28,6 +34,10 @@
             <SolidColorBrush x:Key="App.SubtleTextBrush" Color="#B8B8B8"/>
             <SolidColorBrush x:Key="App.NavBackgroundBrush" Color="#141517"/>
             <SolidColorBrush x:Key="App.NavForegroundBrush" Color="#FFFFFF"/>
+
+            <SolidColorBrush x:Key="Timeline.MarkerBrush" Color="#4DA8FF"/>
+            <SolidColorBrush x:Key="Timeline.HoverBrush" Color="DarkGray"/>
+            <SolidColorBrush x:Key="Timeline.SelectedBrush" Color="#FFFFFF"/>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -144,6 +154,88 @@
         <Setter Property="Foreground" Value="{ThemeResource App.NavForegroundBrush}"/>
         <Setter Property="MinHeight" Value="44"/>
         <Setter Property="Margin" Value="0,0,6,0"/>
+    </Style>
+
+    <Style TargetType="Controls:TimelineControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Controls:TimelineControl">
+                    <Grid x:Name="PART_RootGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Dátumok -->
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       x:Name="PART_StartDate"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource App.SubtleTextBrush}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2"
+                                       x:Name="PART_EndDate"
+                                       FontSize="11"
+                                       Foreground="{ThemeResource App.SubtleTextBrush}"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- ScrollViewer + Canvasok -->
+                        <ScrollViewer Grid.Row="1"
+                                      x:Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      HorizontalScrollMode="Enabled"
+                                      VerticalScrollMode="Disabled"
+                                      ZoomMode="Disabled">
+                            <Grid Height="80">
+                                <Canvas x:Name="PART_TimelineCanvas"
+                                        Height="80"
+                                        Background="Transparent"/>
+                                <Canvas x:Name="PART_MarkerCanvas"
+                                        Height="80"
+                                        Background="Transparent"/>
+                            </Grid>
+                        </ScrollViewer>
+
+                        <!-- Zoom gombok -->
+                        <StackPanel Grid.Row="2"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4"
+                                    Margin="0,8,0,0">
+                            <Button x:Name="PART_ZoomOutBtn"
+                                    Content="−"
+                                    Width="32"
+                                    Height="32"
+                                    FontSize="16"
+                                    Padding="0"
+                                    ToolTipService.ToolTip="Kicsinyítés"/>
+                            <Button x:Name="PART_ZoomInBtn"
+                                    Content="+"
+                                    Width="32"
+                                    Height="32"
+                                    FontSize="16"
+                                    Padding="0"
+                                    ToolTipService.ToolTip="Nagyítás"/>
+                            <Button x:Name="PART_ResetZoomBtn"
+                                    Content="Reset"
+                                    Width="32"
+                                    Height="32"
+                                    FontSize="16"
+                                    Padding="0"
+                                    ToolTipService.ToolTip="Zoom visszaállítása"/>
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>
