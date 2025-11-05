@@ -1,0 +1,4 @@
+[submodule "Project/FirstParty/FW4di.Dotnet.MVVM"]
+	path = Project/FirstParty/FW4di.Dotnet.MVVM
+	url = https://github.com/libs4di/FW4di.Dotnet.MVVM.git
+	branch = V1
