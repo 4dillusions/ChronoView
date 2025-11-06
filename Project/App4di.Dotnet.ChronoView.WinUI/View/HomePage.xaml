@@ -1,8 +1,9 @@
 <Page
     x:Class="App4di.Dotnet.ChronoView.WinUI.View.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Control">
-
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Control"
+    xmlns:viewmodel="using:App4di.Dotnet.ChronoView.Infrastructure.ViewModel">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -15,7 +16,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                
+
                 <!-- Image -->
                 <ScrollViewer x:Name="ImageScroller"
                       Grid.Row="0"
@@ -37,29 +38,27 @@
                         </Image>
                     </Grid>
                 </ScrollViewer>
-
                 <!-- Menu -->
                 <CommandBar Grid.Row="1"
                             DefaultLabelPosition="Right"
                             IsSticky="True">
-                    
+
                     <AppBarButton Icon="Back" Label="Back"/>
                     <AppBarButton Icon="Forward" Label="Next"/>
                     <AppBarSeparator/>
-                    
+
                     <AppBarButton Icon="Play" Label="Play / Pause" x:Name="PlayPauseBtn"/>
                     <AppBarSeparator/>
-
-                    <AppBarButton Icon="ZoomOut" Label="Zoom out" Click="ZoomOut_Click"/>
-                    <AppBarButton Icon="ZoomIn"  Label="Zoom in"  Click="ZoomIn_Click"/>
-                    <AppBarButton Icon="Zoom" Label="Reset zoom" Click="ResetZoom_Click"/>
+                    <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{x:Bind ViewModel.ZoomOutCommand, Mode=OneWay}"/>
+                    <AppBarButton Icon="ZoomIn"  Label="Zoom in"  Command="{x:Bind ViewModel.ZoomInCommand, Mode=OneWay}"/>
+                    <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{x:Bind ViewModel.ResetZoomCommand, Mode=OneWay}"/>
                     <AppBarSeparator/>
-                    
+
                     <AppBarButton Icon="Rotate" Label="Rotate" x:Name="RotateBtn" Click="RotateBtn_Click"/>
                 </CommandBar>
             </Grid>
         </Border>
-        
+
         <!-- Timeline view -->
         <Border Grid.Row="1" 
          Margin="8" 

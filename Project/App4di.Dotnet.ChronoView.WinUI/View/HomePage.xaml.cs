@@ -5,10 +5,8 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
-using App4di.Dotnet.ChronoView.Infrastructure.Helper;
-using Microsoft.UI.Xaml;
+using App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.ObjectModel;
 
@@ -16,13 +14,16 @@ namespace App4di.Dotnet.ChronoView.WinUI.View;
 
 public sealed partial class HomePage : Page
 {
-    private double currentAngle = 0;
+    public HomeViewModel ViewModel { get; }
 
     public HomePage()
     {
         InitializeComponent();
 
-        this.Loaded += (s, e) =>
+        ViewModel = new HomeViewModel();
+        DataContext = ViewModel;
+
+        Loaded += (s, e) =>
         {
             if (Timeline != null)
             {
@@ -33,57 +34,20 @@ public sealed partial class HomePage : Page
                     new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-10), ImageName = "test3.jpg" },
                     new TimelineItemDTO { Timestamp = DateTime.Now, ImageName = "test4.jpg" }
                 };
-
                 Timeline.RedrawTimeline();
             }
         };
-    }
 
-    private void RotateBtn_Click(object sender, RoutedEventArgs e)
-    {
-        var animation = new DoubleAnimation
+        ViewModel.PropertyChanged += (s, e) =>
         {
-            From = currentAngle,
-            To = currentAngle + 90,
-            Duration = new Duration(TimeSpan.FromMilliseconds(300)),
-            EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+            if (e.PropertyName == nameof(ViewModel.ZoomFactor))
+            {
+                ImageScroller?.ChangeView(
+                    ImageScroller.HorizontalOffset,
+                    ImageScroller.VerticalOffset,
+                    ViewModel.ZoomFactor
+                );
+            }
         };
-
-        currentAngle += 90;
-        if (currentAngle >= 360)
-            currentAngle = 0;
-
-        Storyboard.SetTarget(animation, ImgRotate);
-        Storyboard.SetTargetProperty(animation, "Angle");
-
-        var storyboard = new Storyboard();
-        storyboard.Children.Add(animation);
-        storyboard.Begin();
-    }
-
-    private void ZoomIn_Click(object sender, RoutedEventArgs e)
-    {
-        var current = ImageScroller.ZoomFactor;
-        var target = Math.Min(current * SettingsManager.ZoomStep, SettingsManager.MaxZoom);
-
-        ZoomTo(target);
-    }
-
-    private void ZoomOut_Click(object sender, RoutedEventArgs e)
-    {
-        var current = ImageScroller.ZoomFactor;
-        var target = Math.Max(current / SettingsManager.ZoomStep, SettingsManager.MinZoom);
-
-        ZoomTo(target);
-    }
-
-    private void ZoomTo(float targetZoom)
-    {
-        ImageScroller.ChangeView(ImageScroller.HorizontalOffset, ImageScroller.VerticalOffset, targetZoom);
-    }
-
-    private void ResetZoom_Click(object sender, RoutedEventArgs e)
-    {
-        ZoomTo(1);
     }
 }

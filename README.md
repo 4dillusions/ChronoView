@@ -53,8 +53,13 @@ It also serves as a small demonstration of **WinUI + MVVM structure** in a moder
 
 ---
 
-## 🚀 Getting Started
+## 📥 Clone
+Clone the entire project including the submodules:<br>
+```bash
+git clone --recurse-submodules https://github.com/4dillusions/ChronoView.git
+```
 
-1. Clone this repository  
-   ```bash
-   git clone https://github.com/4dillusions/ChronoView.git
+If the project is already cloned and you forgot to fetch the submodules:<br>
+```bash
+git submodule update --init --recursive
+```
