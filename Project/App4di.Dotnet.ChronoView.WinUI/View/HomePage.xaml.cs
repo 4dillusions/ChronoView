@@ -21,21 +21,21 @@ public sealed partial class HomePage : Page
     public HomePage()
     {
         InitializeComponent();
+
         ViewModel = new HomeViewModel();
         DataContext = ViewModel;
 
         Loaded += (s, e) =>
         {
-            if (Timeline != null)
+            if (Timeline?.ViewModel != null)
             {
-                Timeline.Items = new ObservableCollection<TimelineItemDTO>
+                Timeline.ViewModel.Items = new ObservableCollection<TimelineItemDTO>
                 {
                     new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-30), ImageName = "test1.jpg" },
                     new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-20), ImageName = "test2.jpg" },
                     new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-10), ImageName = "test3.jpg" },
                     new TimelineItemDTO { Timestamp = DateTime.Now, ImageName = "test4.jpg" }
                 };
-                Timeline.RedrawTimeline();
             }
         };
 
@@ -58,6 +58,9 @@ public sealed partial class HomePage : Page
 
     private void AnimateRotation()
     {
+        if (ImgRotate == null)
+            return;
+
         var animation = new DoubleAnimation
         {
             From = ViewModel.CurrentRotationAngle,

@@ -15,7 +15,7 @@
             <Setter Property="SelectedBrush" Value="{ThemeResource Timeline.SelectedBrush}"/>
         </Style>
     </UserControl.Resources>
-    
+
     <Grid x:Name="RootGrid" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,39 +23,75 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Dates and Image -->
+        <!-- Dates and Selected Item Info -->
         <Grid Grid.Row="0" Margin="0,4,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Column="0" x:Name="StartDateText" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="{Binding SelectedTimeLineItem.ImageName, ElementName=Root}"/>
-                <TextBlock Text="{Binding SelectedTimeLineItem.Timestamp, ElementName=Root}"/>
+            <TextBlock Grid.Column="0" 
+                       Text="{Binding ViewModel.StartDateText, ElementName=Root}" 
+                       Foreground="{ThemeResource App.SubtleTextBrush}" 
+                       VerticalAlignment="Center"/>
+
+            <StackPanel Grid.Column="1" 
+                        Orientation="Horizontal" 
+                        Spacing="8" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center">
+                <TextBlock Text="{Binding ViewModel.SelectedImageName, ElementName=Root}"/>
+                <TextBlock Text="{Binding ViewModel.SelectedTimestamp, ElementName=Root}"/>
             </StackPanel>
 
-            <TextBlock Grid.Column="2" x:Name="EndDateText" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2" 
+                       Text="{Binding ViewModel.EndDateText, ElementName=Root}" 
+                       Foreground="{ThemeResource App.SubtleTextBrush}" 
+                       VerticalAlignment="Center"/>
         </Grid>
 
         <!-- Timeline -->
-        <Border Grid.Row="1" Background="{ThemeResource App.SurfaceBrush}" BorderBrush="{ThemeResource App.SurfaceBorderBrush}" BorderThickness="1" CornerRadius="8">
-            <ScrollViewer x:Name="TimelineScroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                <Grid x:Name="TimelineContentGrid" Height="80" HorizontalAlignment="Left">
-                    <Canvas x:Name="TimelineCanvas" Height="80" Background="Transparent" HorizontalAlignment="Left"/>
-                    <Canvas x:Name="MarkerCanvas" Height="80" Background="Transparent" HorizontalAlignment="Left"/>
+        <Border Grid.Row="1" 
+                Background="{ThemeResource App.SurfaceBrush}" 
+                BorderBrush="{ThemeResource App.SurfaceBorderBrush}" 
+                BorderThickness="1" 
+                CornerRadius="8">
+            <ScrollViewer x:Name="TimelineScroller" 
+                          HorizontalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Disabled">
+                <Grid x:Name="TimelineContentGrid" 
+                      Height="80" 
+                      Width="{Binding ViewModel.TimelineWidth, ElementName=Root}"
+                      HorizontalAlignment="Left">
+                    <Canvas x:Name="TimelineCanvas" 
+                            Height="80" 
+                            Width="{Binding ViewModel.TimelineWidth, ElementName=Root}"
+                            Background="Transparent" 
+                            HorizontalAlignment="Left"/>
+                    <Canvas x:Name="MarkerCanvas" 
+                            Height="80" 
+                            Width="{Binding ViewModel.TimelineWidth, ElementName=Root}"
+                            Background="Transparent" 
+                            HorizontalAlignment="Left"/>
                 </Grid>
             </ScrollViewer>
         </Border>
 
-        <!-- Menu -->
-        <CommandBar Grid.Row="2" DefaultLabelPosition="Right" HorizontalAlignment="Center" IsSticky="True">
-            <AppBarButton x:Name="ZoomOutBtn" Icon="ZoomOut" Label="Zoom out"/>
-            <AppBarButton x:Name="ZoomInBtn" Icon="ZoomIn" Label="Zoom in"/>
-            <AppBarButton x:Name="ResetZoomBtn" Icon="Zoom" Label="Reset zoomt"/>
-         </CommandBar >
+        <!-- Command Bar -->
+        <CommandBar Grid.Row="2" 
+                    DefaultLabelPosition="Right" 
+                    HorizontalAlignment="Center" 
+                    IsSticky="True">
+            <AppBarButton Icon="ZoomOut" 
+                          Label="Zoom out" 
+                          Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
+            <AppBarButton Icon="ZoomIn" 
+                          Label="Zoom in" 
+                          Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
+            <AppBarButton Icon="Zoom" 
+                          Label="Reset zoom" 
+                          Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
+        </CommandBar>
     </Grid>
 </UserControl>
