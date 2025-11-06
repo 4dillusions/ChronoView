@@ -11,9 +11,15 @@ namespace App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
 
 public class HomeViewModel : NotificationObject
 {
-    #region Fields
-    private float zoomFactor = 1.0f;
+    #region Commands
+    public ICommand ZoomInCommand { get; }
+    public ICommand ZoomOutCommand { get; }
+    public ICommand ResetZoomCommand { get; }
+    public ICommand RotateCommand { get; }
+    #endregion
 
+    #region Fields
+    float zoomFactor = 1.0f;
     public float ZoomFactor
     {
         get => zoomFactor;
@@ -27,48 +33,55 @@ public class HomeViewModel : NotificationObject
             }
         }
     }
-    #endregion
 
-    #region Commands
-    public ICommand ZoomInCommand { get; }
-    public ICommand ZoomOutCommand { get; }
-    public ICommand ResetZoomCommand { get; }
+    double currentRotationAngle = 0;
+    public double CurrentRotationAngle
+    {
+        get => currentRotationAngle;
+        set => SetProperty(ref currentRotationAngle, value);
+    }
+
+    double targetRotationAngle = 0;
+    public double TargetRotationAngle
+    {
+        get => targetRotationAngle;
+        set => SetProperty(ref targetRotationAngle, value);
+    }
     #endregion
 
     #region CTor
     public HomeViewModel()
     {
-        ZoomInCommand = new RelayCommand(
-            _ => ZoomIn(),
-            _ => ZoomFactor < SettingsManager.MaxZoom
-        );
-
-        ZoomOutCommand = new RelayCommand(
-            _ => ZoomOut(),
-            _ => ZoomFactor > SettingsManager.MinZoom
-        );
-
-        ResetZoomCommand = new RelayCommand(
-            _ => ResetZoom(),
-            _ => ZoomFactor != 1.0f
-        );
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => ZoomFactor < SettingsManager.MaxZoom);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => ZoomFactor > SettingsManager.MinZoom);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => ZoomFactor != 1.0f);
+        RotateCommand = new RelayCommand(_ => Rotate(), _ => true);
     }
     #endregion
 
     #region Functions
-    private void ZoomIn()
+    void ZoomIn()
     {
         ZoomFactor = Math.Min(ZoomFactor * SettingsManager.ZoomStep, SettingsManager.MaxZoom);
     }
 
-    private void ZoomOut()
+    void ZoomOut()
     {
         ZoomFactor = Math.Max(ZoomFactor / SettingsManager.ZoomStep, SettingsManager.MinZoom);
     }
 
-    private void ResetZoom()
+    void ResetZoom()
     {
         ZoomFactor = 1.0f;
+    }
+
+    void Rotate()
+    {
+        CurrentRotationAngle = TargetRotationAngle;
+        TargetRotationAngle += 90;
+
+        if (TargetRotationAngle >= 360)
+            TargetRotationAngle = 0;
     }
     #endregion
 }

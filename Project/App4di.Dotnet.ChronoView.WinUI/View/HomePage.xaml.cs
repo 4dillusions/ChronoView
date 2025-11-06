@@ -6,7 +6,9 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.ObjectModel;
 
@@ -19,7 +21,6 @@ public sealed partial class HomePage : Page
     public HomePage()
     {
         InitializeComponent();
-
         ViewModel = new HomeViewModel();
         DataContext = ViewModel;
 
@@ -48,6 +49,28 @@ public sealed partial class HomePage : Page
                     ViewModel.ZoomFactor
                 );
             }
+            else if (e.PropertyName == nameof(ViewModel.TargetRotationAngle))
+            {
+                AnimateRotation();
+            }
         };
+    }
+
+    private void AnimateRotation()
+    {
+        var animation = new DoubleAnimation
+        {
+            From = ViewModel.CurrentRotationAngle,
+            To = ViewModel.TargetRotationAngle,
+            Duration = new Duration(TimeSpan.FromMilliseconds(300)),
+            EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+        };
+
+        Storyboard.SetTarget(animation, ImgRotate);
+        Storyboard.SetTargetProperty(animation, "Angle");
+
+        var storyboard = new Storyboard();
+        storyboard.Children.Add(animation);
+        storyboard.Begin();
     }
 }

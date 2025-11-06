@@ -49,12 +49,13 @@
 
                     <AppBarButton Icon="Play" Label="Play / Pause" x:Name="PlayPauseBtn"/>
                     <AppBarSeparator/>
+                    
                     <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{x:Bind ViewModel.ZoomOutCommand, Mode=OneWay}"/>
                     <AppBarButton Icon="ZoomIn"  Label="Zoom in"  Command="{x:Bind ViewModel.ZoomInCommand, Mode=OneWay}"/>
                     <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{x:Bind ViewModel.ResetZoomCommand, Mode=OneWay}"/>
                     <AppBarSeparator/>
 
-                    <AppBarButton Icon="Rotate" Label="Rotate" x:Name="RotateBtn" Click="RotateBtn_Click"/>
+                    <AppBarButton Icon="Rotate" Label="Rotate" Command="{x:Bind ViewModel.RotateCommand, Mode=OneWay}"/>
                 </CommandBar>
             </Grid>
         </Border>

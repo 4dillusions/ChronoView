@@ -63,3 +63,8 @@ If the project is already cloned and you forgot to fetch the submodules:<br>
 ```bash
 git submodule update --init --recursive
 ```
+
+If the submodules have been updated and you want to fetch the latest changes:<br>
+```bash
+git submodule update --remote --merge
+```
