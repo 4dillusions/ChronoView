@@ -70,7 +70,7 @@
          Background="{ThemeResource App.SurfaceBrush}"
          BorderBrush="{ThemeResource App.SurfaceBorderBrush}"
          BorderThickness="1">
-            <Controls:TimelineControl x:Name="Timeline" Margin="8"/>
+            <Controls:TimelineControl x:Name="Timeline" Margin="8" IsLocked="{x:Bind ViewModel.IsAutoPlay, Mode=OneWay}"/>
         </Border>
     </Grid>
 </Page>

@@ -69,9 +69,7 @@ public sealed partial class HomePage : Page
         {
             Timeline.ViewModel.Items = ViewModel.TimelineItems;
             if (ViewModel.SelectedImageItem != null)
-            {
                 Timeline.ViewModel.SelectedTimeLineItem = ViewModel.SelectedImageItem;
-            }
         }
     }
 
@@ -118,6 +116,23 @@ public sealed partial class HomePage : Page
             else
             {
                 slideshowTimer.Stop();
+            }
+        }
+        else if (e.PropertyName == nameof(ViewModel.SelectedImageItem))
+        {
+            if (Timeline?.ViewModel != null)
+            {
+                Timeline.ViewModel.SelectedTimeLineItem = ViewModel.SelectedImageItem;
+
+                if (ViewModel.SelectedImageItem is not null)
+                {
+                    var pos = Timeline.ViewModel.CalculateMarkerPosition(ViewModel.SelectedImageItem.Timestamp);
+                    if (Timeline.FindName("TimelineScroller") is ScrollViewer sc)
+                    {
+                        var target = Math.Max(0, pos - sc.ViewportWidth / 2.0);
+                        sc.ChangeView(target, null, null);
+                    }
+                }
             }
         }
     }
