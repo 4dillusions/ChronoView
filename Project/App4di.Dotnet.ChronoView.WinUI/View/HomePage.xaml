@@ -43,6 +43,10 @@
                 
                 <!-- Menu -->
                 <CommandBar Grid.Row="1" DefaultLabelPosition="Right" IsSticky="True">
+                    <AppBarSeparator/>
+                    <AppBarButton Icon="OpenFile" Label="Open folder" Command="{x:Bind ViewModel.OpenFolderCommand, Mode=OneWay}"/>
+                    <AppBarSeparator/>
+                    
                     <AppBarButton Icon="Back" Label="Back" Command="{x:Bind ViewModel.BackCommand, Mode=OneWay}"/>
                     <AppBarButton Icon="Forward" Label="Next" Command="{x:Bind ViewModel.NextCommand, Mode=OneWay}"/>
                     <AppBarSeparator/>

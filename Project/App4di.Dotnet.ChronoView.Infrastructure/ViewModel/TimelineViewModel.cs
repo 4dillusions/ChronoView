@@ -62,6 +62,10 @@ public class TimelineViewModel : NotificationObject
                 RaisePropertyChanged(nameof(SelectedImage));
                 
                 SelectedItemChanged?.Invoke(this, value);
+
+                (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -124,9 +128,9 @@ public class TimelineViewModel : NotificationObject
     #region Constructor
     public TimelineViewModel()
     {
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => PixelsPerSecond < MaxPixelsPerSecond);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => PixelsPerSecond > MinPixelsPerSecond);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.01);
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => selectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => selectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.01);
 
         Items.CollectionChanged += (s, e) => OnItemsChanged();
     }

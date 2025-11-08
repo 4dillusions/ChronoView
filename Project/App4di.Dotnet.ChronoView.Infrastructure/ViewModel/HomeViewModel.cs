@@ -6,6 +6,7 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using App4di.Dotnet.ChronoView.Infrastructure.Helper;
+using App4di.Dotnet.ChronoView.Infrastructure.Service;
 using FW4di.Dotnet.MVVM;
 using System.Collections.ObjectModel;
 
@@ -21,6 +22,7 @@ public class HomeViewModel : NotificationObject
     public ICommand ZoomOutCommand { get; }
     public ICommand ResetZoomCommand { get; }
     public ICommand RotateCommand { get; }
+    public ICommand OpenFolderCommand { get; }
     #endregion
 
     #region Fields
@@ -31,6 +33,9 @@ public class HomeViewModel : NotificationObject
     ObservableCollection<TimelineItemDTO> timelineItems = new();
     private int selectedIndex = -1;
     private bool isAutoPlay;
+
+    private readonly IFolderPickerService folderPicker;
+    private readonly FileService file;
 
     public float ZoomFactor
     {
@@ -68,9 +73,7 @@ public class HomeViewModel : NotificationObject
             {
                 //RaisePropertyChanged(nameof(HasSelectedImage));
 
-                (BackCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (NextCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (PlayPauseCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                RiseAllButtonsExecuteChanged();
 
                 if (TimelineItems != null && TimelineItems.Count > 0 && selectedImageItem != null)
                 {
@@ -153,47 +156,42 @@ public class HomeViewModel : NotificationObject
     #endregion
 
     #region CTor
-    public HomeViewModel()
+    public HomeViewModel(IFolderPickerService folderPicker, FileService file)
     {
+        this.folderPicker = folderPicker ?? throw new ArgumentNullException(nameof(folderPicker));
+        this.file = file ?? throw new ArgumentNullException(nameof(file));
+
         BackCommand = new RelayCommand(_ => Back(), _ => IsBackCanExecute);
         NextCommand = new RelayCommand(_ => Next(), _ => IsNextCanExecute);
         PlayPauseCommand = new RelayCommand(_ => PlayPause(), _ => IsPlayPauseCanExecute);
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => ZoomFactor < SettingsManager.MaxZoom && !IsAutoPlay);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => ZoomFactor > SettingsManager.MinZoom && !IsAutoPlay);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => ZoomFactor != 1.0f && !IsAutoPlay);
-        RotateCommand = new RelayCommand(_ => Rotate(), _ => !IsAutoPlay);
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => selectedImageItem != null && ZoomFactor < SettingsManager.MaxZoom && !IsAutoPlay);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => selectedImageItem != null && ZoomFactor > SettingsManager.MinZoom && !IsAutoPlay);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => selectedImageItem != null && ZoomFactor != 1.0f && !IsAutoPlay);
+        RotateCommand = new RelayCommand(_ => Rotate(), _ => selectedImageItem != null && !IsAutoPlay);
+        OpenFolderCommand = new RelayCommand(_ => OpenFolder(), _ => !IsAutoPlay);
 
         if (TimelineItems != null && TimelineItems.Count > 0 && SelectedIndex < 0)
             SelectedIndex = 0;
-
-        InitializeTestData();
     }
     #endregion
 
     #region Functions
-    void InitializeTestData()
-    {
-        string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-        string appDir = Path.GetDirectoryName(appPath);
-
-        TimelineItems = new ObservableCollection<TimelineItemDTO>
-        {
-            new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-30), ImageName = "LockScreenLogo.scale-200.png", ImagePath = appDir + "\\Assets\\LockScreenLogo.scale-200.png" },
-            new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-20), ImageName = "SplashScreen.scale-200.png", ImagePath = appDir + "\\Assets\\SplashScreen.scale-200.png" },
-            new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-10), ImageName = "Square150x150Logo.scale-200.png", ImagePath = appDir + "\\Assets\\Square150x150Logo.scale-200.png" },
-            new TimelineItemDTO { Timestamp = DateTime.Now, ImageName = "Wide310x150Logo.scale-200.png", ImagePath = appDir + "\\Assets\\Wide310x150Logo.scale-200.png" }
-        };
-
-        if (TimelineItems.Count > 0)
-        {
-            SelectedImageItem = TimelineItems[0];
-        }
-    }
-
     public void GoToFirst()
     {
         SelectedIndex = 0;
         RaisePropertyChanged(nameof(SelectedIndex));
+    }
+
+    void RiseAllButtonsExecuteChanged()
+    {
+        (OpenFolderCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (BackCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (NextCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (PlayPauseCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (RotateCommand as RelayCommand)?.RaiseCanExecuteChanged();
     }
 
     void Back()
@@ -225,13 +223,7 @@ public class HomeViewModel : NotificationObject
             return;
 
         IsAutoPlay = !IsAutoPlay;
-
-        (BackCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (NextCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (RotateCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        RiseAllButtonsExecuteChanged();
     }
 
     void ZoomIn()
@@ -256,6 +248,20 @@ public class HomeViewModel : NotificationObject
 
         if (TargetRotationAngle >= 360)
             TargetRotationAngle = 0;
+    }
+
+    public async Task OpenFolder()
+    {
+        var path = await folderPicker.PickFolderAsync();
+        if (path != null)
+        {
+            TimelineItems = new ObservableCollection<TimelineItemDTO>(file.LoadImagesFromFolder(path, ".jpg"));
+
+            if (TimelineItems.Count > 0)
+            {
+                SelectedImageItem = TimelineItems[0];
+            }
+        }
     }
 
     void Reset()
