@@ -70,12 +70,16 @@ public sealed partial class TimelineControl : UserControl
         get => (Brush)GetValue(SelectedBrushProperty);
         set => SetValue(SelectedBrushProperty, value);
     }
+
     public bool IsLocked
     {
         get => (bool)GetValue(IsLockedProperty);
-        set => SetValue(IsLockedProperty, value);
+        set
+        {
+            SetValue(IsLockedProperty, value);
+            ViewModel.IsLocked = value;
+        }
     }
-
     #endregion
 
     #region Constructor
@@ -208,9 +212,6 @@ public sealed partial class TimelineControl : UserControl
     #region Marker Interaction
     private void Marker_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        if (IsLocked)
-            return;
-
         if (sender is Line line && !IsSelectedLine(line))
         {
             line.Stroke = HoverBrush;
@@ -220,9 +221,6 @@ public sealed partial class TimelineControl : UserControl
 
     private void Marker_PointerExited(object sender, PointerRoutedEventArgs e)
     {
-        if (IsLocked)
-            return;
-
         if (sender is Line line && !IsSelectedLine(line))
         {
             line.Stroke = MarkerBrush;
@@ -232,9 +230,6 @@ public sealed partial class TimelineControl : UserControl
 
     private void Marker_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        if (IsLocked)
-            return;
-
         if (sender is Line line && line.Tag is TimelineItemDTO item && ViewModel != null)
         {
             ViewModel.SelectedTimeLineItem = item;

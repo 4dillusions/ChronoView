@@ -36,6 +36,7 @@ public class TimelineViewModel : NotificationObject
     private DateTime minTimestamp;
     private DateTime maxTimestamp;
     private int redrawTrigger;
+    private bool isLocked;
 
     public event EventHandler<TimelineItemDTO?>? SelectedItemChanged;
 
@@ -78,10 +79,7 @@ public class TimelineViewModel : NotificationObject
             if (SetProperty(ref pixelsPerSecond, value))
             {
                 CalculateTimelineMetrics();
-
-                (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                RiseAllButtonsExecuteChanged();
             }
         }
     }
@@ -123,20 +121,38 @@ public class TimelineViewModel : NotificationObject
         get => redrawTrigger;
         private set => SetProperty(ref redrawTrigger, value);
     }
+
+    public bool IsLocked
+    {
+        get => isLocked;
+        
+        set
+        {
+            SetProperty(ref isLocked, value);
+            RiseAllButtonsExecuteChanged();
+        }
+    }
     #endregion
 
     #region Constructor
     public TimelineViewModel()
     {
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => selectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => selectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.01);
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !isLocked && selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.01);
 
         Items.CollectionChanged += (s, e) => OnItemsChanged();
     }
     #endregion
 
-    #region Methods
+    #region Functions
+    void RiseAllButtonsExecuteChanged()
+    {
+        (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
+    }
+
     private void ZoomIn()
     {
         PixelsPerSecond = Math.Min(PixelsPerSecond * ZoomFactor, MaxPixelsPerSecond);
