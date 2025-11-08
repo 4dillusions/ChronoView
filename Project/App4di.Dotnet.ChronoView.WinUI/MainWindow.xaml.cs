@@ -37,6 +37,7 @@ public sealed partial class MainWindow : Window
             p.PreferredMinimumHeight = height;
         }
 
+        ContentFrame.CacheSize = 10; //maximum save stated pages
         ContentFrame.Navigate(typeof(View.HomePage));
     }
 

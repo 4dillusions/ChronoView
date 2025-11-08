@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="ChronoView">
+    Title="Chrono View">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />
@@ -20,10 +20,10 @@
                          Header=""
                          SelectionChanged="NavigationView_SelectionChanged">
         <muxc:NavigationView.MenuItems>
-            <muxc:NavigationViewItem Content="Home" Icon="Home" Tag="home" IsSelected="True"/>
+            <muxc:NavigationViewItem Content="Chrono View" Icon="Home" Tag="home" IsSelected="True"/>
             <muxc:NavigationViewItem Content="Technology" Icon="Library" Tag="tech"/>
-            <muxc:NavigationViewItem Content="Contact" Icon="Contact" Tag="contact"/>
-            <muxc:NavigationViewItem Content="About" Icon="Help" Tag="about"/>
+            <muxc:NavigationViewItem Content="Contact" Icon="Mail" Tag="contact"/>
+            <muxc:NavigationViewItem Content="About" Icon="Important" Tag="about"/>
         </muxc:NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame"/>
