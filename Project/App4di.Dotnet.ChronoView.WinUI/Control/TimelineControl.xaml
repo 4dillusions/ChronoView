@@ -41,8 +41,7 @@
                         Spacing="8" 
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center">
-                <TextBlock Text="{Binding ViewModel.SelectedImageName, ElementName=Root}"/>
-                <TextBlock Text="{Binding ViewModel.SelectedTimestamp, ElementName=Root}"/>
+                <TextBlock Text="{Binding ViewModel.SelectedImage, ElementName=Root}"/>
             </StackPanel>
 
             <TextBlock Grid.Column="2" 

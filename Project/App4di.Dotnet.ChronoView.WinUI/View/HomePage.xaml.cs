@@ -10,34 +10,22 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace App4di.Dotnet.ChronoView.WinUI.View;
 
 public sealed partial class HomePage : Page
 {
     public HomeViewModel ViewModel { get; }
+    private readonly DispatcherTimer slideshowTimer;
 
     public HomePage()
     {
         InitializeComponent();
-
         ViewModel = new HomeViewModel();
         DataContext = ViewModel;
 
-        Loaded += (s, e) =>
-        {
-            if (Timeline?.ViewModel != null)
-            {
-                Timeline.ViewModel.Items = new ObservableCollection<TimelineItemDTO>
-                {
-                    new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-30), ImageName = "test1.jpg" },
-                    new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-20), ImageName = "test2.jpg" },
-                    new TimelineItemDTO { Timestamp = DateTime.Now.AddMinutes(-10), ImageName = "test3.jpg" },
-                    new TimelineItemDTO { Timestamp = DateTime.Now, ImageName = "test4.jpg" }
-                };
-            }
-        };
+        Loaded += OnPageLoaded;
 
         ViewModel.PropertyChanged += (s, e) =>
         {
@@ -53,7 +41,46 @@ public sealed partial class HomePage : Page
             {
                 AnimateRotation();
             }
+            else if (e.PropertyName == nameof(ViewModel.TimelineItems))
+            {
+                SyncTimelineItems();
+            }
         };
+
+        slideshowTimer = new DispatcherTimer();
+        slideshowTimer.Interval = TimeSpan.FromSeconds(2);
+        slideshowTimer.Tick += SlideshowTimer_Tick;
+        
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+    }
+
+    private void OnPageLoaded(object sender, RoutedEventArgs e)
+    {
+        if (Timeline?.ViewModel != null)
+        {
+            SyncTimelineItems();
+            Timeline.ViewModel.SelectedItemChanged += OnTimelineSelectionChanged;
+        }
+    }
+
+    private void SyncTimelineItems()
+    {
+        if (Timeline?.ViewModel != null && ViewModel?.TimelineItems != null)
+        {
+            Timeline.ViewModel.Items = ViewModel.TimelineItems;
+            if (ViewModel.SelectedImageItem != null)
+            {
+                Timeline.ViewModel.SelectedTimeLineItem = ViewModel.SelectedImageItem;
+            }
+        }
+    }
+
+    private void OnTimelineSelectionChanged(object? sender, TimelineItemDTO? selectedItem)
+    {
+        if (selectedItem != null)
+        {
+            ViewModel.SelectedImageItem = selectedItem;
+        }
     }
 
     private void AnimateRotation()
@@ -75,5 +102,40 @@ public sealed partial class HomePage : Page
         var storyboard = new Storyboard();
         storyboard.Children.Add(animation);
         storyboard.Begin();
+    }
+
+    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ViewModel.IsAutoPlay))
+        {
+            if (ViewModel.IsAutoPlay)
+            {
+                if (ViewModel.SelectedIndex < 0 && ViewModel.TimelineItems?.Count > 0)
+                    ViewModel.SelectedIndex = 0;
+
+                slideshowTimer.Start();
+            }
+            else
+            {
+                slideshowTimer.Stop();
+            }
+        }
+    }
+
+    private void SlideshowTimer_Tick(object? sender, object e)
+    {
+        if (ViewModel.TimelineItems == null || ViewModel.TimelineItems.Count == 0)
+            return;
+
+        if (ViewModel.SelectedIndex < 0)
+            ViewModel.SelectedIndex = 0;
+        else
+            ViewModel.SelectedIndex = (ViewModel.SelectedIndex + 1) % ViewModel.TimelineItems.Count;
+    }
+
+    protected override void OnNavigatedFrom(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        slideshowTimer.Stop();
+        base.OnNavigatedFrom(e);
     }
 }

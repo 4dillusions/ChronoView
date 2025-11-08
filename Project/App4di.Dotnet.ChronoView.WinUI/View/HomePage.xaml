@@ -9,6 +9,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="200" />
         </Grid.RowDefinitions>
+        
         <!-- Image view -->
         <Border Grid.Row="0" Margin="8" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
             <Grid>
@@ -16,7 +17,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-
+                
                 <!-- Image -->
                 <ScrollViewer x:Name="ImageScroller"
                       Grid.Row="0"
@@ -31,35 +32,37 @@
                         <Image x:Name="ImageView"
                            Stretch="Uniform"
                            RenderTransformOrigin="0.5,0.5"
-                           Source="ms-appx:///Assets/Square150x150Logo.scale-200.png">
+                           Source="{x:Bind ViewModel.SelectedImageItem.ImagePath, Mode=OneWay}">
                             <Image.RenderTransform>
                                 <RotateTransform x:Name="ImgRotate" Angle="0"/>
                             </Image.RenderTransform>
                         </Image>
                     </Grid>
                 </ScrollViewer>
+                
                 <!-- Menu -->
-                <CommandBar Grid.Row="1"
-                            DefaultLabelPosition="Right"
-                            IsSticky="True">
-
-                    <AppBarButton Icon="Back" Label="Back"/>
-                    <AppBarButton Icon="Forward" Label="Next"/>
+                <CommandBar Grid.Row="1" DefaultLabelPosition="Right" IsSticky="True">
+                    <AppBarButton Icon="Back" Label="Back" Command="{x:Bind ViewModel.BackCommand, Mode=OneWay}"/>
+                    <AppBarButton Icon="Forward" Label="Next" Command="{x:Bind ViewModel.NextCommand, Mode=OneWay}"/>
                     <AppBarSeparator/>
 
-                    <AppBarButton Icon="Play" Label="Play / Pause" x:Name="PlayPauseBtn"/>
+                    <AppBarButton Label="Play / Pause" Command="{x:Bind ViewModel.PlayPauseCommand, Mode=OneWay}">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
                     <AppBarSeparator/>
-                    
+
                     <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{x:Bind ViewModel.ZoomOutCommand, Mode=OneWay}"/>
                     <AppBarButton Icon="ZoomIn"  Label="Zoom in"  Command="{x:Bind ViewModel.ZoomInCommand, Mode=OneWay}"/>
                     <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{x:Bind ViewModel.ResetZoomCommand, Mode=OneWay}"/>
                     <AppBarSeparator/>
-
+                    
                     <AppBarButton Icon="Rotate" Label="Rotate" Command="{x:Bind ViewModel.RotateCommand, Mode=OneWay}"/>
                 </CommandBar>
             </Grid>
         </Border>
-
+        
         <!-- Timeline view -->
         <Border Grid.Row="1" 
          Margin="8" 

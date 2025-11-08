@@ -26,8 +26,19 @@ public class TimelineViewModel : NotificationObject
     public ICommand ResetZoomCommand { get; }
     #endregion
 
-    #region Properties
+    #region Fields
     private ObservableCollection<TimelineItemDTO> items = new();
+    private TimelineItemDTO? selectedTimeLineItem;
+    private double pixelsPerSecond = DefaultPixelsPerSecond;
+    private double timelineWidth;
+    private string startDateText = string.Empty;
+    private string endDateText = string.Empty;
+    private DateTime minTimestamp;
+    private DateTime maxTimestamp;
+    private int redrawTrigger;
+
+    public event EventHandler<TimelineItemDTO?>? SelectedItemChanged;
+
     public ObservableCollection<TimelineItemDTO> Items
     {
         get => items;
@@ -41,7 +52,6 @@ public class TimelineViewModel : NotificationObject
         }
     }
 
-    private TimelineItemDTO? selectedTimeLineItem;
     public TimelineItemDTO? SelectedTimeLineItem
     {
         get => selectedTimeLineItem;
@@ -49,13 +59,13 @@ public class TimelineViewModel : NotificationObject
         {
             if (SetProperty(ref selectedTimeLineItem, value))
             {
-                RaisePropertyChanged(nameof(SelectedImageName));
-                RaisePropertyChanged(nameof(SelectedTimestamp));
+                RaisePropertyChanged(nameof(SelectedImage));
+                
+                SelectedItemChanged?.Invoke(this, value);
             }
         }
     }
 
-    private double pixelsPerSecond = DefaultPixelsPerSecond;
     public double PixelsPerSecond
     {
         get => pixelsPerSecond;
@@ -72,45 +82,38 @@ public class TimelineViewModel : NotificationObject
         }
     }
 
-    private double timelineWidth;
     public double TimelineWidth
     {
         get => timelineWidth;
         set => SetProperty(ref timelineWidth, value);
     }
 
-    private string startDateText = string.Empty;
     public string StartDateText
     {
         get => startDateText;
         set => SetProperty(ref startDateText, value);
     }
 
-    private string endDateText = string.Empty;
     public string EndDateText
     {
         get => endDateText;
         set => SetProperty(ref endDateText, value);
     }
 
-    public string SelectedImageName => SelectedTimeLineItem?.ImageName ?? string.Empty;
-    public string SelectedTimestamp => SelectedTimeLineItem?.Timestamp.ToString(DateFormat) ?? string.Empty;
+    public string SelectedImage => SelectedTimeLineItem?.ImageName + " [" + SelectedTimeLineItem?.Timestamp + "]" ?? string.Empty;
 
-    private DateTime minTimestamp;
     public DateTime MinTimestamp
     {
         get => minTimestamp;
         private set => SetProperty(ref minTimestamp, value);
     }
 
-    private DateTime maxTimestamp;
     public DateTime MaxTimestamp
     {
         get => maxTimestamp;
         private set => SetProperty(ref maxTimestamp, value);
     }
 
-    private int redrawTrigger;
     public int RedrawTrigger
     {
         get => redrawTrigger;
