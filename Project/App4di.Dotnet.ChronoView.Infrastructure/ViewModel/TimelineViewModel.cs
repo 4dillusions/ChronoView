@@ -13,9 +13,7 @@ namespace App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
 public class TimelineViewModel : NotificationObject
 {
     #region Constants
-    private const double MinPixelsPerSecond = 0.1;
-    private const double MaxPixelsPerSecond = 50.0;
-    private const double DefaultPixelsPerSecond = 2.0;
+    private const double DefaultTargetWidthPx = 1600.0;
     private const double ZoomFactor = 1.5;
     private readonly string DateFormat = "yyyy.MM.dd HH:mm:ss";
     #endregion
@@ -29,7 +27,14 @@ public class TimelineViewModel : NotificationObject
     #region Fields
     private ObservableCollection<TimelineItemDTO> items = new();
     private TimelineItemDTO? selectedTimeLineItem;
-    private double pixelsPerSecond = DefaultPixelsPerSecond;
+
+    private double absoluteMinPps = 0.00001;
+    private double absoluteMaxPps = 10000.0;
+    private double pixelsPerSecond;
+    private double minPixelsPerSecond;
+    private double maxPixelsPerSecond;
+    private double defaultPixelsPerSecond;
+
     private double timelineWidth;
     private string startDateText = string.Empty;
     private string endDateText = string.Empty;
@@ -38,8 +43,12 @@ public class TimelineViewModel : NotificationObject
     private int redrawTrigger;
     private bool isLocked;
 
-    public event EventHandler<TimelineItemDTO?>? SelectedItemChanged;
+    private double targetWidthPx = DefaultTargetWidthPx;
 
+    public event EventHandler<TimelineItemDTO?>? SelectedItemChanged;
+    #endregion
+
+    #region Public props
     public ObservableCollection<TimelineItemDTO> Items
     {
         get => items;
@@ -61,7 +70,7 @@ public class TimelineViewModel : NotificationObject
             if (SetProperty(ref selectedTimeLineItem, value))
             {
                 RaisePropertyChanged(nameof(SelectedImage));
-                
+
                 SelectedItemChanged?.Invoke(this, value);
 
                 (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
@@ -71,15 +80,58 @@ public class TimelineViewModel : NotificationObject
         }
     }
 
+    public double AbsoluteMinPps
+    {
+        get => absoluteMinPps;
+        set => SetProperty(ref absoluteMinPps, value);
+    }
+
+    public double AbsoluteMaxPps
+    {
+        get => absoluteMaxPps;
+        set => SetProperty(ref absoluteMaxPps, value);
+    }
+
     public double PixelsPerSecond
     {
         get => pixelsPerSecond;
         set
         {
-            if (SetProperty(ref pixelsPerSecond, value))
+            var clamped = Math.Clamp(value, MinPixelsPerSecond, MaxPixelsPerSecond);
+            if (SetProperty(ref pixelsPerSecond, clamped))
             {
                 CalculateTimelineMetrics();
                 RiseAllButtonsExecuteChanged();
+            }
+        }
+    }
+
+    public double MinPixelsPerSecond
+    {
+        get => minPixelsPerSecond;
+        private set => SetProperty(ref minPixelsPerSecond, Math.Clamp(value, AbsoluteMinPps, AbsoluteMaxPps));
+    }
+
+    public double MaxPixelsPerSecond
+    {
+        get => maxPixelsPerSecond;
+        private set => SetProperty(ref maxPixelsPerSecond, Math.Clamp(value, AbsoluteMinPps, AbsoluteMaxPps));
+    }
+
+    public double DefaultPixelsPerSecond
+    {
+        get => defaultPixelsPerSecond;
+        private set => SetProperty(ref defaultPixelsPerSecond, Math.Clamp(value, AbsoluteMinPps, AbsoluteMaxPps));
+    }
+
+    public double TargetWidthPx
+    {
+        get => targetWidthPx;
+        set
+        {
+            if (SetProperty(ref targetWidthPx, Math.Max(300, value)))
+            {
+                RecomputePpsBoundsAndMaybeReset();
             }
         }
     }
@@ -125,7 +177,7 @@ public class TimelineViewModel : NotificationObject
     public bool IsLocked
     {
         get => isLocked;
-        
+
         set
         {
             SetProperty(ref isLocked, value);
@@ -137,9 +189,14 @@ public class TimelineViewModel : NotificationObject
     #region Constructor
     public TimelineViewModel()
     {
+        MinPixelsPerSecond = 0.001;
+        MaxPixelsPerSecond = 10.0;
+        DefaultPixelsPerSecond = 0.02;
+        pixelsPerSecond = DefaultPixelsPerSecond;
+
         ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
         ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !isLocked && selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.01);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !isLocked && selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.0000001);
 
         Items.CollectionChanged += (s, e) => OnItemsChanged();
     }
@@ -171,6 +228,7 @@ public class TimelineViewModel : NotificationObject
     private void OnItemsChanged()
     {
         CalculateTimelineMetrics();
+        RecomputePpsBoundsAndMaybeReset(forceResetToDefault: true);
     }
 
     private void CalculateTimelineMetrics()
@@ -205,6 +263,33 @@ public class TimelineViewModel : NotificationObject
             return 0;
 
         return 50 + (timestamp - MinTimestamp).TotalSeconds * PixelsPerSecond;
+    }
+
+    private void RecomputePpsBoundsAndMaybeReset(bool forceResetToDefault = false)
+    {
+        if (Items == null || Items.Count == 0 || MinTimestamp == DateTime.MinValue || MaxTimestamp == DateTime.MinValue)
+            return;
+
+        var totalSeconds = Math.Max((MaxTimestamp - MinTimestamp).TotalSeconds, 1);
+
+        var desiredContentWidth = Math.Max(200.0, TargetWidthPx - 100.0);
+        var computedDefault = desiredContentWidth / totalSeconds;
+
+        var computedMin = computedDefault / 20.0;
+        var computedMax = computedDefault * 40.0;
+
+        DefaultPixelsPerSecond = Math.Clamp(computedDefault, AbsoluteMinPps, AbsoluteMaxPps);
+        MinPixelsPerSecond = Math.Clamp(computedMin, AbsoluteMinPps, DefaultPixelsPerSecond);
+        MaxPixelsPerSecond = Math.Clamp(computedMax, DefaultPixelsPerSecond, AbsoluteMaxPps);
+
+        if (forceResetToDefault || PixelsPerSecond < MinPixelsPerSecond || PixelsPerSecond > MaxPixelsPerSecond)
+        {
+            pixelsPerSecond = DefaultPixelsPerSecond;
+            RaisePropertyChanged(nameof(PixelsPerSecond));
+            CalculateTimelineMetrics();
+        }
+
+        RiseAllButtonsExecuteChanged();
     }
     #endregion
 }

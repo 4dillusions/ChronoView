@@ -212,6 +212,9 @@ public sealed partial class TimelineControl : UserControl
     #region Marker Interaction
     private void Marker_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
+        if (IsLocked)
+            return;
+
         if (sender is Line line && !IsSelectedLine(line))
         {
             line.Stroke = HoverBrush;
@@ -221,6 +224,9 @@ public sealed partial class TimelineControl : UserControl
 
     private void Marker_PointerExited(object sender, PointerRoutedEventArgs e)
     {
+        if (IsLocked)
+            return;
+
         if (sender is Line line && !IsSelectedLine(line))
         {
             line.Stroke = MarkerBrush;
@@ -230,6 +236,9 @@ public sealed partial class TimelineControl : UserControl
 
     private void Marker_Tapped(object sender, TappedRoutedEventArgs e)
     {
+        if (IsLocked)
+            return;
+
         if (sender is Line line && line.Tag is TimelineItemDTO item && ViewModel != null)
         {
             ViewModel.SelectedTimeLineItem = item;
