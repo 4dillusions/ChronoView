@@ -255,7 +255,7 @@ public class HomeViewModel : NotificationObject
         var path = await folderPicker.PickFolderAsync();
         if (path != null)
         {
-            TimelineItems = new ObservableCollection<TimelineItemDTO>(file.LoadImagesFromFolder(path, ".jpg"));
+            TimelineItems = new ObservableCollection<TimelineItemDTO>(file.LoadImagesFromFolder(path, isAllFoldersRecursive: false, extensions: ".jpg"));
 
             if (TimelineItems.Count > 0)
             {

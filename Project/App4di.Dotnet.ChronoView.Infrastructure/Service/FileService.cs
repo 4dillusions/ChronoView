@@ -10,7 +10,7 @@ namespace App4di.Dotnet.ChronoView.Infrastructure.Service;
 
 public class FileService
 {
-    public List<TimelineItemDTO> LoadImagesFromFolder(string folderPath, params string[] extensions)
+    public List<TimelineItemDTO> LoadImagesFromFolder(string folderPath, bool isAllFoldersRecursive, params string[] extensions)
     {
         if (extensions == null || extensions.Length == 0)
         {
@@ -21,7 +21,7 @@ public class FileService
         var allowed = new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
 
         return Directory
-            .EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
+            .EnumerateFiles(folderPath, "*.*", isAllFoldersRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
             .Where(path => allowed.Contains(Path.GetExtension(path)))
             .Select(path => new TimelineItemDTO
             {
