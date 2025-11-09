@@ -12,7 +12,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Shapes;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -150,6 +152,13 @@ public sealed partial class TimelineControl : UserControl
         markerCanvas?.Children.OfType<Line>()
             .FirstOrDefault(l => ReferenceEquals(l.Tag, tag));
 
+    private Line? FindLineByTag(object? tag) =>
+        markerCanvas?.Children
+            .OfType<Line>()
+            .FirstOrDefault(l => ReferenceEquals(l.Tag, tag));
+
+    private bool IsSelectedLine(Line l) => ReferenceEquals(l, selectedLine);
+
     private void ApplySelectedLabelVisual(TextBlock label)
     {
         label.FontWeight = FontWeights.SemiBold;
@@ -162,7 +171,7 @@ public sealed partial class TimelineControl : UserControl
         label.Foreground = MarkerBrush;
     }
 
-    void RedrawTimeline()
+    private void RedrawTimeline()
     {
         if (contentGrid == null || markerCanvas == null || timelineCanvas == null ||
             ViewModel?.Items == null || ViewModel.Items.Count == 0)
@@ -196,41 +205,43 @@ public sealed partial class TimelineControl : UserControl
             marker.PointerEntered += Marker_PointerEntered;
             marker.PointerExited += Marker_PointerExited;
             marker.Tapped += Marker_Tapped;
-
             markerCanvas.Children.Add(marker);
 
             var label = new TextBlock
             {
-                Text = item.Timestamp.ToString(TimeFormat),
+                Text = item.Timestamp.ToString("yy.MM.dd HH:mm:ss"),
+                FontSize = 10,
                 Foreground = MarkerBrush,
-                Tag = item,
-                IsHitTestVisible = true
+                Opacity = 0.9,
+                IsHitTestVisible = true,
+                TextAlignment = TextAlignment.Center,
+                Tag = item
             };
-            
+            double labelWidth = 140;
+            Canvas.SetLeft(label, x - labelWidth / 2);
+            Canvas.SetTop(label, 57);
+            label.Width = labelWidth;
+
             label.PointerEntered += Marker_PointerEntered;
             label.PointerExited += Marker_PointerExited;
             label.Tapped += Marker_Tapped;
 
-            label.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
-            var w = label.DesiredSize.Width;
-
-            Canvas.SetLeft(label, x - w / 2.0);
-            Canvas.SetTop(label, 55); //62
-
             markerCanvas.Children.Add(label);
 
-            if (ViewModel.SelectedTimeLineItem != null &&
-                ReferenceEquals(item, ViewModel.SelectedTimeLineItem))
+            AttachThumbnailTooltip(marker, item);
+            AttachThumbnailTooltip(label, item);
+
+            if (ViewModel.SelectedTimeLineItem != null && ReferenceEquals(item, ViewModel.SelectedTimeLineItem))
             {
                 ApplySelectedVisual(marker);
-                ApplySelectedLabelVisual(label);
             }
         }
     }
 
     private void UpdateSelectedVisual()
     {
-        if (markerCanvas == null) return;
+        if (markerCanvas == null) 
+            return;
 
         if (selectedLine != null)
         {
@@ -244,7 +255,8 @@ public sealed partial class TimelineControl : UserControl
             selectedLine = null;
         }
 
-        if (ViewModel?.SelectedTimeLineItem == null) return;
+        if (ViewModel?.SelectedTimeLineItem == null) 
+            return;
 
         var line = FindLineFor(ViewModel.SelectedTimeLineItem);
         if (line != null) 
@@ -261,6 +273,36 @@ public sealed partial class TimelineControl : UserControl
         if (lbl != null)
             ApplySelectedLabelVisual(lbl);
     }
+
+    private void AttachThumbnailTooltip(FrameworkElement target, TimelineItemDTO item)
+    {
+        var bmp = new BitmapImage();
+        try
+        {
+            bmp.DecodePixelWidth = 220;
+            bmp.UriSource = new Uri(item.ImagePath);
+        }
+        catch 
+        { 
+            return; 
+        }
+
+        var img = new Image
+        {
+            Source = bmp,
+            Stretch = Stretch.Uniform,
+            MaxWidth = 240,
+            Margin = new Thickness(6)
+        };
+
+        var tt = new ToolTip
+        {
+            Content = img,
+            Placement = Microsoft.UI.Xaml.Controls.Primitives.PlacementMode.Top
+        };
+
+        ToolTipService.SetToolTip(target, tt);
+    }
     #endregion
 
     #region Marker Interaction
@@ -268,22 +310,12 @@ public sealed partial class TimelineControl : UserControl
     {
         if (IsLocked) return;
 
-        if (sender is FrameworkElement fe)
+        var fe = sender as FrameworkElement;
+        var line = sender as Line ?? FindLineByTag(fe?.Tag);
+        if (line != null && !IsSelectedLine(line))
         {
-            var tag = fe.Tag;
-            var line = FindLineFor(tag);
-            var label = FindLabelFor(tag);
-
-            if (line != null && !IsSelectedLine(line))
-            {
-                line.Stroke = HoverBrush;
-                line.StrokeThickness = 5;
-            }
-
-            if (label != null && (line == null || !IsSelectedLine(line)))
-            {
-                label.Foreground = HoverBrush;
-            }
+            line.Stroke = HoverBrush;
+            line.StrokeThickness = 5;
         }
     }
 
@@ -291,37 +323,26 @@ public sealed partial class TimelineControl : UserControl
     {
         if (IsLocked) return;
 
-        if (sender is FrameworkElement fe)
+        var fe = sender as FrameworkElement;
+        var line = sender as Line ?? FindLineByTag(fe?.Tag);
+        if (line != null && !IsSelectedLine(line))
         {
-            var tag = fe.Tag;
-            var line = FindLineFor(tag);
-            var label = FindLabelFor(tag);
-
-            if (line != null && !IsSelectedLine(line))
-            {
-                line.Stroke = MarkerBrush;
-                line.StrokeThickness = 3;
-            }
-
-            if (label != null && (line == null || !IsSelectedLine(line)))
-            {
-                label.Foreground = MarkerBrush;
-            }
+            line.Stroke = MarkerBrush;
+            line.StrokeThickness = 3;
         }
     }
 
     private void Marker_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        if (IsLocked)
-            return;
+        if (IsLocked) return;
 
-        if (sender is Line line && line.Tag is TimelineItemDTO item && ViewModel != null)
+        var fe = sender as FrameworkElement;
+        var item = fe?.Tag as TimelineItemDTO;
+        if (item != null && ViewModel != null)
         {
             ViewModel.SelectedTimeLineItem = item;
         }
     }
-
-    private bool IsSelectedLine(Line line) => selectedLine == line;
     #endregion
 
     #region Helper Methods

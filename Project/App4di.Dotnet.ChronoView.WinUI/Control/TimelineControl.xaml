@@ -31,66 +31,30 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" 
-                       Text="{Binding ViewModel.StartDateText, ElementName=Root}" 
-                       Foreground="{ThemeResource App.SubtleTextBrush}" 
-                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="0" Text="{Binding ViewModel.StartDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
 
-            <StackPanel Grid.Column="1" 
-                        Orientation="Horizontal" 
-                        Spacing="8" 
-                        HorizontalAlignment="Center" 
-                        VerticalAlignment="Center">
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="{Binding ViewModel.SelectedImage, ElementName=Root}"/>
             </StackPanel>
 
-            <TextBlock Grid.Column="2" 
-                       Text="{Binding ViewModel.EndDateText, ElementName=Root}" 
-                       Foreground="{ThemeResource App.SubtleTextBrush}" 
-                       VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="{Binding ViewModel.EndDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
         </Grid>
 
         <!-- Timeline -->
-        <Border Grid.Row="1" 
-                Background="{ThemeResource App.SurfaceBrush}" 
-                BorderBrush="{ThemeResource App.SurfaceBorderBrush}" 
-                BorderThickness="1" 
-                CornerRadius="8">
-            <ScrollViewer x:Name="TimelineScroller" 
-                          HorizontalScrollBarVisibility="Auto" 
-                          VerticalScrollBarVisibility="Disabled">
-                <Grid x:Name="TimelineContentGrid" 
-                      Height="80" 
-                      Width="{Binding ViewModel.TimelineWidth, ElementName=Root}"
-                      HorizontalAlignment="Left">
-                    <Canvas x:Name="TimelineCanvas" 
-                            Height="80" 
-                            Width="{Binding ViewModel.TimelineWidth, ElementName=Root}"
-                            Background="Transparent" 
-                            HorizontalAlignment="Left"/>
-                    <Canvas x:Name="MarkerCanvas" 
-                            Height="80" 
-                            Width="{Binding ViewModel.TimelineWidth, ElementName=Root}"
-                            Background="Transparent" 
-                            HorizontalAlignment="Left"/>
+        <Border Grid.Row="1" Background="{ThemeResource App.SurfaceBrush}" BorderBrush="{ThemeResource App.SurfaceBorderBrush}" BorderThickness="1" CornerRadius="8">
+            <ScrollViewer x:Name="TimelineScroller"  HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Disabled">
+                <Grid x:Name="TimelineContentGrid" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" HorizontalAlignment="Left">
+                    <Canvas x:Name="TimelineCanvas" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" Background="Transparent" HorizontalAlignment="Left"/>
+                    <Canvas x:Name="MarkerCanvas" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" Background="Transparent" HorizontalAlignment="Left"/>
                 </Grid>
             </ScrollViewer>
         </Border>
 
         <!-- Command Bar -->
-        <CommandBar Grid.Row="2" 
-                    DefaultLabelPosition="Right" 
-                    HorizontalAlignment="Center" 
-                    IsSticky="True">
-            <AppBarButton Icon="ZoomOut" 
-                          Label="Zoom out" 
-                          Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
-            <AppBarButton Icon="ZoomIn" 
-                          Label="Zoom in" 
-                          Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
-            <AppBarButton Icon="Zoom" 
-                          Label="Reset zoom" 
-                          Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
+        <CommandBar Grid.Row="2" DefaultLabelPosition="Right" HorizontalAlignment="Center" IsSticky="True">
+            <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
+            <AppBarButton Icon="ZoomIn" Label="Zoom in" Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
+            <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
         </CommandBar>
     </Grid>
 </UserControl>
