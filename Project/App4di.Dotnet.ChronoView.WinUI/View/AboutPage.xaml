@@ -4,7 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid Padding="20">
-        <Border Style="{StaticResource CardStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15"/>
+        </Grid.RowDefinitions>
+
+        <!-- About -->
+        <Border Style="{StaticResource CardStyle}" Grid.Column="0">
             <Grid ColumnSpacing="16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -22,6 +34,72 @@ Each photo is positioned based on its creation date, allowing you to scroll or z
 The main viewer dynamically updates to display the image corresponding to the center point of the timeline."/>
                 </StackPanel>
             </Grid>
+        </Border>
+
+        <!-- Contact -->
+        <Border Style="{StaticResource CardStyle}" Grid.Column="1">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="📧" Style="{StaticResource CardIconStyle}"/>
+
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Contacts" Style="{StaticResource HeadlineTextStyle}"/>
+
+                    <TextBlock Text="Technical support" Style="{StaticResource MainTextStyle}"/>
+                    <TextBlock Style="{StaticResource HyperlinkTextStyle}">
+                <Hyperlink NavigateUri="mailto:support@4dillusions.com">
+                    support@4dillusions.com
+                </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Style="{StaticResource SubtleTextStyle}" Text="(technical inquiries about our products)"/>
+
+                    <TextBlock Text="General info" Style="{StaticResource MainTextStyle}"/>
+                    <TextBlock Style="{StaticResource HyperlinkTextStyle}">
+                <Hyperlink NavigateUri="mailto:info@4dillusions.com">
+                    info@4dillusions.com
+                </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Style="{StaticResource SubtleTextStyle}" Text="(general inquiries)"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Technology -->
+        <Border Style="{StaticResource CardStyle}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="🖥️" Style="{StaticResource CardIconStyle}"/>
+
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Technology" Style="{StaticResource HeadlineTextStyle}"/>
+
+                    <TextBlock Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"
+Text="ChronoView is a compact yet expressive WinUI application designed to explore temporal storytelling through images. 
+It demonstrates modern MVVM architecture, clean C# design, and a focus on responsive, user-friendly interaction."/>
+                    <TextBlock Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"
+Text="The project highlights structured thinking, modularity, and clear separation of concerns — from timeline rendering and 
+image navigation to asynchronous data loading and smooth transitions. It offers a balanced showcase of both engineering 
+discipline and aesthetic consideration."/>
+                    <TextBlock Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"
+Text="ChronoView was created as a portfolio project to illustrate real-world software design principles within a modern 
+desktop context. The goal is not only to present technical capability but also to convey an appreciation for clarity, 
+user flow, and thoughtful UI/UX craftsmanship."/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+            <StackPanel>
+                <TextBlock Style="{StaticResource SubtleTextStyle}" Text="© 2025 4D Illusions"/>
+            </StackPanel>
         </Border>
     </Grid>
 </Page>
