@@ -8,6 +8,7 @@ using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using App4di.Dotnet.ChronoView.Infrastructure.Helper;
 using App4di.Dotnet.ChronoView.Infrastructure.Service;
 using FW4di.Dotnet.MVVM;
+using FW4di.Dotnet.MVVM.Service;
 using System.Collections.ObjectModel;
 
 namespace App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
