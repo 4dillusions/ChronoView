@@ -23,6 +23,7 @@ public class HomeViewModel : NotificationObject
     public ICommand ResetZoomCommand { get; }
     public ICommand RotateCommand { get; }
     public ICommand OpenFolderCommand { get; }
+    public ICommand ImageOpenedCommand { get; }
     #endregion
 
     #region Fields
@@ -33,6 +34,11 @@ public class HomeViewModel : NotificationObject
     ObservableCollection<TimelineItemDTO> timelineItems = new();
     private int selectedIndex = -1;
     private bool isAutoPlay;
+    private double viewportWidth;
+    private double viewportHeight;
+    private double imageWidth;
+    private double imageHeight;
+    private bool shouldFitToViewport;
 
     private readonly IFolderPickerService folderPicker;
     private readonly FileService file;
@@ -71,8 +77,6 @@ public class HomeViewModel : NotificationObject
         {
             if (SetProperty(ref selectedImageItem, value))
             {
-                //RaisePropertyChanged(nameof(HasSelectedImage));
-
                 RiseAllButtonsExecuteChanged();
 
                 if (TimelineItems != null && TimelineItems.Count > 0 && selectedImageItem != null)
@@ -93,7 +97,6 @@ public class HomeViewModel : NotificationObject
         set => SetProperty(ref timelineItems, value);
     }
 
-    //public bool HasSelectedImage => SelectedImageItem != null;
     public string PlayPauseGlyph => IsAutoPlay ? "\uE769" : "\uE768";
 
     public int SelectedIndex
@@ -105,9 +108,9 @@ public class HomeViewModel : NotificationObject
             {
                 if (TimelineItems != null && TimelineItems.Count > 0)
                 {
-                    if (selectedIndex < 0) 
+                    if (selectedIndex < 0)
                         selectedIndex = 0;
-                    if (selectedIndex > TimelineItems.Count - 1) 
+                    if (selectedIndex > TimelineItems.Count - 1)
                         selectedIndex = TimelineItems.Count - 1;
 
                     var newItem = TimelineItems[selectedIndex];
@@ -128,6 +131,60 @@ public class HomeViewModel : NotificationObject
                 RaisePropertyChanged(nameof(IsAutoPlay), nameof(PlayPauseGlyph));
             }
         }
+    }
+
+    public double ViewportWidth
+    {
+        get => viewportWidth;
+        set
+        {
+            if (SetProperty(ref viewportWidth, value))
+            {
+                CalculateFitToViewport();
+            }
+        }
+    }
+
+    public double ViewportHeight
+    {
+        get => viewportHeight;
+        set
+        {
+            if (SetProperty(ref viewportHeight, value))
+            {
+                CalculateFitToViewport();
+            }
+        }
+    }
+
+    public double ImageWidth
+    {
+        get => imageWidth;
+        set
+        {
+            if (SetProperty(ref imageWidth, value))
+            {
+                CalculateFitToViewport();
+            }
+        }
+    }
+
+    public double ImageHeight
+    {
+        get => imageHeight;
+        set
+        {
+            if (SetProperty(ref imageHeight, value))
+            {
+                CalculateFitToViewport();
+            }
+        }
+    }
+
+    public bool ShouldFitToViewport
+    {
+        get => shouldFitToViewport;
+        set => SetProperty(ref shouldFitToViewport, value);
     }
 
     bool IsBackCanExecute
@@ -169,6 +226,7 @@ public class HomeViewModel : NotificationObject
         ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => selectedImageItem != null && ZoomFactor != 1.0f && !IsAutoPlay);
         RotateCommand = new RelayCommand(_ => Rotate(), _ => selectedImageItem != null && !IsAutoPlay);
         OpenFolderCommand = new RelayCommand(_ => OpenFolder(), _ => !IsAutoPlay);
+        ImageOpenedCommand = new RelayCommand(_ => OnImageOpened());
 
         if (TimelineItems != null && TimelineItems.Count > 0 && SelectedIndex < 0)
             SelectedIndex = 0;
@@ -199,21 +257,20 @@ public class HomeViewModel : NotificationObject
         if (TimelineItems == null || TimelineItems.Count == 0)
             return;
 
-        if (SelectedIndex < 0) 
+        if (SelectedIndex < 0)
             SelectedIndex = 0;
-        else 
+        else
             SelectedIndex = (SelectedIndex - 1 + TimelineItems.Count) % TimelineItems.Count;
     }
-
 
     void Next()
     {
         if (TimelineItems == null || TimelineItems.Count == 0)
             return;
 
-        if (SelectedIndex < 0) 
+        if (SelectedIndex < 0)
             SelectedIndex = 0;
-        else 
+        else
             SelectedIndex = (SelectedIndex + 1) % TimelineItems.Count;
     }
 
@@ -238,7 +295,7 @@ public class HomeViewModel : NotificationObject
 
     void ResetZoom()
     {
-        ZoomFactor = 1.0f;
+        CalculateFitToViewport();
     }
 
     void Rotate()
@@ -248,6 +305,8 @@ public class HomeViewModel : NotificationObject
 
         if (TargetRotationAngle >= 360)
             TargetRotationAngle = 0;
+
+        CalculateFitToViewport();
     }
 
     public async Task OpenFolder()
@@ -255,7 +314,7 @@ public class HomeViewModel : NotificationObject
         var path = await folderPicker.PickFolderAsync();
         if (path != null)
         {
-            TimelineItems = new ObservableCollection<TimelineItemDTO>(file.LoadImagesFromFolder(path, isAllFoldersRecursive: false, extensions: ".jpg"));
+            TimelineItems = new ObservableCollection<TimelineItemDTO>(file.LoadImagesFromFolder(path, isAllFoldersRecursive: false, extensions: [".jpg", /*".png"*/]));
 
             if (TimelineItems.Count > 0)
             {
@@ -268,6 +327,41 @@ public class HomeViewModel : NotificationObject
     {
         ResetZoom();
         TargetRotationAngle = 0;
+    }
+
+    void OnImageOpened()
+    {
+        CalculateFitToViewport();
+    }
+
+    void CalculateFitToViewport()
+    {
+        if (ViewportWidth <= 0 || ViewportHeight <= 0 || ImageWidth <= 0 || ImageHeight <= 0)
+            return;
+
+        double imgW = Math.Max(1, ImageWidth);
+        double imgH = Math.Max(1, ImageHeight);
+
+        var angle = TargetRotationAngle % 360;
+        if (angle < 0)
+            angle += 360;
+
+        bool swap = angle == 90 || angle == 270;
+        if (swap)
+        {
+            var t = imgW;
+            imgW = imgH;
+            imgH = t;
+        }
+
+        double vpW = ViewportWidth;
+        double vpH = ViewportHeight;
+
+        var scale = Math.Min(vpW / imgW, vpH / imgH);
+        scale = Math.Clamp(scale, SettingsManager.MinZoom, SettingsManager.MaxZoom);
+
+        ZoomFactor = (float)scale;
+        ShouldFitToViewport = true;
     }
     #endregion
 }

@@ -14,7 +14,7 @@ public static class SettingsManager
     #endregion
 
     #region Image settings
-    public const float MinZoom = 0.5f;
+    public const float MinZoom = 0.1f;
     public const float MaxZoom = 8.0f;
     public const float ZoomStep = 1.25f;
     #endregion

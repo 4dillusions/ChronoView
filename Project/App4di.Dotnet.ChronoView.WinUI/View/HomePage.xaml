@@ -20,27 +20,16 @@
                 </Grid.RowDefinitions>
                 
                 <!-- Image -->
-                <ScrollViewer x:Name="ImageScroller"
-                      Grid.Row="0"
-                      ZoomMode="Enabled"
-                      MinZoomFactor="0.5"
-                      MaxZoomFactor="8"
-                      HorizontalScrollMode="Auto"
-                      VerticalScrollMode="Auto"
-                      HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto">
+                <ScrollViewer x:Name="ImageScroller" Grid.Row="0" ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8" HorizontalScrollMode="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ImageScroller_SizeChanged">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Image x:Name="ImageView"
-                           Stretch="Uniform"
-                           RenderTransformOrigin="0.5,0.5"
-                           Source="{x:Bind ViewModel.SelectedImageItem.ImagePath, Mode=OneWay}">
+                        <Image x:Name="ImageView" Stretch="Uniform" RenderTransformOrigin="0.5,0.5" Source="{x:Bind ViewModel.SelectedImageItem.ImagePath, Mode=OneWay}" SizeChanged="ImageView_SizeChanged"> 
                             <Image.RenderTransform>
                                 <RotateTransform x:Name="ImgRotate" Angle="0"/>
                             </Image.RenderTransform>
                         </Image>
                     </Grid>
                 </ScrollViewer>
-                
+
                 <!-- Menu -->
                 <CommandBar Grid.Row="1" DefaultLabelPosition="Right" IsSticky="True">
                     <AppBarSeparator/>

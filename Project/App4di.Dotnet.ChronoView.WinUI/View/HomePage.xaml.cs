@@ -27,32 +27,11 @@ public sealed partial class HomePage : Page
         DataContext = ViewModel;
 
         Loaded += OnPageLoaded;
-
-        ViewModel.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(ViewModel.ZoomFactor))
-            {
-                ImageScroller?.ChangeView(
-                    ImageScroller.HorizontalOffset,
-                    ImageScroller.VerticalOffset,
-                    ViewModel.ZoomFactor
-                );
-            }
-            else if (e.PropertyName == nameof(ViewModel.TargetRotationAngle))
-            {
-                AnimateRotation();
-            }
-            else if (e.PropertyName == nameof(ViewModel.TimelineItems))
-            {
-                SyncTimelineItems();
-            }
-        };
+        ViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
         slideshowTimer = new DispatcherTimer();
         slideshowTimer.Interval = TimeSpan.FromSeconds(2);
         slideshowTimer.Tick += SlideshowTimer_Tick;
-        
-        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
     }
 
     private void OnPageLoaded(object sender, RoutedEventArgs e)
@@ -82,6 +61,71 @@ public sealed partial class HomePage : Page
         }
     }
 
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ViewModel.ZoomFactor))
+        {
+            ImageScroller?.ChangeView(ImageScroller.HorizontalOffset, ImageScroller.VerticalOffset, ViewModel.ZoomFactor, disableAnimation: false);
+        }
+        else if (e.PropertyName == nameof(ViewModel.TargetRotationAngle))
+        {
+            AnimateRotation();
+        }
+        else if (e.PropertyName == nameof(ViewModel.TimelineItems))
+        {
+            SyncTimelineItems();
+        }
+        else if (e.PropertyName == nameof(ViewModel.IsAutoPlay))
+        {
+            HandleAutoPlayChanged();
+        }
+        else if (e.PropertyName == nameof(ViewModel.SelectedImageItem))
+        {
+            HandleSelectedImageChanged();
+        }
+        else if (e.PropertyName == nameof(ViewModel.ShouldFitToViewport))
+        {
+            if (ViewModel.ShouldFitToViewport && ImageScroller != null)
+            {
+                ImageScroller.ChangeView(0, 0, ViewModel.ZoomFactor, disableAnimation: false);
+                ViewModel.ShouldFitToViewport = false;
+            }
+        }
+    }
+
+    private void HandleAutoPlayChanged()
+    {
+        if (ViewModel.IsAutoPlay)
+        {
+            if (ViewModel.SelectedIndex < 0 && ViewModel.TimelineItems?.Count > 0)
+                ViewModel.SelectedIndex = 0;
+
+            slideshowTimer.Start();
+        }
+        else
+        {
+            slideshowTimer.Stop();
+        }
+    }
+
+    private void HandleSelectedImageChanged()
+    {
+        if (Timeline?.ViewModel != null)
+        {
+            Timeline.ViewModel.SelectedTimeLineItem = ViewModel.SelectedImageItem;
+
+            if (ViewModel.SelectedImageItem is not null)
+            {
+                var pos = Timeline.ViewModel.CalculateMarkerPosition(ViewModel.SelectedImageItem.Timestamp);
+                if (Timeline.FindName("TimelineScroller") is ScrollViewer sc)
+                {
+                    var target = Math.Max(0, pos - sc.ViewportWidth / 2.0);
+                    sc.ChangeView(target, null, null, disableAnimation: false);
+                }
+            }
+        }
+    }
+
     private void AnimateRotation()
     {
         if (ImgRotate == null)
@@ -103,41 +147,6 @@ public sealed partial class HomePage : Page
         storyboard.Begin();
     }
 
-    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(ViewModel.IsAutoPlay))
-        {
-            if (ViewModel.IsAutoPlay)
-            {
-                if (ViewModel.SelectedIndex < 0 && ViewModel.TimelineItems?.Count > 0)
-                    ViewModel.SelectedIndex = 0;
-
-                slideshowTimer.Start();
-            }
-            else
-            {
-                slideshowTimer.Stop();
-            }
-        }
-        else if (e.PropertyName == nameof(ViewModel.SelectedImageItem))
-        {
-            if (Timeline?.ViewModel != null)
-            {
-                Timeline.ViewModel.SelectedTimeLineItem = ViewModel.SelectedImageItem;
-
-                if (ViewModel.SelectedImageItem is not null)
-                {
-                    var pos = Timeline.ViewModel.CalculateMarkerPosition(ViewModel.SelectedImageItem.Timestamp);
-                    if (Timeline.FindName("TimelineScroller") is ScrollViewer sc)
-                    {
-                        var target = Math.Max(0, pos - sc.ViewportWidth / 2.0);
-                        sc.ChangeView(target, null, null);
-                    }
-                }
-            }
-        }
-    }
-
     private void SlideshowTimer_Tick(object? sender, object e)
     {
         if (ViewModel.TimelineItems == null || ViewModel.TimelineItems.Count == 0)
@@ -153,5 +162,23 @@ public sealed partial class HomePage : Page
     {
         slideshowTimer.Stop();
         base.OnNavigatedFrom(e);
+    }
+
+    private void ImageScroller_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (ImageScroller != null)
+        {
+            ViewModel.ViewportWidth = ImageScroller.ViewportWidth;
+            ViewModel.ViewportHeight = ImageScroller.ViewportHeight;
+        }
+    }
+
+    private void ImageView_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (ImageView?.Source is Microsoft.UI.Xaml.Media.Imaging.BitmapImage bmp)
+        {
+            ViewModel.ImageWidth = bmp.PixelWidth > 0 ? bmp.PixelWidth : ImageView.ActualWidth;
+            ViewModel.ImageHeight = bmp.PixelHeight > 0 ? bmp.PixelHeight : ImageView.ActualHeight;
+        }
     }
 }
