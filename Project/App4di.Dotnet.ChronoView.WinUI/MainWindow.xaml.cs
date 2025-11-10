@@ -48,8 +48,7 @@ public sealed partial class MainWindow : Window
             Type page = tag switch
             {
                 "home" => typeof(View.HomePage),
-                "tech" => typeof(View.TechnologyPage),
-                "contact" => typeof(View.ContactPage),
+                "settings" => typeof(View.SettingsPage),
                 "about" => typeof(View.AboutPage),
                 _ => typeof(View.HomePage)
             };

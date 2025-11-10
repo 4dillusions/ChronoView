@@ -21,8 +21,7 @@
                          SelectionChanged="NavigationView_SelectionChanged">
         <muxc:NavigationView.MenuItems>
             <muxc:NavigationViewItem Content="Chrono View" Icon="Home" Tag="home" IsSelected="True"/>
-            <muxc:NavigationViewItem Content="Technology" Icon="Library" Tag="tech"/>
-            <muxc:NavigationViewItem Content="Contact" Icon="Mail" Tag="contact"/>
+            <muxc:NavigationViewItem Content="Settings" Icon="Setting" Tag="settings"/>
             <muxc:NavigationViewItem Content="About" Icon="Important" Tag="about"/>
         </muxc:NavigationView.MenuItems>
 
