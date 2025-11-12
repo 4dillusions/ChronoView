@@ -6,7 +6,6 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
-using App4di.Dotnet.ChronoView.WinUI.Service;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -18,12 +17,15 @@ namespace App4di.Dotnet.ChronoView.WinUI.View;
 public sealed partial class HomePage : Page
 {
     public HomeViewModel ViewModel { get; }
+
     private readonly DispatcherTimer slideshowTimer;
 
-    public HomePage()
+    public HomePage(HomeViewModel viewModel)
     {
         InitializeComponent();
-        ViewModel = new HomeViewModel(new FolderPickerService(), new Infrastructure.Service.FileService());
+
+        ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+
         DataContext = ViewModel;
 
         Loaded += OnPageLoaded;

@@ -5,21 +5,24 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using FW4di.Dotnet.MVVM.Service;
+using Microsoft.UI.Xaml;
 using System;
 using System.Threading.Tasks;
 using WinRT.Interop;
 
 namespace App4di.Dotnet.ChronoView.WinUI.Service;
 
-public sealed class FolderPickerService : IFolderPickerService
+public sealed class FolderPickerService(MainWindow mainWindow) : IFolderPickerService
 {
+    Window mainWindow = mainWindow ?? throw new ArgumentNullException(nameof(mainWindow));
+
     public async Task<string?> PickFolderAsync()
     {
         var picker = new Windows.Storage.Pickers.FolderPicker();
         picker.FileTypeFilter.Add("*");
 
-        ArgumentNullException.ThrowIfNull(App.MainWindow);
-        var hwnd = WindowNative.GetWindowHandle(App.MainWindow);
+        ArgumentNullException.ThrowIfNull(mainWindow);
+        var hwnd = WindowNative.GetWindowHandle(mainWindow);
         InitializeWithWindow.Initialize(picker, hwnd);
 
         var folder = await picker.PickSingleFolderAsync();

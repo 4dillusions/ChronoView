@@ -5,6 +5,8 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using App4di.Dotnet.ChronoView.Infrastructure.Helper;
+using App4di.Dotnet.ChronoView.WinUI.Service;
+using App4di.Dotnet.ChronoView.WinUI.View;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
@@ -15,7 +17,9 @@ namespace App4di.Dotnet.ChronoView.WinUI;
 
 public sealed partial class MainWindow : Window
 {
-    public MainWindow()
+    INavigationService navigationService;
+
+    public MainWindow(INavigationService navigationService)
     {
         InitializeComponent();
 
@@ -37,8 +41,9 @@ public sealed partial class MainWindow : Window
             p.PreferredMinimumHeight = height;
         }
 
-        ContentFrame.CacheSize = 10; //maximum save stated pages
-        ContentFrame.Navigate(typeof(View.HomePage));
+        this.navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
+        navigationService.Nav = ContentFrame;
+        navigationService.Nav.CacheSize = 10;
     }
 
     private void NavigationView_SelectionChanged(Muxc.NavigationView sender, Muxc.NavigationViewSelectionChangedEventArgs args)
@@ -47,14 +52,19 @@ public sealed partial class MainWindow : Window
         {
             Type page = tag switch
             {
-                "home" => typeof(View.HomePage),
-                "settings" => typeof(View.SettingsPage),
-                "about" => typeof(View.AboutPage),
-                _ => typeof(View.HomePage)
+                "home" => typeof(HomePage),
+                "settings" => typeof(SettingsPage),
+                "about" => typeof(AboutPage),
+                _ => typeof(HomePage)
             };
 
-            if (ContentFrame.CurrentSourcePageType != page)
-                ContentFrame.Navigate(page);
+            if (navigationService.Nav.CurrentSourcePageType != page)
+            {
+                var method = typeof(NavigationService).GetMethod("NavigateTo");
+                var generic = method?.MakeGenericMethod(page);
+
+                generic?.Invoke(navigationService, null);
+            }
         }
     }
 }
