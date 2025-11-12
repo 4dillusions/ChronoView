@@ -29,6 +29,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <!--<ColumnDefinition Width="100"/>-->
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="{Binding ViewModel.StartDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
@@ -38,6 +39,10 @@
             </StackPanel>
 
             <TextBlock Grid.Column="2" Text="{Binding ViewModel.EndDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
+
+            <!--<Button x:Name="CollapseButton" Grid.Column="3" HorizontalAlignment="Right" Margin="8,4,8,0" Background="Transparent" BorderThickness="0" Height="10" MaxWidth="50">
+                <FontIcon x:Name="CollapseIcon" Glyph="&#xE70D;" FontSize="16" />
+            </Button>-->
         </Grid>
 
         <!-- Timeline -->
