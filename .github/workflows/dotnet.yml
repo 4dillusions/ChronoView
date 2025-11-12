@@ -1,0 +1,81 @@
+name: ChronoView CI
+
+on:
+  push:
+    branches: [ "main", "V1" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # --- 1) WINDOWS ONLY: WinUI/Windows solution ---
+  windows-build:
+    name: Windows build (WinUI solution)
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    env:
+      DOTNET_VERSION: 9.0.x
+      SOLUTION_PATH: Project/App4di.Dotnet.ChronoView.Windows.sln
+      WINUI_PROJ: Project/App4di.Dotnet.ChronoView.WinUI/App4di.Dotnet.ChronoView.WinUI.csproj
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore (no R2R)
+        run: dotnet restore "${{ env.SOLUTION_PATH }}" -p:PublishReadyToRun=false -p:PublishProfile=
+
+      - name: Build (${{ matrix.configuration }}) (no R2R)
+        run: dotnet build "${{ env.SOLUTION_PATH }}" --configuration ${{ matrix.configuration }} --no-restore -p:ContinuousIntegrationBuild=true -p:PublishReadyToRun=false -p:PublishProfile=
+
+      # --- only release win-x64, R2R ---
+      - name: Publish (Release, win-x64, R2R)
+        if: matrix.configuration == 'Release'
+        run: |
+          dotnet restore "${{ env.WINUI_PROJ }}" -r win-x64 -p:IsPublish=true -p:PublishReadyToRun=true
+          dotnet publish "${{ env.WINUI_PROJ }}" -c Release -r win-x64 --no-restore -p:IsPublish=true -p:PublishReadyToRun=true -p:SelfContained=false
+
+      # Optional: upload artifacts
+      - name: Upload published artifacts
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChronoView-win-x64
+          path: Project/App4di.Dotnet.ChronoView.WinUI/bin/x64/Release/net9.0-windows10.0.19041.0/win-x64/publish/**
+
+  # --- 2) MAC + LINUX: Core/portable solution ---
+  cross-build:
+    name: Cross-platform build (Core solution)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        configuration: [Debug, Release]
+    env:
+      DOTNET_VERSION: 9.0.x
+      SOLUTION_PATH: Project/App4di.Dotnet.ChronoView.sln
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore "${{ env.SOLUTION_PATH }}"
+
+      - name: Build (${{ matrix.configuration }})
+        run: dotnet build "${{ env.SOLUTION_PATH }}" --configuration ${{ matrix.configuration }} --no-restore -p:ContinuousIntegrationBuild=true

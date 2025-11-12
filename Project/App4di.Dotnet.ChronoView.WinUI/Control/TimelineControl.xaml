@@ -1,0 +1,65 @@
+<UserControl
+    x:Class="App4di.Dotnet.ChronoView.WinUI.Control.TimelineControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:App4di.Dotnet.ChronoView.WinUI.Control"
+    x:Name="Root"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style TargetType="local:TimelineControl">
+            <Setter Property="MarkerBrush" Value="{ThemeResource Timeline.MarkerBrush}"/>
+            <Setter Property="HoverBrush" Value="{ThemeResource Timeline.HoverBrush}"/>
+            <Setter Property="SelectedBrush" Value="{ThemeResource Timeline.SelectedBrush}"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Dates and Selected Item Info -->
+        <Grid Grid.Row="0" Margin="0,4,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <!--<ColumnDefinition Width="100"/>-->
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding ViewModel.StartDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding ViewModel.SelectedImage, ElementName=Root}"/>
+            </StackPanel>
+
+            <TextBlock Grid.Column="2" Text="{Binding ViewModel.EndDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
+
+            <!--<Button x:Name="CollapseButton" Grid.Column="3" HorizontalAlignment="Right" Margin="8,4,8,0" Background="Transparent" BorderThickness="0" Height="10" MaxWidth="50">
+                <FontIcon x:Name="CollapseIcon" Glyph="&#xE70D;" FontSize="16" />
+            </Button>-->
+        </Grid>
+
+        <!-- Timeline -->
+        <Border Grid.Row="1" Background="{ThemeResource App.SurfaceBrush}" BorderBrush="{ThemeResource App.SurfaceBorderBrush}" BorderThickness="1" CornerRadius="8">
+            <ScrollViewer x:Name="TimelineScroller"  HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Disabled">
+                <Grid x:Name="TimelineContentGrid" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" HorizontalAlignment="Left">
+                    <Canvas x:Name="TimelineCanvas" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" Background="Transparent" HorizontalAlignment="Left"/>
+                    <Canvas x:Name="MarkerCanvas" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" Background="Transparent" HorizontalAlignment="Left"/>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Command Bar -->
+        <CommandBar Grid.Row="2" DefaultLabelPosition="Right" HorizontalAlignment="Center" IsSticky="True">
+            <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
+            <AppBarButton Icon="ZoomIn" Label="Zoom in" Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
+            <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
+        </CommandBar>
+    </Grid>
+</UserControl>

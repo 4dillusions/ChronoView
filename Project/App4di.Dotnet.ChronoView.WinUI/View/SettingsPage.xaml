@@ -1,0 +1,70 @@
+<Page
+    x:Class="App4di.Dotnet.ChronoView.WinUI.View.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Padding="20">
+        <ScrollViewer>
+            <StackPanel>
+                <Border Style="{StaticResource CardStyle}" Height="210" Width="600">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="⚙️" Style="{StaticResource CardIconStyle}"/>
+
+                        <StackPanel Grid.Column="1" Spacing="8">
+                            <TextBlock Text="Settings" Style="{StaticResource HeadlineTextStyle}"/>
+
+                            <TextBlock Style="{StaticResource SubtleTextStyle}"
+                           Text="Customize ChronoView to fit your workflow. Configure window size and layout, select theme styles, set image format preferences, adjust timeline behavior, and fine-tune the viewing experience."/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="📝" Style="{StaticResource CardIconStyle}"/>
+                        
+                        <TextBlock Text="Form elements" Style="{StaticResource HeadlineTextStyle}"/>
+
+                        <TextBox PlaceholderText="Your name" />
+                        <PasswordBox PlaceholderText="Password" />
+                        <ComboBox PlaceholderText="Choose platform">
+                            <ComboBoxItem Content="Windows"/>
+                            <ComboBoxItem Content="Linux"/>
+                            <ComboBoxItem Content="macOS"/>
+                            <ComboBoxItem Content="Android"/>
+                        </ComboBox>
+
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <CheckBox Content="I agree" IsChecked="True"/>
+                            <RadioButton Content="Option A" GroupName="demo" IsChecked="True"/>
+                            <RadioButton Content="Option B" GroupName="demo"/>
+                            <ToggleSwitch/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Content="Primary action"/>
+                            <Button Content="Secondary" />
+                            <HyperlinkButton Content="Learn more"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}" Height="210">
+                </Border>
+
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="0, 0, 12, 0" HorizontalAlignment="Right">
+                    <Button Content="Save" />
+                </StackPanel>
+                
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Style="{StaticResource SubtleTextStyle}" Text="© 2025 4D Illusions"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
