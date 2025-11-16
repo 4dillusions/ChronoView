@@ -111,6 +111,7 @@ public class HomeViewModel : NotificationObject
                 {
                     if (selectedIndex < 0)
                         selectedIndex = 0;
+
                     if (selectedIndex > TimelineItems.Count - 1)
                         selectedIndex = TimelineItems.Count - 1;
 

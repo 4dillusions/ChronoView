@@ -6,10 +6,8 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 namespace App4di.Dotnet.ChronoView.Infrastructure.DTO;
 
-public class TimelineItemDTO
+public enum LanguageType
 {
-    public DateTime Timestamp { get; set; }
-    public string ImageName { get; set; }
-    public string ImagePath { get; set; }
-    public string ThumbnailPath { get; set; }
+    EN,
+    HU,
 }

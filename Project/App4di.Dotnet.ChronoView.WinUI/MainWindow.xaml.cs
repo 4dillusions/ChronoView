@@ -25,8 +25,8 @@ public sealed partial class MainWindow : Window
 
         var appWindow = this.AppWindow;
 
-        const int width = SettingsManager.MinWidth;
-        const int height = SettingsManager.MinHeight;
+        int width = SettingsManager.MinWidth;
+        int height = SettingsManager.MinHeight;
 
         var displayArea = DisplayArea.GetFromWindowId(appWindow.Id, DisplayAreaFallback.Primary);
         var workArea = displayArea.WorkArea;
