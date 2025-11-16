@@ -17,7 +17,7 @@ public static class SettingsManager
     {
         settings = new SettingsDTO()
         {
-            Theme = ThemeType.Light,
+            Theme = ThemeType.Dark,
             Language = LanguageType.EN,
 
             MinWidth = 1280,

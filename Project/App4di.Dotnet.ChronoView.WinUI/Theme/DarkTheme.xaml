@@ -7,20 +7,20 @@
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
-            <SolidColorBrush x:Key="App.AccentBrush" Color="#0063B1"/>
-            <SolidColorBrush x:Key="App.AccentBrush.Darker" Color="#005A9E"/>
-            <SolidColorBrush x:Key="App.BackgroundBrush" Color="#F3F3F3"/>
+            <SolidColorBrush x:Key="App.AccentBrush" Color="#0067C0"/>
+            <SolidColorBrush x:Key="App.AccentBrush.Darker" Color="#0055A1"/>
+            <SolidColorBrush x:Key="App.BackgroundBrush" Color="#FAFAFA"/>
             <SolidColorBrush x:Key="App.SurfaceBrush" Color="#FFFFFF"/>
-            
-            <SolidColorBrush x:Key="App.SurfaceBorderBrush" Color="#E0E0E0"/>
-            <SolidColorBrush x:Key="App.OnSurfaceBrush" Color="#1A1A1A"/>
-            <SolidColorBrush x:Key="App.SubtleTextBrush" Color="#5C5C5C"/>
-            <SolidColorBrush x:Key="App.NavBackgroundBrush" Color="#202225"/>
-            <SolidColorBrush x:Key="App.NavForegroundBrush" Color="#FFFFFF"/>
 
-            <SolidColorBrush x:Key="Timeline.MarkerBrush" Color="DodgerBlue"/>
-            <SolidColorBrush x:Key="Timeline.HoverBrush" Color="Black"/>
-            <SolidColorBrush x:Key="Timeline.SelectedBrush" Color="White"/>
+            <SolidColorBrush x:Key="App.SurfaceBorderBrush" Color="#D9D9D9"/>
+            <SolidColorBrush x:Key="App.OnSurfaceBrush" Color="#000000"/>
+            <SolidColorBrush x:Key="App.SubtleTextBrush" Color="#6E6E6E"/>
+            <SolidColorBrush x:Key="App.NavBackgroundBrush" Color="#EDEDED"/>
+            <SolidColorBrush x:Key="App.NavForegroundBrush" Color="#1A1A1A"/>
+
+            <SolidColorBrush x:Key="Timeline.MarkerBrush" Color="#0078D7"/>
+            <SolidColorBrush x:Key="Timeline.HoverBrush" Color="DarkGray"/>
+            <SolidColorBrush x:Key="Timeline.SelectedBrush" Color="#333333"/>
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
