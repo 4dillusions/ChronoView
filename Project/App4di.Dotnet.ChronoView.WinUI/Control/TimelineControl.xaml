@@ -18,7 +18,7 @@
 
     <Grid x:Name="RootGrid" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -29,7 +29,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
-                <!--<ColumnDefinition Width="100"/>-->
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="{Binding ViewModel.StartDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
@@ -40,9 +40,9 @@
 
             <TextBlock Grid.Column="2" Text="{Binding ViewModel.EndDateText, ElementName=Root}" Foreground="{ThemeResource App.SubtleTextBrush}" VerticalAlignment="Center"/>
 
-            <!--<Button x:Name="CollapseButton" Grid.Column="3" HorizontalAlignment="Right" Margin="8,4,8,0" Background="Transparent" BorderThickness="0" Height="10" MaxWidth="50">
-                <FontIcon x:Name="CollapseIcon" Glyph="&#xE70D;" FontSize="16" />
-            </Button>-->
+            <Button x:Name="CollapseButton" Grid.Column="3" Width="30" Height="24" MinWidth="0" Padding="0" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" Command="{Binding ViewModel.CollapseExpandCommand, ElementName=Root}">
+                <FontIcon x:Name="CollapseIcon" Glyph="{Binding ViewModel.CollapseExpandGlyph, ElementName=Root}" FontSize="15"/>
+            </Button>
         </Grid>
 
         <!-- Timeline -->

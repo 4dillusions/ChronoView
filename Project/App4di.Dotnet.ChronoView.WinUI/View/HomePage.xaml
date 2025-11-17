@@ -4,11 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:Controls="using:App4di.Dotnet.ChronoView.WinUI.Control"
     xmlns:viewmodel="using:App4di.Dotnet.ChronoView.Infrastructure.ViewModel"
+    xmlns:conv="using:App4di.Dotnet.ChronoView.WinUI.Converter"
     NavigationCacheMode="Required">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="200" />
+            <RowDefinition Height="{x:Bind ViewModel.TimelineRowHeight, Mode=OneWay, Converter={StaticResource IntToGridLengthConverter}}"/>
         </Grid.RowDefinitions>
         
         <!-- Image view -->
@@ -58,12 +59,7 @@
         </Border>
         
         <!-- Timeline view -->
-        <Border Grid.Row="1" 
-         Margin="8" 
-         CornerRadius="12" 
-         Background="{ThemeResource App.SurfaceBrush}"
-         BorderBrush="{ThemeResource App.SurfaceBorderBrush}"
-         BorderThickness="1">
+        <Border Grid.Row="1"  Margin="8" CornerRadius="12" Background="{ThemeResource App.SurfaceBrush}" BorderBrush="{ThemeResource App.SurfaceBorderBrush}" BorderThickness="1">
             <Controls:TimelineControl x:Name="Timeline" Margin="8" IsLocked="{x:Bind ViewModel.IsAutoPlay, Mode=OneWay}"/>
         </Border>
     </Grid>

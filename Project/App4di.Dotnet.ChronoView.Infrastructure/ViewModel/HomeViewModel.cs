@@ -28,6 +28,7 @@ public class HomeViewModel : NotificationObject
     #endregion
 
     #region Fields
+    int timelineRowHeight = 200;
     float zoomFactor = 1.0f;
     double currentRotationAngle = 0;
     double targetRotationAngle = 0;
@@ -44,6 +45,12 @@ public class HomeViewModel : NotificationObject
     private readonly IFolderPickerService folderPicker;
     private readonly FileService file;
 
+    public int TimelineRowHeight
+    {
+        get => timelineRowHeight;
+        set => SetProperty(ref timelineRowHeight, value);
+    }
+    
     public float ZoomFactor
     {
         get => zoomFactor;

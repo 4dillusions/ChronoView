@@ -42,6 +42,7 @@ public sealed partial class HomePage : Page
         {
             SyncTimelineItems();
             Timeline.ViewModel.SelectedItemChanged += OnTimelineSelectionChanged;
+            Timeline.ViewModel.PropertyChanged += OnTimelineViewModelPropertyChanged;
         }
     }
 
@@ -61,6 +62,19 @@ public sealed partial class HomePage : Page
         {
             ViewModel.SelectedImageItem = selectedItem;
         }
+    }
+
+    private void OnTimelineViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Timeline.ViewModel.IsCollapsed))
+        {
+            HandleIsCollapsedChanged();
+        }
+    }
+
+    private void HandleIsCollapsedChanged()
+    {
+        ViewModel.TimelineRowHeight = Timeline.ViewModel.IsCollapsed ? 60 : 200;
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

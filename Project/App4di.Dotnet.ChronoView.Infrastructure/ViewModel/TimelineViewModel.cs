@@ -5,6 +5,7 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
+using App4di.Dotnet.ChronoView.Infrastructure.Helper;
 using FW4di.Dotnet.MVVM;
 using System.Collections.ObjectModel;
 
@@ -22,6 +23,7 @@ public class TimelineViewModel : NotificationObject
     public ICommand ZoomInCommand { get; }
     public ICommand ZoomOutCommand { get; }
     public ICommand ResetZoomCommand { get; }
+    public ICommand CollapseExpandCommand { get; }
     #endregion
 
     #region Fields
@@ -106,6 +108,18 @@ public class TimelineViewModel : NotificationObject
         }
     }
 
+    public string CollapseExpandGlyph => IsCollapsed ? "\uE70E" : "\uE70D";
+    public bool IsCollapsed
+    {
+        get => SettingsManager.IsTimelineCollapsed;
+        
+        set
+        {
+            SettingsManager.IsTimelineCollapsed = value;
+            RaisePropertyChanged(nameof(IsCollapsed), nameof(CollapseExpandGlyph));
+        }
+    }
+
     public double MinPixelsPerSecond
     {
         get => minPixelsPerSecond;
@@ -186,7 +200,7 @@ public class TimelineViewModel : NotificationObject
     }
     #endregion
 
-    #region Constructor
+    #region CTor
     public TimelineViewModel()
     {
         MinPixelsPerSecond = 0.001;
@@ -197,6 +211,7 @@ public class TimelineViewModel : NotificationObject
         ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
         ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
         ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !isLocked && selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.0000001);
+        CollapseExpandCommand = new RelayCommand(_ => CollapseExpand(), _ => true);
 
         Items.CollectionChanged += (s, e) => OnItemsChanged();
     }
@@ -223,6 +238,11 @@ public class TimelineViewModel : NotificationObject
     private void ResetZoom()
     {
         PixelsPerSecond = DefaultPixelsPerSecond;
+    }
+
+    private void CollapseExpand()
+    {
+        IsCollapsed = !IsCollapsed;
     }
 
     private void OnItemsChanged()

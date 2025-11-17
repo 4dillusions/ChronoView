@@ -12,6 +12,7 @@ namespace App4di.Dotnet.ChronoView.Infrastructure.Helper;
 public static class SettingsManager
 {
     static SettingsDTO settings;
+    static readonly string configFileFullName;
 
     static void InitSettings()
     {
@@ -32,11 +33,16 @@ public static class SettingsManager
         };
     }
 
+    public static void SaveSettings()
+    {
+        XmlHelper.SerializeToFile(settings, configFileFullName);
+    }
+
     static SettingsManager()
     {
         var rootPath = AppContext.BaseDirectory;
         var configFolderPath = Path.Combine(rootPath, "Content");
-        var configFileFullName = Path.Combine(configFolderPath, "Config.xml");
+        configFileFullName = Path.Combine(configFolderPath, "Config.xml");
 
         if (!Directory.Exists(configFolderPath))
             Directory.CreateDirectory(configFolderPath);
@@ -48,7 +54,7 @@ public static class SettingsManager
         else
         {
             InitSettings();
-            XmlHelper.SerializeToFile(settings, configFileFullName);
+            SaveSettings();
         }
     }
 
