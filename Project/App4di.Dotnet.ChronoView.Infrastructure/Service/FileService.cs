@@ -8,7 +8,7 @@ using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 
 namespace App4di.Dotnet.ChronoView.Infrastructure.Service;
 
-public class FileService
+public class FileService : IFileService
 {
     public List<TimelineItemDTO> LoadImagesFromFolder(string folderPath, bool isAllFoldersRecursive, params string[] extensions)
     {

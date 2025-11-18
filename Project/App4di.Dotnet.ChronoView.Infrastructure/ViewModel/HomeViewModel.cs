@@ -5,7 +5,6 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
-using App4di.Dotnet.ChronoView.Infrastructure.Helper;
 using App4di.Dotnet.ChronoView.Infrastructure.Service;
 using FW4di.Dotnet.MVVM;
 using FW4di.Dotnet.MVVM.Service;
@@ -43,7 +42,8 @@ public class HomeViewModel : NotificationObject
     private bool shouldFitToViewport;
 
     private readonly IFolderPickerService folderPicker;
-    private readonly FileService file;
+    private readonly IFileService file;
+    private readonly ISettingsService settings;
 
     public int TimelineRowHeight
     {
@@ -222,16 +222,17 @@ public class HomeViewModel : NotificationObject
     #endregion
 
     #region CTor
-    public HomeViewModel(IFolderPickerService folderPicker, FileService file)
+    public HomeViewModel(IFolderPickerService folderPicker, IFileService file, ISettingsService settings)
     {
         this.folderPicker = folderPicker ?? throw new ArgumentNullException(nameof(folderPicker));
         this.file = file ?? throw new ArgumentNullException(nameof(file));
+        this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
         BackCommand = new RelayCommand(_ => Back(), _ => IsBackCanExecute);
         NextCommand = new RelayCommand(_ => Next(), _ => IsNextCanExecute);
         PlayPauseCommand = new RelayCommand(_ => PlayPause(), _ => IsPlayPauseCanExecute);
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => selectedImageItem != null && ZoomFactor < SettingsManager.MaxZoom && !IsAutoPlay);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => selectedImageItem != null && ZoomFactor > SettingsManager.MinZoom && !IsAutoPlay);
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => selectedImageItem != null && ZoomFactor < settings.MaxZoom && !IsAutoPlay);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => selectedImageItem != null && ZoomFactor > settings.MinZoom && !IsAutoPlay);
         ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => selectedImageItem != null && ZoomFactor != 1.0f && !IsAutoPlay);
         RotateCommand = new RelayCommand(_ => Rotate(), _ => selectedImageItem != null && !IsAutoPlay);
         OpenFolderCommand = new RelayCommand(_ => OpenFolder(), _ => !IsAutoPlay);
@@ -294,12 +295,12 @@ public class HomeViewModel : NotificationObject
 
     void ZoomIn()
     {
-        ZoomFactor = Math.Min(ZoomFactor * SettingsManager.ZoomStep, SettingsManager.MaxZoom);
+        ZoomFactor = Math.Min(ZoomFactor * settings.ZoomStep, settings.MaxZoom);
     }
 
     void ZoomOut()
     {
-        ZoomFactor = Math.Max(ZoomFactor / SettingsManager.ZoomStep, SettingsManager.MinZoom);
+        ZoomFactor = Math.Max(ZoomFactor / settings.ZoomStep, settings.MinZoom);
     }
 
     void ResetZoom()
@@ -367,7 +368,7 @@ public class HomeViewModel : NotificationObject
         double vpH = ViewportHeight;
 
         var scale = Math.Min(vpW / imgW, vpH / imgH);
-        scale = Math.Clamp(scale, SettingsManager.MinZoom, SettingsManager.MaxZoom);
+        scale = Math.Clamp(scale, settings.MinZoom, settings.MaxZoom);
 
         ZoomFactor = (float)scale;
         ShouldFitToViewport = true;

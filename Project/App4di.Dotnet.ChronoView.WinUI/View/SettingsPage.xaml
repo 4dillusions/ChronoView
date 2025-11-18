@@ -57,9 +57,9 @@
                 <Border Style="{StaticResource CardStyle}" Height="210">
                 </Border>
 
-                <StackPanel Orientation="Horizontal" Spacing="12" Margin="0, 0, 12, 0" HorizontalAlignment="Right">
+                <!--<StackPanel Orientation="Horizontal" Spacing="12" Margin="0, 0, 12, 0" HorizontalAlignment="Right">
                     <Button Content="Save" />
-                </StackPanel>
+                </StackPanel>-->
                 
                 <StackPanel HorizontalAlignment="Center">
                     <TextBlock Style="{StaticResource SubtleTextStyle}" Text="© 2025 4D Illusions"/>

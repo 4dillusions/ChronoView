@@ -7,14 +7,24 @@ Released under the terms of the GNU General Public License version 3 or later.
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using FW4di.Dotnet.Core.IO;
 
-namespace App4di.Dotnet.ChronoView.Infrastructure.Helper;
+namespace App4di.Dotnet.ChronoView.Infrastructure.Service;
 
-public static class SettingsManager
+public class SettingsService : ISettingsService
 {
-    static SettingsDTO settings;
-    static readonly string configFileFullName;
+    #region Fields
+    private SettingsDTO settings;
+    private string configFileFullName;
+    #endregion
 
-    static void InitSettings()
+    #region CTor
+    public SettingsService()
+    {
+        CreateService();
+    }
+    #endregion
+
+    #region Functions
+    private void InitSettings()
     {
         settings = new SettingsDTO()
         {
@@ -33,12 +43,12 @@ public static class SettingsManager
         };
     }
 
-    public static void SaveSettings()
+    public void SaveSettings()
     {
         XmlHelper.SerializeToFile(settings, configFileFullName);
     }
 
-    static SettingsManager()
+    void CreateService()
     {
         var rootPath = AppContext.BaseDirectory;
         var configFolderPath = Path.Combine(rootPath, "Content");
@@ -57,86 +67,63 @@ public static class SettingsManager
             SaveSettings();
         }
     }
+    #endregion
 
-    #region AppSettings
-    public static string[] Languages => Enum.GetNames(typeof(LanguageType));
-    public static string Language
+    #region App Settings
+    public string[] Languages => Enum.GetNames(typeof(LanguageType));
+
+    public string Language
     {
         get => settings.Language.ToString();
-        
         set
         {
             if (Enum.TryParse<LanguageType>(value, out var lang))
-            {
                 settings.Language = lang;
-            }
         }
     }
 
-    public static string[] Themes => Enum.GetNames(typeof(ThemeType));
-    public static string Theme
+    public string[] Themes => Enum.GetNames(typeof(ThemeType));
+
+    public string Theme
     {
         get => settings.Theme.ToString();
-        
         set
         {
             if (Enum.TryParse<ThemeType>(value, out var theme))
-            {
                 settings.Theme = theme;
-            }
         }
     }
     #endregion
 
-    #region WindowSettings
-    public static int MinWidth
-    {
-        get => settings.MinWidth;
-    }
+    #region Window Settings
+    public int MinWidth => settings.MinWidth;
+    public int MinHeight => settings.MinHeight;
 
-    public static int MinHeight
-    {
-        get => settings.MinHeight;
-    }
-
-    public static bool IsTimelineCollapsed
+    public bool IsTimelineCollapsed
     {
         get => settings.IsTimelineCollapsed;
         set => settings.IsTimelineCollapsed = value;
     }
     #endregion
 
-    #region Image settings
-    public static float MinZoom 
-    { 
-        get => settings.MinZoom;
-    }
+    #region Image Settings
+    public float MinZoom => settings.MinZoom;
+    public float MaxZoom => settings.MaxZoom;
+    public float ZoomStep => settings.ZoomStep;
 
-    public static float MaxZoom
-    {         
-        get => settings.MaxZoom;
-    }
+    public string[] ImageFormats => Enum.GetNames(typeof(ImageFormatType));
 
-    public static float ZoomStep
-    {
-        get => settings.ZoomStep;
-    }
-
-    public static string[] ImageFormats => Enum.GetNames(typeof(ImageFormatType));
-    public static string ImageFormat
+    public string ImageFormat
     {
         get => settings.imageFormat.ToString();
-
         set
         {
             if (Enum.TryParse<ImageFormatType>(value, out var format))
-            {
                 settings.imageFormat = format;
-            }
         }
     }
 
-    public static bool IsRecursiveImageSearch
+    public bool IsRecursiveImageSearch
     {
         get => settings.IsRecursiveImageSearch;
         set => settings.IsRecursiveImageSearch = value;

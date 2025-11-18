@@ -96,12 +96,18 @@ public sealed partial class TimelineControl : UserControl
     #endregion
 
     #region Constructor
-    public TimelineControl()
+    public TimelineControl()//(TimelineViewModel vm)
     {
         InitializeComponent();
-        ViewModel = new TimelineViewModel();
-        DataContext = ViewModel;
+        //ViewModel = vm;
+        //DataContext = ViewModel;
         Loaded += TimelineControl_Loaded;
+    }
+
+    public void SetViewModel(TimelineViewModel vm)
+    {
+        ViewModel = vm;
+        DataContext = vm;
     }
     #endregion
 

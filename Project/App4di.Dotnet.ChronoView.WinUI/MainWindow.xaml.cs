@@ -4,7 +4,7 @@ Copyright (c) 2025 by 4D Illusions. All rights reserved.
 Released under the terms of the GNU General Public License version 3 or later.
 */
 
-using App4di.Dotnet.ChronoView.Infrastructure.Helper;
+using App4di.Dotnet.ChronoView.Infrastructure.Service;
 using App4di.Dotnet.ChronoView.WinUI.Service;
 using App4di.Dotnet.ChronoView.WinUI.View;
 using Microsoft.UI.Windowing;
@@ -17,16 +17,18 @@ namespace App4di.Dotnet.ChronoView.WinUI;
 
 public sealed partial class MainWindow : Window
 {
-    INavigationService navigationService;
+    private readonly INavigationService navigationService;
+    private readonly ISettingsService settings;
 
-    public MainWindow(INavigationService navigationService)
+    public MainWindow(INavigationService navigationService, ISettingsService settings)
     {
         InitializeComponent();
 
         var appWindow = this.AppWindow;
 
-        int width = SettingsManager.MinWidth;
-        int height = SettingsManager.MinHeight;
+        this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        int width = settings.MinWidth;
+        int height = settings.MinHeight;
 
         var displayArea = DisplayArea.GetFromWindowId(appWindow.Id, DisplayAreaFallback.Primary);
         var workArea = displayArea.WorkArea;
