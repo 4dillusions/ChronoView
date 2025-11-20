@@ -15,6 +15,8 @@
   <ItemGroup>
     <None Remove="Control\TimelineControl.xaml" />
     <None Remove="Theme\DarkTheme.xaml" />
+    <None Remove="Theme\LightTheme.xaml" />
+    <None Remove="Theme\Themes.xaml" />
     <None Remove="View\AboutPage.xaml" />
     <None Remove="View\HomePage.xaml" />
   </ItemGroup>
@@ -47,6 +49,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\App4di.Dotnet.ChronoView.Infrastructure\App4di.Dotnet.ChronoView.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Theme\Themes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Theme\LightTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\SettingsPage.xaml">
