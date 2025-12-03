@@ -23,9 +23,6 @@ namespace App4di.Dotnet.ChronoView.WinUI.Control;
 public sealed partial class TimelineControl : UserControl
 {
     #region Fields
-    private Canvas? markerCanvas;
-    private Canvas? timelineCanvas;
-    private Grid? contentGrid;
     private Line? selectedLine;
     #endregion
 
@@ -96,12 +93,9 @@ public sealed partial class TimelineControl : UserControl
     #endregion
 
     #region Constructor
-    public TimelineControl()//(TimelineViewModel vm)
+    public TimelineControl()
     {
         InitializeComponent();
-        //ViewModel = vm;
-        //DataContext = ViewModel;
-        Loaded += TimelineControl_Loaded;
     }
 
     public void SetViewModel(TimelineViewModel vm)
@@ -112,13 +106,6 @@ public sealed partial class TimelineControl : UserControl
     #endregion
 
     #region Event Handlers
-    private void TimelineControl_Loaded(object sender, RoutedEventArgs e)
-    {
-        contentGrid = FindChild<Grid>(this, "TimelineContentGrid");
-        timelineCanvas = FindChild<Canvas>(this, "TimelineCanvas");
-        markerCanvas = FindChild<Canvas>(this, "MarkerCanvas");
-    }
-
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not TimelineControl control)
@@ -151,15 +138,15 @@ public sealed partial class TimelineControl : UserControl
 
     #region Drawing Methods
     private TextBlock? FindLabelFor(object tag) =>
-        markerCanvas?.Children.OfType<TextBlock>()
+        MarkerCanvas.Children.OfType<TextBlock>()
             .FirstOrDefault(t => ReferenceEquals(t.Tag, tag));
 
     private Line? FindLineFor(object tag) =>
-        markerCanvas?.Children.OfType<Line>()
+        MarkerCanvas.Children.OfType<Line>()
             .FirstOrDefault(l => ReferenceEquals(l.Tag, tag));
 
     private Line? FindLineByTag(object? tag) =>
-        markerCanvas?.Children
+        MarkerCanvas.Children
             .OfType<Line>()
             .FirstOrDefault(l => ReferenceEquals(l.Tag, tag));
 
@@ -179,14 +166,13 @@ public sealed partial class TimelineControl : UserControl
 
     private void RedrawTimeline()
     {
-        if (contentGrid == null || markerCanvas == null || timelineCanvas == null ||
-            ViewModel?.Items == null || ViewModel.Items.Count == 0)
+        if (ViewModel?.Items == null || ViewModel.Items.Count == 0)
             return;
 
-        contentGrid.Width = ViewModel.TimelineWidth;
-        timelineCanvas.Width = ViewModel.TimelineWidth;
+        TimelineContentGrid.Width = ViewModel.TimelineWidth;
+        TimelineCanvas.Width = ViewModel.TimelineWidth;
 
-        markerCanvas.Children.Clear();
+        MarkerCanvas.Children.Clear();
         selectedLine = null;
 
         var sorted = ViewModel.Items.OrderBy(i => i.Timestamp).ToList();
@@ -211,7 +197,7 @@ public sealed partial class TimelineControl : UserControl
             marker.PointerEntered += Marker_PointerEntered;
             marker.PointerExited += Marker_PointerExited;
             marker.Tapped += Marker_Tapped;
-            markerCanvas.Children.Add(marker);
+            MarkerCanvas.Children.Add(marker);
 
             var label = new TextBlock
             {
@@ -232,7 +218,7 @@ public sealed partial class TimelineControl : UserControl
             label.PointerExited += Marker_PointerExited;
             label.Tapped += Marker_Tapped;
 
-            markerCanvas.Children.Add(label);
+            MarkerCanvas.Children.Add(label);
 
             AttachThumbnailTooltip(marker, item);
             AttachThumbnailTooltip(label, item);
@@ -246,7 +232,7 @@ public sealed partial class TimelineControl : UserControl
 
     private void UpdateSelectedVisual()
     {
-        if (markerCanvas == null) 
+        if (MarkerCanvas == null) 
             return;
 
         if (selectedLine != null)
