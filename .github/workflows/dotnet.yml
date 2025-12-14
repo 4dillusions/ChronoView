@@ -61,7 +61,7 @@ jobs:
         configuration: [Debug, Release]
     env:
       DOTNET_VERSION: 10.0.x
-      SOLUTION_PATH: Project/App4di.Dotnet.ChronoView.slnx
+      SOLUTION_PATH: Project/App4di.Dotnet.ChronoView.CrossPlatform.slnx
     steps:
       - name: Checkout
         uses: actions/checkout@v4
