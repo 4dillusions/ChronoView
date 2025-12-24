@@ -27,25 +27,10 @@ public class TimelineViewModel : NotificationObject
     #endregion
 
     #region Fields
-    private ObservableCollection<TimelineItemDTO> items = new();
-    private TimelineItemDTO? selectedTimeLineItem;
-
-    private double absoluteMinPps = 0.00001;
-    private double absoluteMaxPps = 10000.0;
     private double pixelsPerSecond;
     private double minPixelsPerSecond;
     private double maxPixelsPerSecond;
     private double defaultPixelsPerSecond;
-
-    private double timelineWidth;
-    private string startDateText = string.Empty;
-    private string endDateText = string.Empty;
-    private DateTime minTimestamp;
-    private DateTime maxTimestamp;
-    private int redrawTrigger;
-    private bool isLocked;
-
-    private double targetWidthPx = DefaultTargetWidthPx;
 
     public event EventHandler<TimelineItemDTO?>? SelectedItemChanged;
 
@@ -55,23 +40,23 @@ public class TimelineViewModel : NotificationObject
     #region Public props
     public ObservableCollection<TimelineItemDTO> Items
     {
-        get => items;
+        get;
         set
         {
-            if (SetProperty(ref items, value))
+            if (SetProperty(ref field, value))
             {
-                items.CollectionChanged += (s, e) => OnItemsChanged();
+                field.CollectionChanged += (s, e) => OnItemsChanged();
                 OnItemsChanged();
             }
         }
-    }
+    } = new();
 
     public TimelineItemDTO? SelectedTimeLineItem
     {
-        get => selectedTimeLineItem;
+        get;
         set
         {
-            if (SetProperty(ref selectedTimeLineItem, value))
+            if (SetProperty(ref field, value))
             {
                 RaisePropertyChanged(nameof(SelectedImage));
 
@@ -86,15 +71,15 @@ public class TimelineViewModel : NotificationObject
 
     public double AbsoluteMinPps
     {
-        get => absoluteMinPps;
-        set => SetProperty(ref absoluteMinPps, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = 0.00001;
 
     public double AbsoluteMaxPps
     {
-        get => absoluteMaxPps;
-        set => SetProperty(ref absoluteMaxPps, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = 10000.0;
 
     public double PixelsPerSecond
     {
@@ -142,61 +127,60 @@ public class TimelineViewModel : NotificationObject
 
     public double TargetWidthPx
     {
-        get => targetWidthPx;
+        get;
         set
         {
-            if (SetProperty(ref targetWidthPx, Math.Max(300, value)))
+            if (SetProperty(ref field, Math.Max(300, value)))
             {
                 RecomputePpsBoundsAndMaybeReset();
             }
         }
-    }
+    } = DefaultTargetWidthPx;
 
     public double TimelineWidth
     {
-        get => timelineWidth;
-        set => SetProperty(ref timelineWidth, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public string StartDateText
     {
-        get => startDateText;
-        set => SetProperty(ref startDateText, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = string.Empty;
 
     public string EndDateText
     {
-        get => endDateText;
-        set => SetProperty(ref endDateText, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = string.Empty;
 
     public string SelectedImage => SelectedTimeLineItem?.ImageName + " [" + SelectedTimeLineItem?.Timestamp + "]" ?? string.Empty;
 
     public DateTime MinTimestamp
     {
-        get => minTimestamp;
-        private set => SetProperty(ref minTimestamp, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     public DateTime MaxTimestamp
     {
-        get => maxTimestamp;
-        private set => SetProperty(ref maxTimestamp, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     public int RedrawTrigger
     {
-        get => redrawTrigger;
-        private set => SetProperty(ref redrawTrigger, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     public bool IsLocked
     {
-        get => isLocked;
-
+        get;
         set
         {
-            SetProperty(ref isLocked, value);
+            SetProperty(ref field, value);
             RiseAllButtonsExecuteChanged();
         }
     }
@@ -214,9 +198,9 @@ public class TimelineViewModel : NotificationObject
         DefaultPixelsPerSecond = 0.02;
         pixelsPerSecond = DefaultPixelsPerSecond;
         
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => !isLocked && selectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !isLocked && selectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.0000001);
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => !IsLocked && SelectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => !IsLocked && SelectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !IsLocked && SelectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.0000001);
         CollapseExpandCommand = new RelayCommand(_ => CollapseExpand(), _ => true);
 
         Items.CollectionChanged += (s, e) => OnItemsChanged();

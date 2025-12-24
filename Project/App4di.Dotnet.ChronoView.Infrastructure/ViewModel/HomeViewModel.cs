@@ -27,69 +27,55 @@ public class HomeViewModel : NotificationObject
     #endregion
 
     #region Fields
-    int timelineRowHeight = 200;
-    float zoomFactor = 1.0f;
-    double currentRotationAngle = 0;
-    double targetRotationAngle = 0;
-    TimelineItemDTO? selectedImageItem;
-    ObservableCollection<TimelineItemDTO> timelineItems = new();
-    private int selectedIndex = -1;
-    private bool isAutoPlay;
-    private double viewportWidth;
-    private double viewportHeight;
-    private double imageWidth;
-    private double imageHeight;
-    private bool shouldFitToViewport;
-
     private readonly IFolderPickerService folderPicker;
     private readonly IFileService file;
     private readonly ISettingsService settings;
 
     public int TimelineRowHeight
     {
-        get => timelineRowHeight;
-        set => SetProperty(ref timelineRowHeight, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = 200;
     
     public float ZoomFactor
     {
-        get => zoomFactor;
+        get;
         set
         {
-            if (SetProperty(ref zoomFactor, value))
+            if (SetProperty(ref field, value))
             {
                 (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
-    }
+    } = 1.0f;
 
     public double CurrentRotationAngle
     {
-        get => currentRotationAngle;
-        set => SetProperty(ref currentRotationAngle, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = 0;
 
     public double TargetRotationAngle
     {
-        get => targetRotationAngle;
-        set => SetProperty(ref targetRotationAngle, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = 0;
 
     public TimelineItemDTO? SelectedImageItem
     {
-        get => selectedImageItem;
+        get;
 
         set
         {
-            if (SetProperty(ref selectedImageItem, value))
+            if (SetProperty(ref field, value))
             {
                 RiseAllButtonsExecuteChanged();
 
-                if (TimelineItems != null && TimelineItems.Count > 0 && selectedImageItem != null)
+                if (TimelineItems != null && TimelineItems.Count > 0 && field != null)
                 {
-                    var idx = TimelineItems.IndexOf(selectedImageItem);
+                    var idx = TimelineItems.IndexOf(field);
                     if (idx >= 0 && idx != SelectedIndex)
                         SelectedIndex = idx;
                 }
@@ -101,41 +87,41 @@ public class HomeViewModel : NotificationObject
 
     public ObservableCollection<TimelineItemDTO> TimelineItems
     {
-        get => timelineItems;
-        set => SetProperty(ref timelineItems, value);
-    }
+        get;
+        set => SetProperty(ref field, value);
+    } = new ();
 
     public string PlayPauseGlyph => IsAutoPlay ? "\uE769" : "\uE768";
 
     public int SelectedIndex
     {
-        get => selectedIndex;
+        get;
         set
         {
-            if (SetProperty(ref selectedIndex, value))
+            if (SetProperty(ref field, value))
             {
                 if (TimelineItems != null && TimelineItems.Count > 0)
                 {
-                    if (selectedIndex < 0)
-                        selectedIndex = 0;
+                    if (field < 0)
+                        field = 0;
 
-                    if (selectedIndex > TimelineItems.Count - 1)
-                        selectedIndex = TimelineItems.Count - 1;
+                    if (field > TimelineItems.Count - 1)
+                        field = TimelineItems.Count - 1;
 
-                    var newItem = TimelineItems[selectedIndex];
+                    var newItem = TimelineItems[field];
                     if (!ReferenceEquals(SelectedImageItem, newItem))
                         SelectedImageItem = newItem;
                 }
             }
         }
-    }
+    } = -1;
 
     public bool IsAutoPlay
     {
-        get => isAutoPlay;
+        get;
         private set
         {
-            if (SetProperty(ref isAutoPlay, value))
+            if (SetProperty(ref field, value))
             {
                 RaisePropertyChanged(nameof(IsAutoPlay), nameof(PlayPauseGlyph));
             }
@@ -144,10 +130,10 @@ public class HomeViewModel : NotificationObject
 
     public double ViewportWidth
     {
-        get => viewportWidth;
+        get;
         set
         {
-            if (SetProperty(ref viewportWidth, value))
+            if (SetProperty(ref field, value))
             {
                 CalculateFitToViewport();
             }
@@ -156,10 +142,10 @@ public class HomeViewModel : NotificationObject
 
     public double ViewportHeight
     {
-        get => viewportHeight;
+        get;
         set
         {
-            if (SetProperty(ref viewportHeight, value))
+            if (SetProperty(ref field, value))
             {
                 CalculateFitToViewport();
             }
@@ -168,10 +154,10 @@ public class HomeViewModel : NotificationObject
 
     public double ImageWidth
     {
-        get => imageWidth;
+        get;
         set
         {
-            if (SetProperty(ref imageWidth, value))
+            if (SetProperty(ref field, value))
             {
                 CalculateFitToViewport();
             }
@@ -180,10 +166,10 @@ public class HomeViewModel : NotificationObject
 
     public double ImageHeight
     {
-        get => imageHeight;
+        get;
         set
         {
-            if (SetProperty(ref imageHeight, value))
+            if (SetProperty(ref field, value))
             {
                 CalculateFitToViewport();
             }
@@ -192,16 +178,16 @@ public class HomeViewModel : NotificationObject
 
     public bool ShouldFitToViewport
     {
-        get => shouldFitToViewport;
-        set => SetProperty(ref shouldFitToViewport, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     bool IsBackCanExecute
     {
         get
         {
-            if (!IsAutoPlay && TimelineItems.Count > 0 && selectedImageItem != null)
-                return TimelineItems.IndexOf(selectedImageItem) > 0;
+            if (!IsAutoPlay && TimelineItems.Count > 0 && SelectedImageItem != null)
+                return TimelineItems.IndexOf(SelectedImageItem) > 0;
 
             return false;
         }
@@ -211,14 +197,14 @@ public class HomeViewModel : NotificationObject
     {
         get
         {
-            if (!IsAutoPlay && TimelineItems.Count > 0 && selectedImageItem != null)
-                return TimelineItems.IndexOf(selectedImageItem) < TimelineItems.Count - 1;
+            if (!IsAutoPlay && TimelineItems.Count > 0 && SelectedImageItem != null)
+                return TimelineItems.IndexOf(SelectedImageItem) < TimelineItems.Count - 1;
 
             return false;
         }
     }
 
-    bool IsPlayPauseCanExecute => TimelineItems.Count > 1 && selectedImageItem != null;
+    bool IsPlayPauseCanExecute => TimelineItems.Count > 1 && SelectedImageItem != null;
     #endregion
 
     #region CTor
@@ -231,10 +217,10 @@ public class HomeViewModel : NotificationObject
         BackCommand = new RelayCommand(_ => Back(), _ => IsBackCanExecute);
         NextCommand = new RelayCommand(_ => Next(), _ => IsNextCanExecute);
         PlayPauseCommand = new RelayCommand(_ => PlayPause(), _ => IsPlayPauseCanExecute);
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => selectedImageItem != null && ZoomFactor < settings.MaxZoom && !IsAutoPlay);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => selectedImageItem != null && ZoomFactor > settings.MinZoom && !IsAutoPlay);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => selectedImageItem != null && ZoomFactor != 1.0f && !IsAutoPlay);
-        RotateCommand = new RelayCommand(_ => Rotate(), _ => selectedImageItem != null && !IsAutoPlay);
+        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => SelectedImageItem != null && ZoomFactor < settings.MaxZoom && !IsAutoPlay);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => SelectedImageItem != null && ZoomFactor > settings.MinZoom && !IsAutoPlay);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => SelectedImageItem != null && ZoomFactor != 1.0f && !IsAutoPlay);
+        RotateCommand = new RelayCommand(_ => Rotate(), _ => SelectedImageItem != null && !IsAutoPlay);
         OpenFolderCommand = new RelayCommand(_ => OpenFolder(), _ => !IsAutoPlay);
         ImageOpenedCommand = new RelayCommand(_ => OnImageOpened());
 
