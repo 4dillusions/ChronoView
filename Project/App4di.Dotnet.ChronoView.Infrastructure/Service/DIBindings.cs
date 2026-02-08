@@ -17,9 +17,11 @@ public class DIBindings
         (
             () =>
             {
-                di.Bind<FileService, FileService>(DILifetimeScopes.Singleton);
+                di.Bind<IFileService, FileService>(DILifetimeScopes.Singleton);
+                di.Bind<ISettingsService, SettingsService>(DILifetimeScopes.Singleton);
 
                 di.Bind<HomeViewModel, HomeViewModel>(DILifetimeScopes.Transient);
+                di.Bind<TimelineViewModel, TimelineViewModel>(DILifetimeScopes.Transient);
 
                 bindings();
             }

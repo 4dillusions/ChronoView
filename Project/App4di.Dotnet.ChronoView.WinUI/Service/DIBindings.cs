@@ -20,11 +20,10 @@ public class DIBindings
             () =>
             {
                 di.Bind<IFolderPickerService, FolderPickerService>(DILifetimeScopes.Singleton);
-                di.Bind<INavigationService, NavigationService>(DILifetimeScopes.Singleton, new NavigationService(di));
+                di.Bind<INavigationService, NavigationService>(DILifetimeScopes.Singleton);
 
                 di.Bind<HomePage, HomePage>(DILifetimeScopes.Singleton);
                 di.Bind<MainWindow, MainWindow>(DILifetimeScopes.Singleton);
-
             });
     }
 

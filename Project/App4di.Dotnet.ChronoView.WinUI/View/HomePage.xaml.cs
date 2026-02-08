@@ -6,6 +6,7 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 using App4di.Dotnet.ChronoView.Infrastructure.DTO;
 using App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
+using FW4di.Dotnet.Core.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -17,15 +18,16 @@ namespace App4di.Dotnet.ChronoView.WinUI.View;
 public sealed partial class HomePage : Page
 {
     public HomeViewModel ViewModel { get; }
-
+    
     private readonly DispatcherTimer slideshowTimer;
 
-    public HomePage(HomeViewModel viewModel)
+    public HomePage(HomeViewModel viewModel, IDIManager di)
     {
         InitializeComponent();
 
-        ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+        Timeline.SetViewModel(di.GetDependency<TimelineViewModel>());
 
+        ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
         DataContext = ViewModel;
 
         Loaded += OnPageLoaded;
@@ -42,6 +44,7 @@ public sealed partial class HomePage : Page
         {
             SyncTimelineItems();
             Timeline.ViewModel.SelectedItemChanged += OnTimelineSelectionChanged;
+            Timeline.ViewModel.PropertyChanged += OnTimelineViewModelPropertyChanged;
         }
     }
 
@@ -53,6 +56,8 @@ public sealed partial class HomePage : Page
             if (ViewModel.SelectedImageItem != null)
                 Timeline.ViewModel.SelectedTimeLineItem = ViewModel.SelectedImageItem;
         }
+
+        HandleIsCollapsedChanged();
     }
 
     private void OnTimelineSelectionChanged(object? sender, TimelineItemDTO? selectedItem)
@@ -61,6 +66,19 @@ public sealed partial class HomePage : Page
         {
             ViewModel.SelectedImageItem = selectedItem;
         }
+    }
+
+    private void OnTimelineViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Timeline.ViewModel.IsCollapsed))
+        {
+            HandleIsCollapsedChanged();
+        }
+    }
+
+    private void HandleIsCollapsedChanged()
+    {
+        ViewModel.TimelineRowHeight = Timeline.ViewModel.IsCollapsed ? 60 : 200;
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
