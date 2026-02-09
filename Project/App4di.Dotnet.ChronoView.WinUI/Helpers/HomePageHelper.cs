@@ -41,11 +41,66 @@ public static class HomePageHelper
         return s;
     }
 
+    private static void EnsureSlideshowTimer(State s)
+    {
+        if (s.SlideshowTimer != null)
+            return;
+
+        s.SlideshowTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(2)
+        };
+
+        s.SlideshowTickHandler = (_, __) =>
+        {
+            if (s.VM?.TimelineItems == null || s.VM.TimelineItems.Count == 0)
+                return;
+
+            if (s.VM.SelectedIndex < 0)
+                s.VM.SelectedIndex = 0;
+            else
+                s.VM.SelectedIndex = (s.VM.SelectedIndex + 1) % s.VM.TimelineItems.Count;
+        };
+
+        s.SlideshowTimer.Tick += s.SlideshowTickHandler;
+    }
+
+    private static void HandleAutoPlayChanged(State s)
+    {
+        EnsureSlideshowTimer(s);
+
+        if (s.VM == null || s.SlideshowTimer == null)
+            return;
+
+        if (s.VM.IsAutoPlay)
+        {
+            if (s.VM.SelectedIndex < 0 && s.VM.TimelineItems?.Count > 0)
+                s.VM.SelectedIndex = 0;
+
+            s.SlideshowTimer.Start();
+        }
+        else
+        {
+            s.SlideshowTimer.Stop();
+        }
+    }
+
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not FrameworkElement root) return;
+        if (d is not FrameworkElement root) 
+            return;
 
         var s = GetState(root);
+
+        if (s.SlideshowTimer != null)
+        {
+            s.SlideshowTimer.Stop();
+            if (s.SlideshowTickHandler != null)
+                s.SlideshowTimer.Tick -= s.SlideshowTickHandler;
+
+            s.SlideshowTimer = null;
+            s.SlideshowTickHandler = null;
+        }
 
         if (e.OldValue is HomeViewModel oldVm && s.VmHandler != null)
             oldVm.PropertyChanged -= s.VmHandler;
@@ -103,9 +158,16 @@ public static class HomePageHelper
                 if (s.VM.ShouldFitToViewport)
                     FitToViewport(s, disableAnimation: true);
             }
+            else if (ev.PropertyName == nameof(HomeViewModel.IsAutoPlay))
+            {
+                HandleAutoPlayChanged(s);
+            }
         };
 
         s.VM.PropertyChanged += s.VmHandler;
+
+        EnsureSlideshowTimer(s);
+        HandleAutoPlayChanged(s);
 
         UpdateViewportSizes(s);
         UpdateImageSizes(s);
@@ -210,5 +272,8 @@ public static class HomePageHelper
         public PropertyChangedEventHandler? VmHandler;
         public SizeChangedEventHandler? ScrollerSizeHandler;
         public RoutedEventHandler? ImageOpenedHandler;
+
+        public DispatcherTimer? SlideshowTimer;
+        public EventHandler<object>? SlideshowTickHandler;
     }
 }
