@@ -10,10 +10,8 @@ using Microsoft.UI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,7 +21,9 @@ namespace App4di.Dotnet.ChronoView.WinUI.Control;
 public sealed partial class TimelineControl : UserControl
 {
     #region Fields
-    private Line? selectedLine;
+    private Border? selectedThumb;
+    private const double ThumbHeight = 60;
+    private const double LabelHeight = 18;
     #endregion
 
     #region Dependency Properties
@@ -49,7 +49,7 @@ public sealed partial class TimelineControl : UserControl
 
     public static readonly DependencyProperty TimeFormatProperty =
         DependencyProperty.Register(nameof(TimeFormat), typeof(string), typeof(TimelineControl),
-            new PropertyMetadata("yyyy.MM.dd HH:mm"));
+            new PropertyMetadata("yy.MM.dd HH:mm:ss"));
 
     private static void OnIsLockedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -101,8 +101,16 @@ public sealed partial class TimelineControl : UserControl
     public TimelineControl()
     {
         InitializeComponent();
+
+        SizeChanged += (_, __) => RedrawTimeline();
+
+        TimelineScroller.ViewChanged += (_, __) =>
+        {
+            LabelScroller?.ChangeView(TimelineScroller.HorizontalOffset, null, null, disableAnimation: true);
+        };
     }
 
+    // backward compatibility
     public void SetViewModel(TimelineViewModel vm)
     {
         ViewModel = vm;
@@ -110,7 +118,7 @@ public sealed partial class TimelineControl : UserControl
     }
     #endregion
 
-    #region Event Handlers
+    #region ViewModel wiring
     private static void OnViewModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not TimelineControl control)
@@ -124,7 +132,7 @@ public sealed partial class TimelineControl : UserControl
             control.DataContext = newVm;
             newVm.PropertyChanged += control.ViewModel_PropertyChanged;
 
-            // DP -> VM sync (DP-ket a XAML már korábban beállíthatta)
+            // DP -> VM sync
             newVm.IsLocked = control.IsLocked;
 
             control.RedrawTimeline();
@@ -145,225 +153,155 @@ public sealed partial class TimelineControl : UserControl
     }
     #endregion
 
-    #region Drawing Methods
-    private TextBlock? FindLabelFor(object tag) =>
-        MarkerCanvas.Children.OfType<TextBlock>()
-            .FirstOrDefault(t => ReferenceEquals(t.Tag, tag));
-
-    private Line? FindLineFor(object tag) =>
-        MarkerCanvas.Children.OfType<Line>()
-            .FirstOrDefault(l => ReferenceEquals(l.Tag, tag));
-
-    private Line? FindLineByTag(object? tag) =>
-        MarkerCanvas.Children
-            .OfType<Line>()
-            .FirstOrDefault(l => ReferenceEquals(l.Tag, tag));
-
-    private bool IsSelectedLine(Line l) => ReferenceEquals(l, selectedLine);
-
-    private void ApplySelectedLabelVisual(TextBlock label)
-    {
-        label.FontWeight = FontWeights.SemiBold;
-        label.Foreground = SelectedBrush;
-    }
-
-    private void ResetLabelVisual(TextBlock label)
-    {
-        label.FontWeight = FontWeights.Normal;
-        label.Foreground = MarkerBrush;
-    }
-
+    #region Thumbnail timeline
     private void RedrawTimeline()
     {
+        if (ThumbPanel == null || LabelPanel == null)
+            return;
+
+        ThumbPanel.Children.Clear();
+        LabelPanel.Children.Clear();
+        selectedThumb = null;
+
         if (ViewModel?.Items == null || ViewModel.Items.Count == 0)
             return;
 
-        TimelineContentGrid.Width = ViewModel.TimelineWidth;
-        TimelineCanvas.Width = ViewModel.TimelineWidth;
-
-        MarkerCanvas.Children.Clear();
-        selectedLine = null;
-
+        var thumbSize = ThumbHeight;
         var sorted = ViewModel.Items.OrderBy(i => i.Timestamp).ToList();
 
         foreach (var item in sorted)
         {
-            var x = ViewModel.CalculateMarkerPosition(item.Timestamp);
-
-            var marker = new Line
+            // --- THUMB ---
+            var border = new Border
             {
-                X1 = x,
-                Y1 = 20,
-                X2 = x,
-                Y2 = 60,
-                Stroke = MarkerBrush,
-                StrokeThickness = 3,
-                StrokeStartLineCap = PenLineCap.Round,
-                StrokeEndLineCap = PenLineCap.Round,
-                IsHitTestVisible = true,
+                Width = thumbSize,
+                Height = thumbSize,
+                BorderThickness = new Thickness(2),
+                BorderBrush = MarkerBrush,
+                Margin = new Thickness(0),
                 Tag = item
             };
-            marker.PointerEntered += Marker_PointerEntered;
-            marker.PointerExited += Marker_PointerExited;
-            marker.Tapped += Marker_Tapped;
-            MarkerCanvas.Children.Add(marker);
 
+            var img = new Image { Stretch = Stretch.UniformToFill };
+
+            try
+            {
+                var bmp = new BitmapImage
+                {
+                    DecodePixelWidth = (int)Math.Min(thumbSize, 220),
+                    UriSource = new Uri(item.ImagePath)
+                };
+                img.Source = bmp;
+            }
+            catch
+            {
+                
+            }
+
+            border.Child = img;
+
+            border.Tapped += (_, __) =>
+            {
+                if (IsLocked) return;
+                ViewModel.SelectedTimeLineItem = item;
+            };
+
+            border.PointerEntered += (_, __) =>
+            {
+                if (IsLocked) return;
+                if (!ReferenceEquals(border, selectedThumb))
+                    border.BorderBrush = HoverBrush;
+            };
+
+            border.PointerExited += (_, __) =>
+            {
+                if (IsLocked) return;
+                if (!ReferenceEquals(border, selectedThumb))
+                    border.BorderBrush = MarkerBrush;
+            };
+
+            ThumbPanel.Children.Add(border);
+
+            // --- LABEL ---
             var label = new TextBlock
             {
-                Text = item.Timestamp.ToString("yy.MM.dd HH:mm:ss"),
+                Text = item.Timestamp.ToString(TimeFormat),
+                Height = LabelHeight,
                 FontSize = 10,
                 Foreground = MarkerBrush,
                 Opacity = 0.9,
-                IsHitTestVisible = true,
                 TextAlignment = TextAlignment.Center,
-                Tag = item
+                Width = thumbSize
             };
-            double labelWidth = 140;
-            Canvas.SetLeft(label, x - labelWidth / 2);
-            Canvas.SetTop(label, 57);
-            label.Width = labelWidth;
 
-            label.PointerEntered += Marker_PointerEntered;
-            label.PointerExited += Marker_PointerExited;
-            label.Tapped += Marker_Tapped;
+            LabelPanel.Children.Add(label);
 
-            MarkerCanvas.Children.Add(label);
-
-            AttachThumbnailTooltip(marker, item);
-            AttachThumbnailTooltip(label, item);
-
+            // select
             if (ViewModel.SelectedTimeLineItem != null && ReferenceEquals(item, ViewModel.SelectedTimeLineItem))
             {
-                ApplySelectedVisual(marker);
+                ApplySelectedVisual(border, label);
             }
         }
     }
 
     private void UpdateSelectedVisual()
     {
-        if (MarkerCanvas == null)
+        if (ThumbPanel == null || LabelPanel == null)
             return;
 
-        if (selectedLine != null)
+        if (selectedThumb != null)
         {
-            selectedLine.Stroke = MarkerBrush;
-            selectedLine.StrokeThickness = 3;
+            selectedThumb.BorderBrush = MarkerBrush;
+            selectedThumb.BorderThickness = new Thickness(2);
 
-            var oldLbl = FindLabelFor(selectedLine.Tag!);
-            if (oldLbl != null)
-                ResetLabelVisual(oldLbl);
+            var idx = ThumbPanel.Children.IndexOf(selectedThumb);
+            if (idx >= 0 && idx < LabelPanel.Children.Count && LabelPanel.Children[idx] is TextBlock oldLbl)
+            {
+                oldLbl.FontWeight = FontWeights.Normal;
+                oldLbl.Foreground = MarkerBrush;
+            }
 
-            selectedLine = null;
+            selectedThumb = null;
         }
 
         if (ViewModel?.SelectedTimeLineItem == null)
             return;
 
-        var line = FindLineFor(ViewModel.SelectedTimeLineItem);
-        if (line != null)
-            ApplySelectedVisual(line);
-    }
-
-    private void ApplySelectedVisual(Line line)
-    {
-        line.Stroke = SelectedBrush;
-        line.StrokeThickness = 6;
-        selectedLine = line;
-
-        var lbl = FindLabelFor(line.Tag!);
-        if (lbl != null)
-            ApplySelectedLabelVisual(lbl);
-    }
-
-    private void AttachThumbnailTooltip(FrameworkElement target, TimelineItemDTO item)
-    {
-        var bmp = new BitmapImage();
-        try
+        for (int i = 0; i < ThumbPanel.Children.Count; i++)
         {
-            bmp.DecodePixelWidth = 220;
-            bmp.UriSource = new Uri(item.ImagePath);
+            if (ThumbPanel.Children[i] is Border b && ReferenceEquals(b.Tag, ViewModel.SelectedTimeLineItem))
+            {
+                var lbl = (i < LabelPanel.Children.Count) ? LabelPanel.Children[i] as TextBlock : null;
+                ApplySelectedVisual(b, lbl);
+                CenterSelectedIntoView(b);
+                break;
+            }
         }
-        catch
+    }
+
+    private void ApplySelectedVisual(Border border, TextBlock? label)
+    {
+        border.BorderBrush = SelectedBrush;
+        border.BorderThickness = new Thickness(4);
+        selectedThumb = border;
+
+        if (label != null)
         {
+            label.FontWeight = FontWeights.SemiBold;
+            label.Foreground = SelectedBrush;
+        }
+    }
+
+    private void CenterSelectedIntoView(Border selected)
+    {
+        if (TimelineScroller == null || ThumbPanel == null)
             return;
-        }
 
-        var img = new Image
-        {
-            Source = bmp,
-            Stretch = Stretch.Uniform,
-            MaxWidth = 240,
-            Margin = new Thickness(6)
-        };
+        var t = selected.TransformToVisual(ThumbPanel);
+        var p = t.TransformPoint(new Windows.Foundation.Point(0, 0));
 
-        var tt = new ToolTip
-        {
-            Content = img,
-            Placement = Microsoft.UI.Xaml.Controls.Primitives.PlacementMode.Top
-        };
-
-        ToolTipService.SetToolTip(target, tt);
-    }
-    #endregion
-
-    #region Marker Interaction
-    private void Marker_PointerEntered(object sender, PointerRoutedEventArgs e)
-    {
-        if (IsLocked) return;
-
-        var fe = sender as FrameworkElement;
-        var line = sender as Line ?? FindLineByTag(fe?.Tag);
-        if (line != null && !IsSelectedLine(line))
-        {
-            line.Stroke = HoverBrush;
-            line.StrokeThickness = 5;
-        }
-    }
-
-    private void Marker_PointerExited(object sender, PointerRoutedEventArgs e)
-    {
-        if (IsLocked) return;
-
-        var fe = sender as FrameworkElement;
-        var line = sender as Line ?? FindLineByTag(fe?.Tag);
-        if (line != null && !IsSelectedLine(line))
-        {
-            line.Stroke = MarkerBrush;
-            line.StrokeThickness = 3;
-        }
-    }
-
-    private void Marker_Tapped(object sender, TappedRoutedEventArgs e)
-    {
-        if (IsLocked) return;
-
-        var fe = sender as FrameworkElement;
-        var item = fe?.Tag as TimelineItemDTO;
-        if (item != null && ViewModel != null)
-        {
-            ViewModel.SelectedTimeLineItem = item;
-        }
-    }
-    #endregion
-
-    #region Helper Methods
-    private T? FindChild<T>(DependencyObject parent, string childName) where T : DependencyObject
-    {
-        if (parent == null)
-            return null;
-
-        int count = VisualTreeHelper.GetChildrenCount(parent);
-        for (int i = 0; i < count; i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is T t && (string)t.GetValue(FrameworkElement.NameProperty) == childName)
-                return t;
-
-            var result = FindChild<T>(child, childName);
-            if (result != null)
-                return result;
-        }
-        return null;
+        var target = Math.Max(0, p.X - TimelineScroller.ViewportWidth / 2 + selected.ActualWidth / 2);
+        TimelineScroller.ChangeView(target, null, null, disableAnimation: false);
     }
     #endregion
 
