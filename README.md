@@ -6,7 +6,7 @@
 
 <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"> <!--<img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0"> 
 -->
-<img src="https://img.shields.io/badge/-.NET%209.0-blueviolet">
+<img src="https://img.shields.io/badge/-.NET%2010.0-blueviolet">
 [![Azure Static Web Apps CI/CD](https://github.com/4dillusions/ChronoView/actions/workflows/dotnet.yml/badge.svg)](https://github.com/4dillusions/ChronoView/actions/workflows/dotnet-desktop.yml)
 
 </h1>

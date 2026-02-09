@@ -30,6 +30,9 @@ public class HomeViewModel : NotificationObject
     private readonly IFolderPickerService folderPicker;
     private readonly IFileService file;
     private readonly ISettingsService settings;
+    private readonly TimelineViewModel timelineViewModel;
+
+    public TimelineViewModel TimelineViewModel => timelineViewModel;
 
     public int TimelineRowHeight
     {
@@ -73,6 +76,10 @@ public class HomeViewModel : NotificationObject
             {
                 RiseAllButtonsExecuteChanged();
 
+                // Keep timeline selection in sync
+                if (!ReferenceEquals(timelineViewModel.SelectedTimeLineItem, field))
+                    timelineViewModel.SelectedTimeLineItem = field;
+
                 if (TimelineItems != null && TimelineItems.Count > 0 && field != null)
                 {
                     var idx = TimelineItems.IndexOf(field);
@@ -88,7 +95,19 @@ public class HomeViewModel : NotificationObject
     public ObservableCollection<TimelineItemDTO> TimelineItems
     {
         get;
-        set => SetProperty(ref field, value);
+        set
+        {
+            if (SetProperty(ref field, value))
+            {
+                timelineViewModel.Items = field;
+
+                if (field.Count > 0 && SelectedIndex < 0)
+                    SelectedIndex = 0;
+
+                if (field.Count == 0)
+                    SelectedImageItem = null;
+            }
+        }
     } = new ();
 
     public string PlayPauseGlyph => IsAutoPlay ? "\uE769" : "\uE768";
@@ -208,11 +227,16 @@ public class HomeViewModel : NotificationObject
     #endregion
 
     #region CTor
-    public HomeViewModel(IFolderPickerService folderPicker, IFileService file, ISettingsService settings)
+    public HomeViewModel(
+        IFolderPickerService folderPicker,
+        IFileService file,
+        ISettingsService settings,
+        TimelineViewModel timelineViewModel)
     {
         this.folderPicker = folderPicker ?? throw new ArgumentNullException(nameof(folderPicker));
         this.file = file ?? throw new ArgumentNullException(nameof(file));
         this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        this.timelineViewModel = timelineViewModel ?? throw new ArgumentNullException(nameof(timelineViewModel));
 
         BackCommand = new RelayCommand(_ => Back(), _ => IsBackCanExecute);
         NextCommand = new RelayCommand(_ => Next(), _ => IsNextCanExecute);
@@ -223,6 +247,26 @@ public class HomeViewModel : NotificationObject
         RotateCommand = new RelayCommand(_ => Rotate(), _ => SelectedImageItem != null && !IsAutoPlay);
         OpenFolderCommand = new RelayCommand(_ => OpenFolder(), _ => !IsAutoPlay);
         ImageOpenedCommand = new RelayCommand(_ => OnImageOpened());
+
+        // Wire Timeline VM <-> Home VM (no View code needed)
+        this.timelineViewModel.SelectedItemChanged += (_, item) =>
+        {
+            if (item != null && !ReferenceEquals(SelectedImageItem, item))
+                SelectedImageItem = item;
+        };
+
+        this.timelineViewModel.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(TimelineViewModel.IsCollapsed))
+            {
+                TimelineRowHeight = this.timelineViewModel.IsCollapsed ? 60 : 200;
+            }
+        };
+
+        // Initial state
+        TimelineRowHeight = this.timelineViewModel.IsCollapsed ? 60 : 200;
+        this.timelineViewModel.Items = TimelineItems;
+        this.timelineViewModel.SelectedTimeLineItem = SelectedImageItem;
 
         if (TimelineItems != null && TimelineItems.Count > 0 && SelectedIndex < 0)
             SelectedIndex = 0;

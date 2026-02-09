@@ -45,11 +45,20 @@ public sealed partial class TimelineControl : UserControl
 
     public static readonly DependencyProperty IsLockedProperty =
         DependencyProperty.Register(nameof(IsLocked), typeof(bool), typeof(TimelineControl),
-            new PropertyMetadata(false));
+            new PropertyMetadata(false, OnIsLockedChanged));
 
     public static readonly DependencyProperty TimeFormatProperty =
         DependencyProperty.Register(nameof(TimeFormat), typeof(string), typeof(TimelineControl),
             new PropertyMetadata("yyyy.MM.dd HH:mm"));
+
+    private static void OnIsLockedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not TimelineControl control)
+            return;
+
+        if (control.ViewModel is not null)
+            control.ViewModel.IsLocked = (bool)e.NewValue;
+    }
 
     public TimelineViewModel ViewModel
     {
@@ -78,11 +87,7 @@ public sealed partial class TimelineControl : UserControl
     public bool IsLocked
     {
         get => (bool)GetValue(IsLockedProperty);
-        set
-        {
-            SetValue(IsLockedProperty, value);
-            ViewModel.IsLocked = value;
-        }
+        set => SetValue(IsLockedProperty, value);
     }
 
     public string TimeFormat
@@ -118,6 +123,10 @@ public sealed partial class TimelineControl : UserControl
         {
             control.DataContext = newVm;
             newVm.PropertyChanged += control.ViewModel_PropertyChanged;
+
+            // DP -> VM sync (DP-ket a XAML már korábban beállíthatta)
+            newVm.IsLocked = control.IsLocked;
+
             control.RedrawTimeline();
         }
     }
@@ -232,7 +241,7 @@ public sealed partial class TimelineControl : UserControl
 
     private void UpdateSelectedVisual()
     {
-        if (MarkerCanvas == null) 
+        if (MarkerCanvas == null)
             return;
 
         if (selectedLine != null)
@@ -241,17 +250,17 @@ public sealed partial class TimelineControl : UserControl
             selectedLine.StrokeThickness = 3;
 
             var oldLbl = FindLabelFor(selectedLine.Tag!);
-            if (oldLbl != null) 
+            if (oldLbl != null)
                 ResetLabelVisual(oldLbl);
 
             selectedLine = null;
         }
 
-        if (ViewModel?.SelectedTimeLineItem == null) 
+        if (ViewModel?.SelectedTimeLineItem == null)
             return;
 
         var line = FindLineFor(ViewModel.SelectedTimeLineItem);
-        if (line != null) 
+        if (line != null)
             ApplySelectedVisual(line);
     }
 
@@ -274,9 +283,9 @@ public sealed partial class TimelineControl : UserControl
             bmp.DecodePixelWidth = 220;
             bmp.UriSource = new Uri(item.ImagePath);
         }
-        catch 
-        { 
-            return; 
+        catch
+        {
+            return;
         }
 
         var img = new Image
@@ -362,20 +371,20 @@ public sealed partial class TimelineControl : UserControl
     public ObservableCollection<TimelineItemDTO> Items
     {
         get => ViewModel?.Items ?? new ObservableCollection<TimelineItemDTO>();
-        set 
-        { 
-            if (ViewModel != null) 
-                ViewModel.Items = value; 
+        set
+        {
+            if (ViewModel != null)
+                ViewModel.Items = value;
         }
     }
 
     public TimelineItemDTO? SelectedTimeLineItem
     {
         get => ViewModel?.SelectedTimeLineItem;
-        set 
-        { 
-            if (ViewModel != null) 
-                ViewModel.SelectedTimeLineItem = value; 
+        set
+        {
+            if (ViewModel != null)
+                ViewModel.SelectedTimeLineItem = value;
         }
     }
 
