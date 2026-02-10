@@ -20,9 +20,9 @@
                          Header=""
                          SelectionChanged="NavigationView_SelectionChanged">
         <muxc:NavigationView.MenuItems>
-            <muxc:NavigationViewItem Content="Chrono View" Icon="Home" Tag="home" IsSelected="True"/>
-            <muxc:NavigationViewItem Content="Settings" Icon="Setting" Tag="settings"/>
-            <muxc:NavigationViewItem Content="About" Icon="Important" Tag="about"/>
+            <muxc:NavigationViewItem x:Uid="Nav_Home" Content="Home" Icon="Home" Tag="home" IsSelected="True"/>
+            <muxc:NavigationViewItem x:Uid="Nav_Settings" Content="Settings" Icon="Setting" Tag="settings"/>
+            <muxc:NavigationViewItem x:Uid="Nav_About" Content="About" Icon="Important" Tag="about"/>
         </muxc:NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame"/>

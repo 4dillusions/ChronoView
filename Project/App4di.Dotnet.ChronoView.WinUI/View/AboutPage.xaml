@@ -26,12 +26,9 @@
                 <TextBlock Text="ℹ️" Style="{StaticResource CardIconStyle}"/>
 
                 <StackPanel Grid.Column="1" Spacing="8">
-                    <TextBlock Text="About" Style="{StaticResource HeadlineTextStyle}"/>
+                    <TextBlock x:Uid="About_Title" Style="{StaticResource HeadlineTextStyle}"/>
 
-                    <TextBlock Style="{StaticResource SubtleTextStyle}"
-                           Text="ChronoView visualizes JPEG images from a selected folder along a horizontal timeline.
-Each photo is positioned based on its creation date, allowing you to scroll or zoom through your visual history.
-The main viewer dynamically updates to display the image corresponding to the center point of the timeline."/>
+                    <TextBlock x:Uid="About_Description" Style="{StaticResource SubtleTextStyle}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -47,23 +44,23 @@ The main viewer dynamically updates to display the image corresponding to the ce
                 <TextBlock Text="📧" Style="{StaticResource CardIconStyle}"/>
 
                 <StackPanel Grid.Column="1" Spacing="8">
-                    <TextBlock Text="Contacts" Style="{StaticResource HeadlineTextStyle}"/>
+                    <TextBlock x:Uid="Contacts_Title" Style="{StaticResource HeadlineTextStyle}"/>
 
-                    <TextBlock Text="Technical support" Style="{StaticResource MainTextStyle}"/>
+                    <TextBlock x:Uid="Contacts_TechSupport_Title" Style="{StaticResource MainTextStyle}"/>
                     <TextBlock Style="{StaticResource HyperlinkTextStyle}">
                 <Hyperlink NavigateUri="mailto:support@4dillusions.com">
                     support@4dillusions.com
                 </Hyperlink>
                     </TextBlock>
-                    <TextBlock Style="{StaticResource SubtleTextStyle}" Text="(technical inquiries about our products)"/>
+                    <TextBlock x:Uid="Contacts_TechSupport_Description" Style="{StaticResource SubtleTextStyle}"/>
 
-                    <TextBlock Text="General info" Style="{StaticResource MainTextStyle}"/>
+                    <TextBlock x:Uid="Contacts_GeneralInfo_Title" Style="{StaticResource MainTextStyle}"/>
                     <TextBlock Style="{StaticResource HyperlinkTextStyle}">
                 <Hyperlink NavigateUri="mailto:info@4dillusions.com">
                     info@4dillusions.com
                 </Hyperlink>
                     </TextBlock>
-                    <TextBlock Style="{StaticResource SubtleTextStyle}" Text="(general inquiries)"/>
+                    <TextBlock x:Uid="Contacts_GeneralInfo_Description" Style="{StaticResource SubtleTextStyle}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -79,23 +76,15 @@ The main viewer dynamically updates to display the image corresponding to the ce
                 <TextBlock Text="🖥️" Style="{StaticResource CardIconStyle}"/>
 
                 <StackPanel Grid.Column="1" Spacing="8">
-                    <TextBlock Text="Technology" Style="{StaticResource HeadlineTextStyle}"/>
+                    <TextBlock x:Uid="Technology_Title" Style="{StaticResource HeadlineTextStyle}"/>
 
-                    <TextBlock Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"
-Text="ChronoView is a compact yet expressive WinUI application designed to explore temporal storytelling through images. 
-It demonstrates modern MVVM architecture, clean C# design, and a focus on responsive, user-friendly interaction."/>
-                    <TextBlock Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"
-Text="The project highlights structured thinking, modularity, and clear separation of concerns — from timeline rendering and 
-image navigation to asynchronous data loading and smooth transitions. It offers a balanced showcase of both engineering 
-discipline and aesthetic consideration."/>
-                    <TextBlock Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"
-Text="ChronoView was created as a portfolio project to illustrate real-world software design principles within a modern 
-desktop context. The goal is not only to present technical capability but also to convey an appreciation for clarity, 
-user flow, and thoughtful UI/UX craftsmanship."/>
+                    <TextBlock x:Uid="Technology_Paragraph1" Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"/>
+                    <TextBlock x:Uid="Technology_Paragraph2" Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"/>
+                    <TextBlock x:Uid="Technology_Paragraph3" Style="{StaticResource SubtleTextStyle}" TextWrapping="Wrap" xml:space="preserve"/>
                 </StackPanel>
             </Grid>
         </Border>
-        
+
         <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Style="{StaticResource SubtleTextStyle}" Text="© 2025 4D Illusions"/>

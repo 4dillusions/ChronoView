@@ -83,9 +83,9 @@
 
         <!-- Command Bar -->
         <CommandBar Grid.Row="2" DefaultLabelPosition="Right" HorizontalAlignment="Center" IsSticky="True">
-            <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
-            <AppBarButton Icon="ZoomIn" Label="Zoom in" Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
-            <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
+            <AppBarButton x:Uid="Cmd_ZoomOut" Icon="ZoomOut" Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
+            <AppBarButton x:Uid="Cmd_ZoomIn"  Icon="ZoomIn"  Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
+            <AppBarButton x:Uid="Cmd_ResetZoom" Icon="Zoom" Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
         </CommandBar>
     </Grid>
 </UserControl>
