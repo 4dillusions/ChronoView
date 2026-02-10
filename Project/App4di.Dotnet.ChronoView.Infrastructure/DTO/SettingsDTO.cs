@@ -23,7 +23,7 @@ public class SettingsDTO
     public float MinZoom { get; set; }
     public float MaxZoom { get; set; }
     public float ZoomStep { get; set; }
-    public ImageFormatType imageFormat { get; set; }
+    public ImageFormatType ImageFormat { get; set; }
     public bool IsRecursiveImageSearch { get; set; }
     #endregion
 }

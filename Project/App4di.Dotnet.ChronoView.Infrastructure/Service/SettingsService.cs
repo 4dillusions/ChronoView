@@ -38,7 +38,7 @@ public class SettingsService : ISettingsService
             MinZoom = 0.1f,
             MaxZoom = 8.0f,
             ZoomStep = 1.25f,
-            imageFormat = ImageFormatType.jpg,
+            ImageFormat = ImageFormatType.jpg,
             IsRecursiveImageSearch = false,
         };
     }
@@ -115,11 +115,11 @@ public class SettingsService : ISettingsService
 
     public string ImageFormat
     {
-        get => settings.imageFormat.ToString();
+        get => settings.ImageFormat.ToString();
         set
         {
             if (Enum.TryParse<ImageFormatType>(value, out var format))
-                settings.imageFormat = format;
+                settings.ImageFormat = format;
         }
     }
 
