@@ -365,8 +365,12 @@ public class HomeViewModel : NotificationObject
 
     void Reset()
     {
-        ResetZoom();
+        //ResetZoom();
+        //TargetRotationAngle = 0;
+
+        ShouldFitToViewport = true;
         TargetRotationAngle = 0;
+        CurrentRotationAngle = 0;
     }
 
     void OnImageOpened()
@@ -398,7 +402,9 @@ public class HomeViewModel : NotificationObject
         double vpH = ViewportHeight;
 
         var scale = Math.Min(vpW / imgW, vpH / imgH);
-        scale = Math.Clamp(scale, settings.MinZoom, settings.MaxZoom);
+        scale = Math.Min(scale, settings.MaxZoom);
+        scale = Math.Max(scale, 0.01);
+        scale = Math.Clamp(scale, 0.1, settings.MaxZoom);
 
         ZoomFactor = (float)scale;
         ShouldFitToViewport = true;

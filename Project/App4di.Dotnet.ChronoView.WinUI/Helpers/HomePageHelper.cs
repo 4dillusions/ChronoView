@@ -151,7 +151,7 @@ public static class HomePageHelper
             else if (ev.PropertyName == nameof(HomeViewModel.SelectedImageItem))
             {
                 s.VM.ShouldFitToViewport = true;
-                FitToViewport(s, disableAnimation: true);
+                //FitToViewport(s, disableAnimation: true);
             }
             else if (ev.PropertyName == nameof(HomeViewModel.ShouldFitToViewport))
             {
@@ -217,25 +217,16 @@ public static class HomePageHelper
 
     private static void FitToViewport(State s, bool disableAnimation)
     {
-        if (s.ImageScroller == null || s.VM == null) 
+        if (s.ImageScroller == null || s.VM == null)
             return;
 
         UpdateViewportSizes(s);
         UpdateImageSizes(s);
 
-        if (s.VM.ViewportWidth <= 0 || s.VM.ViewportHeight <= 0 || s.VM.ImageWidth <= 0 || s.VM.ImageHeight <= 0)
+        if (s.VM.ZoomFactor <= 0)
             return;
 
-        var zx = s.VM.ViewportWidth / s.VM.ImageWidth;
-        var zy = s.VM.ViewportHeight / s.VM.ImageHeight;
-        var z = (float)Math.Min(zx, zy);
-
-        if (z <= 0) 
-            return;
-
-        s.VM.ZoomFactor = z;
-        s.ImageScroller.ChangeView(0, 0, z, disableAnimation);
-
+        s.ImageScroller.ChangeView(0, 0, s.VM.ZoomFactor, disableAnimation);
         s.VM.ShouldFitToViewport = false;
     }
 

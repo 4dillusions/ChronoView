@@ -21,7 +21,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Image -->
-                <ScrollViewer x:Name="ImageScroller" Grid.Row="0" ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8" HorizontalScrollMode="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer x:Name="ImageScroller" Grid.Row="0" ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="10" HorizontalScrollMode="Auto" VerticalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Image x:Name="ImageView" Stretch="Uniform" RenderTransformOrigin="0.5,0.5" Source="{x:Bind ViewModel.SelectedImageItem.ImagePath, Mode=OneWay}">
                             <Image.RenderTransform>
