@@ -24,7 +24,7 @@ public class SettingsService : ISettingsService
     #endregion
 
     #region Functions
-    private void InitSettings()
+    public void InitSettings()
     {
         settings = new SettingsDTO()
         {
@@ -35,10 +35,10 @@ public class SettingsService : ISettingsService
             MinHeight = 768,
             IsTimelineCollapsed = false,
 
-            MinZoom = 0.1f,
-            MaxZoom = 8.0f,
-            ZoomStep = 1.25f,
-            imageFormat = ImageFormatType.jpg,
+            MinZoom = 4.31f,
+            MaxZoom = 8.6f,
+            ZoomStep = 1.37f,
+            ImageFormat = ImageFormatType.jpg,
             IsRecursiveImageSearch = false,
         };
     }
@@ -96,8 +96,17 @@ public class SettingsService : ISettingsService
     #endregion
 
     #region Window Settings
-    public int MinWidth => settings.MinWidth;
-    public int MinHeight => settings.MinHeight;
+    public int MinWidth
+    {
+        get => settings.MinWidth;
+        set => settings.MinWidth = value;
+    }
+
+    public int MinHeight
+    {
+        get => settings.MinHeight;
+        set => settings.MinHeight = value;
+    }
 
     public bool IsTimelineCollapsed
     {
@@ -107,19 +116,33 @@ public class SettingsService : ISettingsService
     #endregion
 
     #region Image Settings
-    public float MinZoom => settings.MinZoom;
-    public float MaxZoom => settings.MaxZoom;
-    public float ZoomStep => settings.ZoomStep;
+    public float MinZoom
+    {
+        get => settings.MinZoom;
+        set => settings.MinZoom = value;
+    }
 
+    public float MaxZoom
+    {
+        get => settings.MaxZoom;
+        set => settings.MaxZoom = value;
+    }
+
+    public float ZoomStep
+    {
+        get => settings.ZoomStep;
+        set => settings.ZoomStep = value;
+    }
+    
     public string[] ImageFormats => Enum.GetNames(typeof(ImageFormatType));
 
     public string ImageFormat
     {
-        get => settings.imageFormat.ToString();
+        get => settings.ImageFormat.ToString();
         set
         {
             if (Enum.TryParse<ImageFormatType>(value, out var format))
-                settings.imageFormat = format;
+                settings.ImageFormat = format;
         }
     }
 

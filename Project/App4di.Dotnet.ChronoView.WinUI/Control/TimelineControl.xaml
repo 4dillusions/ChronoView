@@ -46,20 +46,46 @@
         </Grid>
 
         <!-- Timeline -->
-        <Border Grid.Row="1" Background="{ThemeResource App.SurfaceBrush}" BorderBrush="{ThemeResource App.SurfaceBorderBrush}" BorderThickness="1" CornerRadius="8">
-            <ScrollViewer x:Name="TimelineScroller"  HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Disabled">
-                <Grid x:Name="TimelineContentGrid" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" HorizontalAlignment="Left">
-                    <Canvas x:Name="TimelineCanvas" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" Background="Transparent" HorizontalAlignment="Left"/>
-                    <Canvas x:Name="MarkerCanvas" Height="110" Width="{Binding ViewModel.TimelineWidth, ElementName=Root}" Background="Transparent" HorizontalAlignment="Left"/>
-                </Grid>
-            </ScrollViewer>
+        <Border Grid.Row="1"
+            Background="{ThemeResource App.SurfaceBrush}"
+            BorderBrush="{ThemeResource App.SurfaceBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="11" />
+                </Grid.RowDefinitions>
+
+                <!-- Thumbnails -->
+                <ScrollViewer x:Name="TimelineScroller"
+                      Grid.Row="0"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollMode="Auto"
+                      VerticalScrollMode="Disabled"
+                      ZoomMode="Disabled">
+                    <StackPanel x:Name="ThumbPanel" Orientation="Horizontal" Spacing="0"/>
+                </ScrollViewer>
+
+                <!-- Labels (dates) -->
+                <ScrollViewer x:Name="LabelScroller"
+                      Grid.Row="1"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollMode="Enabled"
+                      VerticalScrollMode="Disabled"
+                      ZoomMode="Disabled">
+                    <StackPanel x:Name="LabelPanel" Orientation="Horizontal" Spacing="0"/>
+                </ScrollViewer>
+            </Grid>
         </Border>
 
         <!-- Command Bar -->
         <CommandBar Grid.Row="2" DefaultLabelPosition="Right" HorizontalAlignment="Center" IsSticky="True">
-            <AppBarButton Icon="ZoomOut" Label="Zoom out" Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
-            <AppBarButton Icon="ZoomIn" Label="Zoom in" Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
-            <AppBarButton Icon="Zoom" Label="Reset zoom" Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
+            <AppBarButton x:Uid="Cmd_ZoomOut" Icon="ZoomOut" Command="{Binding ViewModel.ZoomOutCommand, ElementName=Root}"/>
+            <AppBarButton x:Uid="Cmd_ZoomIn"  Icon="ZoomIn"  Command="{Binding ViewModel.ZoomInCommand, ElementName=Root}"/>
+            <AppBarButton x:Uid="Cmd_ResetZoom" Icon="Zoom" Command="{Binding ViewModel.ResetZoomCommand, ElementName=Root}"/>
         </CommandBar>
     </Grid>
 </UserControl>

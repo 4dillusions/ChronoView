@@ -22,6 +22,7 @@ public class DIBindings
 
                 di.Bind<HomeViewModel, HomeViewModel>(DILifetimeScopes.Transient);
                 di.Bind<TimelineViewModel, TimelineViewModel>(DILifetimeScopes.Transient);
+                di.Bind<SettingsViewModel, SettingsViewModel>(DILifetimeScopes.Transient);
 
                 bindings();
             }

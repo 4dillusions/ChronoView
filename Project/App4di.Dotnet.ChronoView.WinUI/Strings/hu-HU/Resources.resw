@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <data name="Nav_About.Content" xml:space="preserve">
+    <value>Névjegy</value>
+  </data>
+  
+  <data name="Nav_Home.Content" xml:space="preserve">
+    <value>Chrono View</value>
+  </data>
+  
+  <data name="Nav_Settings.Content" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  
+  <data name="Cmd_OpenFolder.Label" xml:space="preserve">
+	<value>Mappa megnyitása</value>
+	</data>
+
+	<data name="Cmd_Back.Label" xml:space="preserve">
+	  <value>Vissza</value>
+	</data>
+
+	<data name="Cmd_Next.Label" xml:space="preserve">
+	  <value>Következő</value>
+	</data>
+
+	<data name="Cmd_PlayPause.Label" xml:space="preserve">
+	  <value>Lejátszás / Szünet</value>
+	</data>
+
+	<data name="Cmd_ZoomOut.Label" xml:space="preserve">
+	  <value>Kicsinyítés</value>
+	</data>
+
+	<data name="Cmd_ZoomIn.Label" xml:space="preserve">
+	  <value>Nagyítás</value>
+	</data>
+
+	<data name="Cmd_ResetZoom.Label" xml:space="preserve">
+	  <value>Alaphelyzet</value>
+	</data>
+
+	<data name="Cmd_Rotate.Label" xml:space="preserve">
+	  <value>Forgatás</value>
+	</data>
+
+	<!-- ABOUT -->
+	<data name="About_Title.Text" xml:space="preserve">
+	  <value>Névjegy</value>
+	</data>
+
+	<data name="About_Description.Text" xml:space="preserve">
+	  <value>A ChronoView JPEG képeket jelenít meg egy kiválasztott mappából egy vízszintes idővonal mentén. Minden kép a létrehozás dátuma alapján kerül elhelyezésre, lehetővé téve a vizuális előzmények közötti görgetést és nagyítást. A fő megjelenítő dinamikusan frissül, és mindig az idővonal középpontjához tartozó képet mutatja.</value>
+	</data>
+
+	<!-- CONTACTS -->
+	<data name="Contacts_Title.Text" xml:space="preserve">
+	  <value>Kapcsolat</value>
+	</data>
+
+	<data name="Contacts_TechSupport_Title.Text" xml:space="preserve">
+	  <value>Technikai támogatás</value>
+	</data>
+
+	<data name="Contacts_TechSupport_Email.Text" xml:space="preserve">
+	  <value>support@4dillusions.com</value>
+	</data>
+
+	<data name="Contacts_TechSupport_Description.Text" xml:space="preserve">
+	  <value>(technikai kérdések a termékeinkkel kapcsolatban)</value>
+	</data>
+
+	<data name="Contacts_GeneralInfo_Title.Text" xml:space="preserve">
+	  <value>Általános információ</value>
+	</data>
+
+	<data name="Contacts_GeneralInfo_Email.Text" xml:space="preserve">
+	  <value>info@4dillusions.com</value>
+	</data>
+
+	<data name="Contacts_GeneralInfo_Description.Text" xml:space="preserve">
+	  <value>(általános megkeresések)</value>
+	</data>
+
+	<!-- TECHNOLOGY -->
+	<data name="Technology_Title.Text" xml:space="preserve">
+	  <value>Technológia</value>
+	</data>
+
+	<data name="Technology_Paragraph1.Text" xml:space="preserve">
+	  <value>A ChronoView egy kompakt, mégis kifejező WinUI alkalmazás, amely az időbeli történetmesélést helyezi középpontba képeken keresztül. Modern MVVM architektúrát, letisztult C# tervezést és reszponzív, felhasználóbarát működést demonstrál.</value>
+	</data>
+
+	<data name="Technology_Paragraph2.Text" xml:space="preserve">
+	  <value>A projekt hangsúlyt fektet a strukturált gondolkodásra, modularitásra és a felelősségi körök világos szétválasztására — az idővonal renderelésétől és képnavigációtól kezdve az aszinkron adatbetöltésen át a finom animációkig. Egyensúlyt teremt mérnöki fegyelem és esztétikai igényesség között.</value>
+	</data>
+
+	<data name="Technology_Paragraph3.Text" xml:space="preserve">
+	  <value>A ChronoView portfólió projektként készült, amely valós szoftvertervezési elveket mutat be egy modern asztali alkalmazás kontextusában. A cél nem csupán a technikai felkészültség bemutatása, hanem az átláthatóság, a felhasználói folyamatok és az átgondolt UI/UX iránti elkötelezettség közvetítése is.</value>
+	</data>
+
+	<!-- HEADER -->
+	<data name="Settings_Title.Text" xml:space="preserve">
+	  <value>Beállítások</value>
+	</data>
+	<data name="Settings_Description.Text" xml:space="preserve">
+	  <value>Téma, nyelv, ablak viselkedés és képnézet finomhangolása. A képformátum és a képkeresés kivételével az összes beállítás újraindítás után érvényesül.</value>
+	</data>
+
+	<!-- SECTIONS -->
+	<data name="Settings_Section_App.Text" xml:space="preserve">
+	  <value>🎨 Alkalmazás</value>
+	</data>
+	<data name="Settings_Section_Window.Text" xml:space="preserve">
+	  <value>🪟 Ablak</value>
+	</data>
+	<data name="Settings_Section_ImageView.Text" xml:space="preserve">
+	  <value>🖼️ Kép / Nézet</value>
+	</data>
+
+	<!-- APP SETTINGS -->
+	<data name="Settings_Label_Theme.Text" xml:space="preserve">
+	  <value>Téma</value>
+	</data>
+	<data name="Settings_Label_Language.Text" xml:space="preserve">
+	  <value>Nyelv</value>
+	</data>
+
+	<!-- WINDOW SETTINGS -->
+	<data name="Settings_Label_MinWidth.Text" xml:space="preserve">
+	  <value>Min. szélesség</value>
+	</data>
+	<data name="Settings_Label_MinHeight.Text" xml:space="preserve">
+	  <value>Min. magasság</value>
+	</data>
+	<data name="Settings_Label_TimelineCollapsed.Text" xml:space="preserve">
+	  <value>Timeline összecsukva</value>
+	</data>
+
+	<data name="Settings_Toggle_TimelineCollapsed.OnContent" xml:space="preserve">
+	  <value>Igen</value>
+	</data>
+	<data name="Settings_Toggle_TimelineCollapsed.OffContent" xml:space="preserve">
+	  <value>Nem</value>
+	</data>
+
+	<!-- IMAGE / VIEW SETTINGS -->
+	<data name="Settings_Label_ZoomSettings.Text" xml:space="preserve">
+	  <value>Zoom beállítások</value>
+	</data>
+	<data name="Settings_Zoom_Min.Text" xml:space="preserve">
+	  <value>Min</value>
+	</data>
+	<data name="Settings_Zoom_Max.Text" xml:space="preserve">
+	  <value>Max</value>
+	</data>
+	<data name="Settings_Zoom_Step.Text" xml:space="preserve">
+	  <value>Lépés</value>
+	</data>
+
+	<data name="Settings_Label_ImageFormat.Text" xml:space="preserve">
+	  <value>Képformátum</value>
+	</data>
+
+	<data name="Settings_Label_RecursiveImageSearch.Text" xml:space="preserve">
+	  <value>Rekurzív képkeresés</value>
+	</data>
+	<data name="Settings_Toggle_RecursiveImageSearch.OnContent" xml:space="preserve">
+	  <value>Bekapcsolva</value>
+	</data>
+	<data name="Settings_Toggle_RecursiveImageSearch.OffContent" xml:space="preserve">
+	  <value>Kikapcsolva</value>
+	</data>
+
+	<!-- FOOTER -->
+	<data name="Settings_Button_ResetDefault.Content" xml:space="preserve">
+	  <value>Alaphelyzet</value>
+	</data>
+	<data name="Settings_Footer_Copyright.Text" xml:space="preserve">
+	  <value>© 2025 4D Illusions</value>
+	</data>
+
+</root>

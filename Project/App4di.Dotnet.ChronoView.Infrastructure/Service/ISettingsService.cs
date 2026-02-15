@@ -9,6 +9,7 @@ namespace App4di.Dotnet.ChronoView.Infrastructure.Service;
 public interface ISettingsService
 {
     #region Lifecycle
+    void InitSettings();
     void SaveSettings();
     #endregion
 
@@ -21,15 +22,15 @@ public interface ISettingsService
     #endregion
 
     #region Window Settings
-    int MinWidth { get; }
-    int MinHeight { get; }
+    int MinWidth { get; set; }
+    int MinHeight { get; set;  }
     bool IsTimelineCollapsed { get; set; }
     #endregion
 
     #region Image Settings
-    float MinZoom { get; }
-    float MaxZoom { get; }
-    float ZoomStep { get; }
+    float MinZoom { get; set;  }
+    float MaxZoom { get; set; }
+    float ZoomStep { get; set; }
 
     string[] ImageFormats { get; }
     string ImageFormat { get; set; }
