@@ -15,8 +15,6 @@ public sealed partial class HomePage : Page
 {
     public HomeViewModel ViewModel { get; }
 
-    // NOTE: IDIManager is kept for compatibility with existing DI wiring.
-    // The actual "glue" code was moved to XAML via HomePageHelper (attached property).
     public HomePage(HomeViewModel viewModel, IDIManager _)
     {
         ViewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));

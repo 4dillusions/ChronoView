@@ -85,6 +85,7 @@
             </Grid>
         </Border>
 
+        <!-- Footer -->
         <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center">
             <StackPanel>
                 <TextBlock Style="{StaticResource SubtleTextStyle}" Text="© 2025 4D Illusions"/>

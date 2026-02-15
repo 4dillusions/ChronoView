@@ -217,5 +217,85 @@
 	  <value>ChronoView was created as a portfolio project to illustrate real-world software design principles within a modern desktop context. The goal is not only to present technical capability but also to convey an appreciation for clarity, user flow, and thoughtful UI/UX craftsmanship.</value>
 	</data>
 
+	<!-- HEADER -->
+	<data name="Settings_Title.Text" xml:space="preserve">
+	  <value>Settings</value>
+	</data>
+	<data name="Settings_Description.Text" xml:space="preserve">
+	  <value>Fine-tune theme, language, window behavior, and image view settings. Except for image format and image search, all settings take effect after restart.</value>
+	</data>
+
+	<!-- SECTIONS -->
+	<data name="Settings_Section_App.Text" xml:space="preserve">
+	  <value>🎨 Application</value>
+	</data>
+	<data name="Settings_Section_Window.Text" xml:space="preserve">
+	  <value>🪟 Window</value>
+	</data>
+	<data name="Settings_Section_ImageView.Text" xml:space="preserve">
+	  <value>🖼️ Image / View</value>
+	</data>
+
+	<!-- APP SETTINGS -->
+	<data name="Settings_Label_Theme.Text" xml:space="preserve">
+	  <value>Theme</value>
+	</data>
+	<data name="Settings_Label_Language.Text" xml:space="preserve">
+	  <value>Language</value>
+	</data>
+
+	<!-- WINDOW SETTINGS -->
+	<data name="Settings_Label_MinWidth.Text" xml:space="preserve">
+	  <value>Min width</value>
+	</data>
+	<data name="Settings_Label_MinHeight.Text" xml:space="preserve">
+	  <value>Min height</value>
+	</data>
+	<data name="Settings_Label_TimelineCollapsed.Text" xml:space="preserve">
+	  <value>Timeline collapsed</value>
+	</data>
+
+	<data name="Settings_Toggle_TimelineCollapsed.OnContent" xml:space="preserve">
+	  <value>Yes</value>
+	</data>
+	<data name="Settings_Toggle_TimelineCollapsed.OffContent" xml:space="preserve">
+	  <value>No</value>
+	</data>
+
+	<!-- IMAGE / VIEW SETTINGS -->
+	<data name="Settings_Label_ZoomSettings.Text" xml:space="preserve">
+	  <value>Zoom settings</value>
+	</data>
+	<data name="Settings_Zoom_Min.Text" xml:space="preserve">
+	  <value>Min</value>
+	</data>
+	<data name="Settings_Zoom_Max.Text" xml:space="preserve">
+	  <value>Max</value>
+	</data>
+	<data name="Settings_Zoom_Step.Text" xml:space="preserve">
+	  <value>Step</value>
+	</data>
+
+	<data name="Settings_Label_ImageFormat.Text" xml:space="preserve">
+	  <value>Image format</value>
+	</data>
+
+	<data name="Settings_Label_RecursiveImageSearch.Text" xml:space="preserve">
+	  <value>Recursive image search</value>
+	</data>
+	<data name="Settings_Toggle_RecursiveImageSearch.OnContent" xml:space="preserve">
+	  <value>On</value>
+	</data>
+	<data name="Settings_Toggle_RecursiveImageSearch.OffContent" xml:space="preserve">
+	  <value>Off</value>
+	</data>
+
+	<!-- FOOTER -->
+	<data name="Settings_Button_ResetDefault.Content" xml:space="preserve">
+	  <value>Reset to defaults</value>
+	</data>
+	<data name="Settings_Footer_Copyright.Text" xml:space="preserve">
+	  <value>© 2025 4D Illusions</value>
+	</data>
 
 </root>

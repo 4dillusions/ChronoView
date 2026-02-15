@@ -217,5 +217,85 @@
 	  <value>A ChronoView portfólió projektként készült, amely valós szoftvertervezési elveket mutat be egy modern asztali alkalmazás kontextusában. A cél nem csupán a technikai felkészültség bemutatása, hanem az átláthatóság, a felhasználói folyamatok és az átgondolt UI/UX iránti elkötelezettség közvetítése is.</value>
 	</data>
 
+	<!-- HEADER -->
+	<data name="Settings_Title.Text" xml:space="preserve">
+	  <value>Beállítások</value>
+	</data>
+	<data name="Settings_Description.Text" xml:space="preserve">
+	  <value>Téma, nyelv, ablak viselkedés és képnézet finomhangolása. A képformátum és a képkeresés kivételével az összes beállítás újraindítás után érvényesül.</value>
+	</data>
+
+	<!-- SECTIONS -->
+	<data name="Settings_Section_App.Text" xml:space="preserve">
+	  <value>🎨 Alkalmazás</value>
+	</data>
+	<data name="Settings_Section_Window.Text" xml:space="preserve">
+	  <value>🪟 Ablak</value>
+	</data>
+	<data name="Settings_Section_ImageView.Text" xml:space="preserve">
+	  <value>🖼️ Kép / Nézet</value>
+	</data>
+
+	<!-- APP SETTINGS -->
+	<data name="Settings_Label_Theme.Text" xml:space="preserve">
+	  <value>Téma</value>
+	</data>
+	<data name="Settings_Label_Language.Text" xml:space="preserve">
+	  <value>Nyelv</value>
+	</data>
+
+	<!-- WINDOW SETTINGS -->
+	<data name="Settings_Label_MinWidth.Text" xml:space="preserve">
+	  <value>Min. szélesség</value>
+	</data>
+	<data name="Settings_Label_MinHeight.Text" xml:space="preserve">
+	  <value>Min. magasság</value>
+	</data>
+	<data name="Settings_Label_TimelineCollapsed.Text" xml:space="preserve">
+	  <value>Timeline összecsukva</value>
+	</data>
+
+	<data name="Settings_Toggle_TimelineCollapsed.OnContent" xml:space="preserve">
+	  <value>Igen</value>
+	</data>
+	<data name="Settings_Toggle_TimelineCollapsed.OffContent" xml:space="preserve">
+	  <value>Nem</value>
+	</data>
+
+	<!-- IMAGE / VIEW SETTINGS -->
+	<data name="Settings_Label_ZoomSettings.Text" xml:space="preserve">
+	  <value>Zoom beállítások</value>
+	</data>
+	<data name="Settings_Zoom_Min.Text" xml:space="preserve">
+	  <value>Min</value>
+	</data>
+	<data name="Settings_Zoom_Max.Text" xml:space="preserve">
+	  <value>Max</value>
+	</data>
+	<data name="Settings_Zoom_Step.Text" xml:space="preserve">
+	  <value>Lépés</value>
+	</data>
+
+	<data name="Settings_Label_ImageFormat.Text" xml:space="preserve">
+	  <value>Képformátum</value>
+	</data>
+
+	<data name="Settings_Label_RecursiveImageSearch.Text" xml:space="preserve">
+	  <value>Rekurzív képkeresés</value>
+	</data>
+	<data name="Settings_Toggle_RecursiveImageSearch.OnContent" xml:space="preserve">
+	  <value>Bekapcsolva</value>
+	</data>
+	<data name="Settings_Toggle_RecursiveImageSearch.OffContent" xml:space="preserve">
+	  <value>Kikapcsolva</value>
+	</data>
+
+	<!-- FOOTER -->
+	<data name="Settings_Button_ResetDefault.Content" xml:space="preserve">
+	  <value>Alaphelyzet</value>
+	</data>
+	<data name="Settings_Footer_Copyright.Text" xml:space="preserve">
+	  <value>© 2025 4D Illusions</value>
+	</data>
 
 </root>

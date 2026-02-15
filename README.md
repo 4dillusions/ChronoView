@@ -14,6 +14,10 @@
 ChronoView is a minimalist photo timeline viewer built with **WinUI 3** and **C# (MVVM pattern)**.  
 It lets you explore your images through time — smooth, responsive, and focused on clean UI and intuitive interaction.
 
+<p align="center">
+  <img src="Doc/ChronoViewHome.jpg">
+</p>
+
 ---
 
 ## 🕓 Overview
