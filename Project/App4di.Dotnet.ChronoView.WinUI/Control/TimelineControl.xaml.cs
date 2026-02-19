@@ -325,9 +325,5 @@ public sealed partial class TimelineControl : UserControl
                 ViewModel.SelectedTimeLineItem = value;
         }
     }
-
-    public void ZoomIn() => ViewModel?.ZoomInCommand?.Execute(null);
-    public void ZoomOut() => ViewModel?.ZoomOutCommand?.Execute(null);
-    public void ResetZoom() => ViewModel?.ResetZoomCommand?.Execute(null);
     #endregion
 }
