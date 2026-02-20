@@ -14,6 +14,11 @@ namespace App4di.Dotnet.ChronoView.Infrastructure.ViewModel;
 
 public class HomeViewModel : NotificationObject
 {
+    #region Constants
+    private const int DefaultTimelineRowHeight = 150;
+    private const int CollapsedTimelineRowHeight = 60;
+    #endregion
+
     #region Commands
     public ICommand BackCommand { get; }
     public ICommand NextCommand { get; }
@@ -259,12 +264,12 @@ public class HomeViewModel : NotificationObject
         {
             if (e.PropertyName == nameof(TimelineViewModel.IsCollapsed))
             {
-                TimelineRowHeight = this.timelineViewModel.IsCollapsed ? 60 : 200;
+                TimelineRowHeight = this.timelineViewModel.IsCollapsed ? CollapsedTimelineRowHeight : DefaultTimelineRowHeight;
             }
         };
 
         // Initial state
-        TimelineRowHeight = this.timelineViewModel.IsCollapsed ? 60 : 200;
+        TimelineRowHeight = this.timelineViewModel.IsCollapsed ? CollapsedTimelineRowHeight : DefaultTimelineRowHeight;
         this.timelineViewModel.Items = TimelineItems;
         this.timelineViewModel.SelectedTimeLineItem = SelectedImageItem;
 

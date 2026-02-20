@@ -20,9 +20,6 @@ public class TimelineViewModel : NotificationObject
     #endregion
 
     #region Commands
-    public ICommand ZoomInCommand { get; }
-    public ICommand ZoomOutCommand { get; }
-    public ICommand ResetZoomCommand { get; }
     public ICommand CollapseExpandCommand { get; }
     #endregion
 
@@ -61,10 +58,6 @@ public class TimelineViewModel : NotificationObject
                 RaisePropertyChanged(nameof(SelectedImage));
 
                 SelectedItemChanged?.Invoke(this, value);
-
-                (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -90,7 +83,6 @@ public class TimelineViewModel : NotificationObject
             if (SetProperty(ref pixelsPerSecond, clamped))
             {
                 CalculateTimelineMetrics();
-                RiseAllButtonsExecuteChanged();
             }
         }
     }
@@ -181,7 +173,6 @@ public class TimelineViewModel : NotificationObject
         set
         {
             SetProperty(ref field, value);
-            RiseAllButtonsExecuteChanged();
         }
     }
     #endregion
@@ -198,9 +189,6 @@ public class TimelineViewModel : NotificationObject
         DefaultPixelsPerSecond = 0.02;
         pixelsPerSecond = DefaultPixelsPerSecond;
         
-        ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => !IsLocked && SelectedTimeLineItem != null && PixelsPerSecond < MaxPixelsPerSecond);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => !IsLocked && SelectedTimeLineItem != null && PixelsPerSecond > MinPixelsPerSecond);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => !IsLocked && SelectedTimeLineItem != null && Math.Abs(PixelsPerSecond - DefaultPixelsPerSecond) > 0.0000001);
         CollapseExpandCommand = new RelayCommand(_ => CollapseExpand(), _ => true);
 
         Items.CollectionChanged += (s, e) => OnItemsChanged();
@@ -208,13 +196,6 @@ public class TimelineViewModel : NotificationObject
     #endregion
 
     #region Functions
-    void RiseAllButtonsExecuteChanged()
-    {
-        (ZoomInCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
-        (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
-    }
-
     private void ZoomIn()
     {
         PixelsPerSecond = Math.Min(PixelsPerSecond * ZoomFactor, MaxPixelsPerSecond);
@@ -298,8 +279,6 @@ public class TimelineViewModel : NotificationObject
             RaisePropertyChanged(nameof(PixelsPerSecond));
             CalculateTimelineMetrics();
         }
-
-        RiseAllButtonsExecuteChanged();
     }
     #endregion
 }
