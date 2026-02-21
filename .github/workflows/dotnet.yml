@@ -2,7 +2,7 @@ name: ChronoView CI
 
 on:
   push:
-    branches: [ "main", "V1" ]
+    branches: [ "main", "V1", "V2" ]
   pull_request:
     branches: [ "main" ]
 
