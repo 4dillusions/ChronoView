@@ -4,7 +4,93 @@
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.Styles>
-        <FluentTheme />
-    </Application.Styles>
+             <Application.Resources>
+    
+                <ResourceDictionary>
+                  <ResourceDictionary.ThemeDictionaries>
+
+                    <!-- ===== LIGHT ===== -->
+                    <ResourceDictionary x:Key="Light">
+                      <SolidColorBrush x:Key="App.AccentBrush" Color="#0067C0"/>
+                      <SolidColorBrush x:Key="App.AccentBrush.Darker" Color="#0055A1"/>
+                      <SolidColorBrush x:Key="App.BackgroundBrush" Color="#FAFAFA"/>
+                      <SolidColorBrush x:Key="App.SurfaceBrush" Color="#FFFFFF"/>
+
+                      <SolidColorBrush x:Key="App.SurfaceBorderBrush" Color="#D9D9D9"/>
+                      <SolidColorBrush x:Key="App.OnSurfaceBrush" Color="#000000"/>
+                      <SolidColorBrush x:Key="App.SubtleTextBrush" Color="#6E6E6E"/>
+                      <SolidColorBrush x:Key="App.NavBackgroundBrush" Color="#EDEDED"/>
+                      <SolidColorBrush x:Key="App.NavForegroundBrush" Color="#1A1A1A"/>
+
+                      <SolidColorBrush x:Key="Timeline.MarkerBrush" Color="#0078D7"/>
+                      <SolidColorBrush x:Key="Timeline.HoverBrush" Color="DarkGray"/>
+                      <SolidColorBrush x:Key="Timeline.SelectedBrush" Color="#333333"/>
+
+                      <!-- Card system -->
+                      <SolidColorBrush x:Key="AccentBrush" Color="#0067C0"/>
+                      <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+                      <SolidColorBrush x:Key="CardBorderBrush" Color="#D9D9D9"/>
+                    </ResourceDictionary>
+
+                    <!-- ===== DARK ===== -->
+                    <ResourceDictionary x:Key="Dark">
+                      <SolidColorBrush x:Key="App.AccentBrush" Color="#3A96DD"/>
+                      <SolidColorBrush x:Key="App.AccentBrush.Darker" Color="#2E7BB5"/>
+                      <SolidColorBrush x:Key="App.BackgroundBrush" Color="#1E1F22"/>
+                      <SolidColorBrush x:Key="App.SurfaceBrush" Color="#2A2B2F"/>
+
+                      <SolidColorBrush x:Key="App.SurfaceBorderBrush" Color="#3A3B40"/>
+                      <SolidColorBrush x:Key="App.OnSurfaceBrush" Color="#FFFFFF"/>
+                      <SolidColorBrush x:Key="App.SubtleTextBrush" Color="#B8B8B8"/>
+                      <SolidColorBrush x:Key="App.NavBackgroundBrush" Color="#141517"/>
+                      <SolidColorBrush x:Key="App.NavForegroundBrush" Color="#FFFFFF"/>
+
+                      <SolidColorBrush x:Key="Timeline.MarkerBrush" Color="#4DA8FF"/>
+                      <SolidColorBrush x:Key="Timeline.HoverBrush" Color="DarkGray"/>
+                      <SolidColorBrush x:Key="Timeline.SelectedBrush" Color="#FFFFFF"/>
+
+                      <!-- Card system -->
+                      <SolidColorBrush x:Key="AccentBrush" Color="#3A96DD"/>
+                      <SolidColorBrush x:Key="CardBackgroundBrush" Color="#2A2B2F"/>
+                      <SolidColorBrush x:Key="CardBorderBrush" Color="#3A3B40"/>
+                    </ResourceDictionary>
+
+                  </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>
+
+            </Application.Resources>
+             
+             <Application.Styles>
+                 <FluentTheme/>
+                 
+                 <!-- TabControl -->
+                 <Style Selector="TabControl.navTabs">
+                   <Setter Property="Background" Value="Transparent"/>
+                   <Setter Property="BorderThickness" Value="0"/>
+                   <Setter Property="Padding" Value="0"/>
+                 </Style>
+
+                 <!-- TabItem -->
+                 <Style Selector="TabControl.navTabs TabItem">
+                   <Setter Property="Foreground" Value="{DynamicResource App.NavForegroundBrush}"/>
+                   <Setter Property="Background" Value="Transparent"/>
+                   <Setter Property="BorderBrush" Value="Transparent"/>
+                   <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                   <Setter Property="Padding" Value="16,10"/>
+                 </Style>
+
+                 <!-- Hover -->
+                 <Style Selector="TabControl.navTabs TabItem:pointerover">
+                   <Setter Property="Opacity" Value="0.9"/>
+                 </Style>
+
+                 <!-- Selected:“underline” -->
+                 <Style Selector="TabControl.navTabs TabItem:selected">
+                   <Setter Property="BorderBrush" Value="{DynamicResource App.AccentBrush}"/>
+                   <Setter Property="Foreground" Value="{DynamicResource App.NavForegroundBrush}"/>
+                   <Setter Property="Opacity" Value="1"/>
+                 </Style>
+                 
+                 <StyleInclude Source="avares://App4di.Dotnet.ChronoView.AvaloniaUI/Styles/Cards.axaml"/>
+             </Application.Styles>
 </Application>

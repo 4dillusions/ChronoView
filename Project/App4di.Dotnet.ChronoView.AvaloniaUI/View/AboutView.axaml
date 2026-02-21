@@ -2,7 +2,70 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:loc="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Localization"
+             xmlns:controls="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Controls"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="650"
              x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.View.AboutView">
-    About view
+
+    <Grid Margin="24"
+          ColumnDefinitions="*,*"
+          RowDefinitions="Auto,Auto,Auto"
+          ColumnSpacing="18"
+          RowSpacing="18">
+
+        <!-- About (card) -->
+        <Border Grid.Row="0" Grid.Column="0" Classes="card">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+
+                <controls:CardIcon Text="️️ℹ️"/>
+                
+                <StackPanel Grid.Column="1" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Classes="cardTitle" Text="{loc:Tr About_Title.Text}"/>
+                    <TextBlock Classes="subtle" Text="{loc:Tr About_Description.Text}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <!-- Contact (card) -->
+        <Border Grid.Row="0" Grid.Column="1" Classes="card">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+
+                <controls:CardIcon Text="📧"/>
+
+                <StackPanel Grid.Column="1" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Classes="cardTitle" Text="{loc:Tr Contacts_Title.Text}"/>
+                    
+                    <TextBlock Classes="main" Text="{loc:Tr Contacts_TechSupport_Title.Text}"/>
+                    <Button Classes="link" Content="{loc:Tr Contacts_TechSupport_Email.Text}" HorizontalAlignment="Left"/>
+                    <TextBlock Classes="subtle" Text="{loc:Tr Contacts_TechSupport_Description.Text}"/>
+                    
+                    <TextBlock Margin="0,8,0,0" Classes="main" Text="{loc:Tr Contacts_GeneralInfo_Title.Text}"/>
+                    <Button Classes="link" Content="{loc:Tr Contacts_GeneralInfo_Email.Text}" HorizontalAlignment="Left"/>
+                    <TextBlock Classes="subtle" Text="{loc:Tr Contacts_GeneralInfo_Description.Text}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <!-- Technology (wide card) -->
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Classes="card">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+
+                <controls:CardIcon Text="🖥️"/>
+                
+                <StackPanel Grid.Column="1" Spacing="10">
+                    <TextBlock Classes="cardTitle" Text="{loc:Tr Technology_Title.Text}"/>
+                    
+                    <TextBlock Classes="subtle" Text="{loc:Tr Technology_Paragraph1.Text}"/>
+                    <TextBlock Classes="subtle" Text="{loc:Tr Technology_Paragraph2.Text}"/>
+                    <TextBlock Classes="subtle" Text="{loc:Tr Technology_Paragraph3.Text}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+        <!-- Footer -->
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Classes="subtle" Text="{loc:Tr Settings_Footer_Copyright.Text}"/>
+    </Grid>
 </UserControl>

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Controls"
+             x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.Controls.CardIcon">
+
+    <Border Width="200"
+            Height="200"
+            CornerRadius="18"
+            Background="{DynamicResource CardBackgroundBrush}"
+            BorderThickness="1"
+            BorderBrush="{DynamicResource CardBorderBrush}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+        <TextBlock Text="{Binding Text, RelativeSource={RelativeSource AncestorType=local:CardIcon}}"
+                   FontSize="140"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+    </Border>
+
+</UserControl>

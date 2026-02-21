@@ -1,24 +1,34 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Localization"
         xmlns:view="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.View"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.MainWindow"
-        Title="App4di.Dotnet.ChronoView.AvaloniaUI">
+        Title="ChronoView">
 
-    <TabControl>
-        <TabItem Header="Home">
-            <view:HomeView/>
-        </TabItem>
+    <DockPanel Background="{DynamicResource App.BackgroundBrush}">
 
-        <TabItem Header="Settings">
-            <view:SettingsView/>
-        </TabItem>
-        
-        <TabItem Header="About">
-            <view:AboutView/>
-        </TabItem>
-    </TabControl>
+        <!-- NAV BAR -->
+        <Border DockPanel.Dock="Top"
+                Background="{DynamicResource App.NavBackgroundBrush}"
+                BorderBrush="{DynamicResource App.SurfaceBorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="12,8">
 
+            <TabControl>
+                <TabItem Header="{loc:Tr Nav_Home.Content}">
+                    <view:HomeView/>
+                </TabItem>
+
+                <TabItem Header="{loc:Tr Nav_Settings.Content}">
+                    <view:SettingsView/>
+                </TabItem>
+
+                <TabItem Header="{loc:Tr Nav_About.Content}">
+                    <view:AboutView/>
+                </TabItem>
+            </TabControl>
+
+        </Border>
+
+    </DockPanel>
 </Window>
