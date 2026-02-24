@@ -2,8 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Localization"
         xmlns:view="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.View"
+        xmlns:local="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI"
         x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.MainWindow"
-        Title="ChronoView">
+        Title="ChronoView"
+        x:DataType="local:MainWindow">
 
     <DockPanel Background="{DynamicResource App.BackgroundBrush}">
 
@@ -20,7 +22,9 @@
                 </TabItem>
 
                 <TabItem Header="{loc:Tr Nav_Settings.Content}">
-                    <view:SettingsView/>
+                    <ContentControl
+                        Content="{Binding SettingsViewControl,
+                          RelativeSource={RelativeSource AncestorType=local:MainWindow}}" />
                 </TabItem>
 
                 <TabItem Header="{loc:Tr Nav_About.Content}">

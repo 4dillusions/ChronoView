@@ -2,7 +2,150 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Localization"
+             xmlns:controls="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Controls"
+             xmlns:vm="clr-namespace:App4di.Dotnet.ChronoView.Infrastructure.ViewModel;assembly=App4di.Dotnet.ChronoView.Infrastructure"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.View.SettingsView">
-    Settings view
+             x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.View.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer>
+        <Grid Margin="24"
+              RowDefinitions="Auto,Auto"
+              RowSpacing="18">
+
+            <StackPanel Grid.Row="0" Spacing="18" MaxWidth="900">
+
+                <!-- HEADER CARD -->
+                <Border Classes="card">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                        <controls:CardIcon Text="⚙️"/>
+
+                        <StackPanel Grid.Column="1" Spacing="10" VerticalAlignment="Center">
+                            <TextBlock Classes="cardTitle" Text="{loc:Tr Settings_Title.Text}"/>
+                            <TextBlock Classes="subtle" Text="{loc:Tr Settings_Description.Text}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- APP SETTINGS -->
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="cardTitle" FontSize="20" Text="{loc:Tr Settings_Section_App.Text}"/>
+
+                        <!-- Theme -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_Theme.Text}"/>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding Themes}"
+                                      SelectedValue="{Binding Theme, Mode=TwoWay}"
+                                      SelectedValueBinding="{Binding}" />
+                        </Grid>
+
+                        <!-- Language -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_Language.Text}"/>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding Languages}"
+                                      SelectedValue="{Binding Language, Mode=TwoWay}"
+                                      SelectedValueBinding="{Binding}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- WINDOW SETTINGS -->
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="cardTitle" FontSize="20" Text="{loc:Tr Settings_Section_Window.Text}"/>
+
+                        <!-- MinWidth -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_MinWidth.Text}"/>
+                            <NumericUpDown Grid.Column="1"
+                                           Minimum="320"
+                                           Maximum="7680"
+                                           Increment="10"
+                                           Value="{Binding MinWidth, Mode=TwoWay}"/>
+                        </Grid>
+
+                        <!-- MinHeight -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_MinHeight.Text}"/>
+                            <NumericUpDown Grid.Column="1"
+                                           Minimum="240"
+                                           Maximum="4320"
+                                           Increment="10"
+                                           Value="{Binding MinHeight, Mode=TwoWay}"/>
+                        </Grid>
+
+                        <!-- Timeline collapsed -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_TimelineCollapsed.Text}"/>
+                            <ToggleSwitch Grid.Column="1"
+                                          IsChecked="{Binding IsTimelineCollapsed, Mode=TwoWay}"
+                                          OnContent="{loc:Tr Settings_Toggle_TimelineCollapsed.OnContent}"
+                                          OffContent="{loc:Tr Settings_Toggle_TimelineCollapsed.OffContent}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- IMAGE SETTINGS -->
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="cardTitle" FontSize="20" Text="{loc:Tr Settings_Section_ImageView.Text}"/>
+
+                        <!-- Zoom settings -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Top" Margin="0,6,0,0" Text="{loc:Tr Settings_Label_ZoomSettings.Text}"/>
+
+                            <Grid Grid.Column="1" ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="subtle" Text="{loc:Tr Settings_Zoom_Min.Text}"/>
+                                    <NumericUpDown Minimum="1" Maximum="1000" Increment="1" Value="{Binding MinZoom, Mode=TwoWay}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <TextBlock Classes="subtle" Text="{loc:Tr Settings_Zoom_Max.Text}"/>
+                                    <NumericUpDown Minimum="1" Maximum="1000" Increment="1" Value="{Binding MaxZoom, Mode=TwoWay}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" Spacing="4">
+                                    <TextBlock Classes="subtle" Text="{loc:Tr Settings_Zoom_Step.Text}"/>
+                                    <NumericUpDown Minimum="1" Maximum="1000" Increment="1" Value="{Binding ZoomStep, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+
+                        <!-- Image format -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_ImageFormat.Text}"/>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding ImageFormats}"
+                                      SelectedValue="{Binding ImageFormat, Mode=TwoWay}"
+                                      SelectedValueBinding="{Binding}" />
+                        </Grid>
+
+                        <!-- Recursive image search -->
+                        <Grid ColumnDefinitions="220,*" ColumnSpacing="12">
+                            <TextBlock VerticalAlignment="Center" Text="{loc:Tr Settings_Label_RecursiveImageSearch.Text}"/>
+                            <ToggleSwitch Grid.Column="1"
+                                          IsChecked="{Binding IsRecursiveImageSearch, Mode=TwoWay}"
+                                          OnContent="{loc:Tr Settings_Toggle_RecursiveImageSearch.OnContent}"
+                                          OffContent="{loc:Tr Settings_Toggle_RecursiveImageSearch.OffContent}"/>
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- FOOTER ACTIONS -->
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,6,0,0">
+                    <TextBlock VerticalAlignment="Center" Classes="subtle" Text="{loc:Tr Settings_Footer_Copyright.Text}"/>
+                    <Button Grid.Column="1"
+                            Content="{loc:Tr Settings_Button_ResetDefault.Content}"
+                            Command="{Binding ResetDefaultCommand}"/>
+                </Grid>
+
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
