@@ -2,7 +2,111 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.View.HomeView">
-    Home view
+             xmlns:controls="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Controls"
+             xmlns:conv="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Converters"
+             xmlns:vm="clr-namespace:App4di.Dotnet.ChronoView.Infrastructure.ViewModel;assembly=App4di.Dotnet.ChronoView.Infrastructure"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+             x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.View.HomeView"
+             x:DataType="vm:HomeViewModel">
+
+    <UserControl.Resources>
+        <conv:IntToGridLengthConverter x:Key="IntToGridLengthConverter"/>
+        <conv:BoolToPlayPauseTextConverter x:Key="BoolToPlayPauseTextConverter"/>
+        <conv:ImagePathToBitmapConverter x:Key="ImagePathToBitmapConverter"/>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="*,Auto"
+          RowSpacing="0">
+
+        <!-- Image view -->
+        <Border Grid.Row="0"
+                Margin="8"
+                CornerRadius="12"
+                Background="{DynamicResource CardBackgroundBrush}"
+                BorderBrush="{DynamicResource CardBorderBrush}"
+                BorderThickness="1">
+            <Grid RowDefinitions="*,Auto">
+
+                <!-- Image -->
+                <ScrollViewer x:Name="ImageScroller"
+                              Grid.Row="0"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image x:Name="ImageView"
+                               Stretch="Uniform"
+                               RenderTransformOrigin="0.5,0.5"
+                               Source="{Binding SelectedImageItem.ImagePath, Converter={StaticResource ImagePathToBitmapConverter}}">
+                            <Image.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                    <RotateTransform Angle="0"/>
+                                </TransformGroup>
+                            </Image.RenderTransform>
+                        </Image>
+                    </Grid>
+                </ScrollViewer>
+
+                <!-- Menu -->
+                <Border Grid.Row="1"
+                        BorderThickness="0,1,0,0"
+                        BorderBrush="{DynamicResource App.SurfaceBorderBrush}"
+                        Background="{DynamicResource App.SurfaceBrush}"
+                        Padding="10,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="📂"
+                                ToolTip.Tip="Open folder"
+                                Command="{Binding OpenFolderCommand}"/>
+                        <Separator Width="1"/>
+
+                        <Button Content="◀"
+                                ToolTip.Tip="Back"
+                                Command="{Binding BackCommand}"/>
+                        <Button Content="▶"
+                                ToolTip.Tip="Next"
+                                Command="{Binding NextCommand}"/>
+
+                        <Separator Width="1"/>
+
+                        <Button ToolTip.Tip="Play / Pause"
+                                Command="{Binding PlayPauseCommand}">
+                            <TextBlock Text="{Binding IsAutoPlay, Converter={StaticResource BoolToPlayPauseTextConverter}}"/></Button>
+
+                        <Separator Width="1"/>
+
+                        <Button Content="➖"
+                                ToolTip.Tip="Zoom out"
+                                Command="{Binding ZoomOutCommand}"/>
+                        <Button Content="➕"
+                                ToolTip.Tip="Zoom in"
+                                Command="{Binding ZoomInCommand}"/>
+                        <Button Content="⤾"
+                                ToolTip.Tip="Reset zoom"
+                                Command="{Binding ResetZoomCommand}"/>
+
+                        <Separator Width="1"/>
+
+                        <Button Content="🔄"
+                                ToolTip.Tip="Rotate"
+                                Command="{Binding RotateCommand}"/>
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!-- Timeline view -->
+        <Border Grid.Row="1"
+                Margin="8"
+                CornerRadius="12"
+                Background="{DynamicResource App.SurfaceBrush}"
+                BorderBrush="{DynamicResource App.SurfaceBorderBrush}"
+                BorderThickness="1"
+                Height="{Binding TimelineRowHeight}">
+            <controls:TimelineControl Margin="8"
+                                     IsLocked="{Binding IsAutoPlay}"
+                                     ViewModel="{Binding TimelineViewModel}"/>
+        </Border>
+
+    </Grid>
 </UserControl>

@@ -18,7 +18,9 @@
 
             <TabControl>
                 <TabItem Header="{loc:Tr Nav_Home.Content}">
-                    <view:HomeView/>
+                    <ContentControl
+                        Content="{Binding HomeViewControl,
+                          RelativeSource={RelativeSource AncestorType=local:MainWindow}}" />
                 </TabItem>
 
                 <TabItem Header="{loc:Tr Nav_Settings.Content}">

@@ -5,6 +5,8 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using App4di.Dotnet.ChronoView.AvaloniaUI.View;
+using App4di.Dotnet.ChronoView.AvaloniaUI.Service;
+using FW4di.Dotnet.MVVM.Service;
 using FW4di.Dotnet.Core.DependencyInjection;
 
 namespace App4di.Dotnet.ChronoView.AvaloniaUI.Service;
@@ -18,10 +20,10 @@ public class DIBindings
         new Infrastructure.Service.DIBindings().BindAllDepencies(di,
             () =>
             {
-                //di.Bind<IFolderPickerService, FolderPickerService>(DILifetimeScopes.Singleton);
+                di.Bind<IFolderPickerService, FolderPickerService>(DILifetimeScopes.Singleton);
                 //di.Bind<INavigationService, NavigationService>(DILifetimeScopes.Singleton);
 
-                //di.Bind<HomeView, HomeView>(DILifetimeScopes.Singleton);
+                di.Bind<HomeView, HomeView>(DILifetimeScopes.Singleton);
                 
                 di.Bind<SettingsView, SettingsView>(DILifetimeScopes.Singleton);
                 di.Bind<MainWindow, MainWindow>(DILifetimeScopes.Singleton);

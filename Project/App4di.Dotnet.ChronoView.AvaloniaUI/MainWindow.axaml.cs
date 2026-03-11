@@ -12,10 +12,12 @@ namespace App4di.Dotnet.ChronoView.AvaloniaUI;
 
 public partial class MainWindow : Window
 {
+    public UserControl HomeViewControl { get; set; }
     public UserControl SettingsViewControl { get; set; }
     
     public MainWindow(IDIManager diManager)
     {
+        HomeViewControl = diManager.GetDependency<HomeView>();
         SettingsViewControl = diManager.GetDependency<SettingsView>();
         
         InitializeComponent();
