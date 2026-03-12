@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:controls="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Controls"
              xmlns:conv="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Converters"
+             xmlns:loc="clr-namespace:App4di.Dotnet.ChronoView.AvaloniaUI.Localization"
              xmlns:vm="clr-namespace:App4di.Dotnet.ChronoView.Infrastructure.ViewModel;assembly=App4di.Dotnet.ChronoView.Infrastructure"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
              x:Class="App4di.Dotnet.ChronoView.AvaloniaUI.View.HomeView"
@@ -61,42 +62,76 @@
                         BorderBrush="{DynamicResource App.SurfaceBorderBrush}"
                         Background="{DynamicResource App.SurfaceBrush}"
                         Padding="10,8">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button Content="📂"
-                                ToolTip.Tip="Open folder"
-                                Command="{Binding OpenFolderCommand}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                HorizontalAlignment="Right">
+                        <Button ToolTip.Tip="{loc:Tr Cmd_OpenFolder.Label}"
+                                Command="{Binding OpenFolderCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="🗂️"/>
+                                <TextBlock Text="{loc:Tr Cmd_OpenFolder.Label}"/>
+                            </StackPanel>
+                        </Button>
                         <Separator Width="1"/>
 
-                        <Button Content="◀"
-                                ToolTip.Tip="Back"
-                                Command="{Binding BackCommand}"/>
-                        <Button Content="▶"
-                                ToolTip.Tip="Next"
-                                Command="{Binding NextCommand}"/>
+                        <Button ToolTip.Tip="{loc:Tr Cmd_Back.Label}"
+                                Command="{Binding BackCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="←"/>
+                                <TextBlock Text="{loc:Tr Cmd_Back.Label}"/>
+                            </StackPanel>
+                        </Button>
+                        <Button ToolTip.Tip="{loc:Tr Cmd_Next.Label}"
+                                Command="{Binding NextCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="→"/>
+                                <TextBlock Text="{loc:Tr Cmd_Next.Label}"/>
+                            </StackPanel>
+                        </Button>
 
                         <Separator Width="1"/>
 
-                        <Button ToolTip.Tip="Play / Pause"
+                        <Button ToolTip.Tip="{loc:Tr Cmd_PlayPause.Label}"
                                 Command="{Binding PlayPauseCommand}">
-                            <TextBlock Text="{Binding IsAutoPlay, Converter={StaticResource BoolToPlayPauseTextConverter}}"/></Button>
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="{Binding IsAutoPlay, Converter={StaticResource BoolToPlayPauseTextConverter}}"/>
+                                <TextBlock Text="{loc:Tr Cmd_PlayPause.Label}"/>
+                            </StackPanel>
+                        </Button>
 
                         <Separator Width="1"/>
 
-                        <Button Content="➖"
-                                ToolTip.Tip="Zoom out"
-                                Command="{Binding ZoomOutCommand}"/>
-                        <Button Content="➕"
-                                ToolTip.Tip="Zoom in"
-                                Command="{Binding ZoomInCommand}"/>
-                        <Button Content="⤾"
-                                ToolTip.Tip="Reset zoom"
-                                Command="{Binding ResetZoomCommand}"/>
+                        <Button ToolTip.Tip="{loc:Tr Cmd_ZoomOut.Label}"
+                                Command="{Binding ZoomOutCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="−"/>
+                                <TextBlock Text="{loc:Tr Cmd_ZoomOut.Label}"/>
+                            </StackPanel>
+                        </Button>
+                        <Button ToolTip.Tip="{loc:Tr Cmd_ZoomIn.Label}"
+                                Command="{Binding ZoomInCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="+"/>
+                                <TextBlock Text="{loc:Tr Cmd_ZoomIn.Label}"/>
+                            </StackPanel>
+                        </Button>
+                        <Button ToolTip.Tip="{loc:Tr Cmd_ResetZoom.Label}"
+                                Command="{Binding ResetZoomCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="↺"/>
+                                <TextBlock Text="{loc:Tr Cmd_ResetZoom.Label}"/>
+                            </StackPanel>
+                        </Button>
 
                         <Separator Width="1"/>
 
-                        <Button Content="🔄"
-                                ToolTip.Tip="Rotate"
-                                Command="{Binding RotateCommand}"/>
+                        <Button ToolTip.Tip="{loc:Tr Cmd_Rotate.Label}"
+                                Command="{Binding RotateCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="⟳"/>
+                                <TextBlock Text="{loc:Tr Cmd_Rotate.Label}"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Border>
 
