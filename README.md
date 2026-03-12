@@ -4,25 +4,29 @@
 
 <h1 align="center">ChronoView </br></br>
 
-<img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"> <!--<img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0"> 
--->
+<img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"> 
+<img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"> <img src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0"> 
+
 <img src="https://img.shields.io/badge/-.NET%2010.0-blueviolet">
-[![Azure Static Web Apps CI/CD](https://github.com/4dillusions/ChronoView/actions/workflows/dotnet.yml/badge.svg)](https://github.com/4dillusions/ChronoView/actions/workflows/dotnet-desktop.yml)
+<a href="https://github.com/4dillusions/ChronoView/actions/workflows/dotnet.yml">
+  <img src="https://github.com/4dillusions/ChronoView/actions/workflows/dotnet.yml/badge.svg" alt=".NET Desktop CI">
+</a>
 
 </h1>
 
-ChronoView is a minimalist photo timeline viewer built with **WinUI 3** and **C# (MVVM pattern)**.  
+ChronoView is a minimalist photo timeline viewer built with **WinUI 3**, **Avalonia** and **C# (MVVM pattern)**.  
 It lets you explore your images through time — smooth, responsive, and focused on clean UI and intuitive interaction.
 
 <p align="center">
   <img src="Doc/ChronoViewHome.jpg">
+  <img src="Doc/ChronoViewHomeAvalonia.jpg">
 </p>
 
 ---
 
 ## 🕓 Overview
 
-ChronoView visualizes JPEG images from a selected folder along a horizontal timeline.  
+ChronoView visualizes JPEG (and other formats) images from a selected folder along a horizontal timeline.  
 Each photo is positioned based on its creation date, allowing you to scroll or zoom through your visual history.  
 The main viewer dynamically updates to display the image corresponding to the center point of the timeline.
 
@@ -30,7 +34,7 @@ The main viewer dynamically updates to display the image corresponding to the ce
 
 ## ✨ Features
 
-- 📁 **Folder-based photo loading** — automatically scans and loads `.jpg` / `.jpeg` files  
+- 📁 **Folder-based photo loading** — automatically scans and loads `.jpg` and other image files  
 - 🖼️ **Timeline view** — displays each image according to its timestamp  
 - 🔍 **Zoom & Pan** — intuitive timeline navigation  
 - 🪄 **Smooth transitions** — optional animations for zoom and image changes  
@@ -42,7 +46,7 @@ The main viewer dynamically updates to display the image corresponding to the ce
 ## 🧩 Tech Stack
 
 - **Language:** C#  
-- **Framework:** WinUI 3  
+- **Framework:** WinUI 3, Avalonia, .NET 10
 - **Architecture:** MVVM (Model–View–ViewModel)  
 - **UI/UX:** Responsive layout, touch & mouse support  
 - **Async loading:** optional, for handling large image sets  
@@ -53,7 +57,7 @@ The main viewer dynamically updates to display the image corresponding to the ce
 
 ChronoView is a personal exploration of **temporal storytelling through images**.  
 It combines simple data binding and reactive UI concepts with a focus on **clean design and user flow**.  
-It also serves as a small demonstration of **WinUI + MVVM structure** in a modern desktop context.
+It also serves as a small demonstration of **WinUI/Avalonia + cross-platform MVVM structure** in a modern desktop context.
 
 ---
 
