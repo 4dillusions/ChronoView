@@ -103,7 +103,8 @@
                 BorderBrush="{DynamicResource App.SurfaceBorderBrush}"
                 BorderThickness="1"
                 Height="{Binding TimelineRowHeight}">
-            <controls:TimelineControl Margin="8"
+            <controls:TimelineControl x:Name="Timeline"
+                                     Margin="8"
                                      IsLocked="{Binding IsAutoPlay}"
                                      ViewModel="{Binding TimelineViewModel}"/>
         </Border>

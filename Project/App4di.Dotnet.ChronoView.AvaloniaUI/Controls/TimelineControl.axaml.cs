@@ -5,6 +5,7 @@ Released under the terms of the GNU General Public License version 3 or later.
 */
 
 using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -29,6 +30,7 @@ public partial class TimelineControl : UserControl
 
     private Border? _selectedThumb;
     private bool _isSyncingScroll;
+    private NotifyCollectionChangedEventHandler? _itemsChangedHandler;
 
     public static readonly StyledProperty<TimelineViewModel?> ViewModelProperty =
         AvaloniaProperty.Register<TimelineControl, TimelineViewModel?>(nameof(ViewModel));
@@ -124,6 +126,7 @@ public partial class TimelineControl : UserControl
             }));
 
         SizeChanged += (_, __) => RedrawTimeline();
+        AttachedToVisualTree += (_, __) => ScheduleRedraw();
     }
 
     private void TryWireVmFromDataContext()
@@ -135,7 +138,10 @@ public partial class TimelineControl : UserControl
     private void WireViewModel()
     {
         if (_wiredVm != null)
+        {
             _wiredVm.PropertyChanged -= VmOnPropertyChanged;
+            UnwireItems(_wiredVm);
+        }
 
         _wiredVm = ViewModel;
         if (_wiredVm == null)
@@ -147,7 +153,8 @@ public partial class TimelineControl : UserControl
         // DP -> VM sync
         _wiredVm.IsLocked = IsLocked;
 
-        RedrawTimeline();
+        WireItems(_wiredVm);
+        ScheduleRedraw();
     }
 
     private TimelineViewModel? _wiredVm;
@@ -158,12 +165,42 @@ public partial class TimelineControl : UserControl
             e.PropertyName == nameof(TimelineViewModel.TimelineWidth) ||
             e.PropertyName == nameof(TimelineViewModel.Items))
         {
-            RedrawTimeline();
+            if (e.PropertyName == nameof(TimelineViewModel.Items) && sender is TimelineViewModel vm)
+                WireItems(vm);
+
+            ScheduleRedraw();
         }
         else if (e.PropertyName == nameof(TimelineViewModel.SelectedTimeLineItem))
         {
             UpdateSelectedVisual();
         }
+    }
+
+    private void WireItems(TimelineViewModel vm)
+    {
+        UnwireItems(vm);
+
+        _itemsChangedHandler = (_, __) => ScheduleRedraw();
+        vm.Items.CollectionChanged += _itemsChangedHandler;
+    }
+
+    private void UnwireItems(TimelineViewModel vm)
+    {
+        if (_itemsChangedHandler == null)
+            return;
+
+        vm.Items.CollectionChanged -= _itemsChangedHandler;
+        _itemsChangedHandler = null;
+    }
+
+    private void ScheduleRedraw()
+    {
+        Dispatcher.UIThread.Post(RedrawTimeline, DispatcherPriority.Render);
+    }
+
+    public void Refresh()
+    {
+        ScheduleRedraw();
     }
 
     private void RedrawTimeline()
@@ -247,6 +284,15 @@ public partial class TimelineControl : UserControl
             if (vm.SelectedTimeLineItem != null && ReferenceEquals(item, vm.SelectedTimeLineItem))
                 ApplySelectedVisual(border, label, marker, selected);
         }
+
+        ThumbPanel.InvalidateMeasure();
+        ThumbPanel.InvalidateArrange();
+        LabelPanel.InvalidateMeasure();
+        LabelPanel.InvalidateArrange();
+        TimelineScroller.InvalidateMeasure();
+        TimelineScroller.InvalidateArrange();
+        LabelScroller.InvalidateMeasure();
+        LabelScroller.InvalidateArrange();
     }
 
     private void UpdateSelectedVisual()

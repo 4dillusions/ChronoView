@@ -31,6 +31,7 @@ public partial class HomeView : UserControl
 
     private ScaleTransform? _imgScale;
     private RotateTransform? _imgRotate;
+    private PropertyChangedEventHandler? _timelineViewModelHandler;
 
     public HomeView(HomeViewModel viewModel)
     {
@@ -80,6 +81,16 @@ public partial class HomeView : UserControl
         };
 
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        _timelineViewModelHandler = (_, e) =>
+        {
+            if (e.PropertyName == nameof(TimelineViewModel.RedrawTrigger) ||
+                e.PropertyName == nameof(TimelineViewModel.Items) ||
+                e.PropertyName == nameof(TimelineViewModel.SelectedTimeLineItem))
+            {
+                Timeline.Refresh();
+            }
+        };
+        ViewModel.TimelineViewModel.PropertyChanged += _timelineViewModelHandler;
 
         EnsureSlideshowTimer();
         HandleAutoPlayChanged();
@@ -96,6 +107,8 @@ public partial class HomeView : UserControl
         base.OnDetachedFromVisualTree(e);
 
         ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+        if (_timelineViewModelHandler != null)
+            ViewModel.TimelineViewModel.PropertyChanged -= _timelineViewModelHandler;
 
         if (_slideshowTimer != null && _slideshowTick != null)
             _slideshowTimer.Tick -= _slideshowTick;
