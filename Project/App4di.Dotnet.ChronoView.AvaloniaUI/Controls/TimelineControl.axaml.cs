@@ -28,9 +28,9 @@ public partial class TimelineControl : UserControl
     private const double ThumbHeight = 60;
     private const double LabelHeight = 18;
 
-    private Border? _selectedThumb;
-    private bool _isSyncingScroll;
-    private NotifyCollectionChangedEventHandler? _itemsChangedHandler;
+    private Border? selectedThumb;
+    private bool isSyncingScroll;
+    private NotifyCollectionChangedEventHandler? itemsChangedHandler;
 
     public static readonly StyledProperty<TimelineViewModel?> ViewModelProperty =
         AvaloniaProperty.Register<TimelineControl, TimelineViewModel?>(nameof(ViewModel));
@@ -113,15 +113,15 @@ public partial class TimelineControl : UserControl
             .GetObservable(ScrollViewer.OffsetProperty)
             .Subscribe(new ActionObserver<Vector>(offset =>
             {
-                if (_isSyncingScroll) return;
-                _isSyncingScroll = true;
+                if (isSyncingScroll) return;
+                isSyncingScroll = true;
                 try
                 {
                     LabelScroller.Offset = new Vector(offset.X, 0);
                 }
                 finally
                 {
-                    _isSyncingScroll = false;
+                    isSyncingScroll = false;
                 }
             }));
 
@@ -137,27 +137,27 @@ public partial class TimelineControl : UserControl
 
     private void WireViewModel()
     {
-        if (_wiredVm != null)
+        if (wiredVm != null)
         {
-            _wiredVm.PropertyChanged -= VmOnPropertyChanged;
-            UnwireItems(_wiredVm);
+            wiredVm.PropertyChanged -= VmOnPropertyChanged;
+            UnwireItems(wiredVm);
         }
 
-        _wiredVm = ViewModel;
-        if (_wiredVm == null)
+        wiredVm = ViewModel;
+        if (wiredVm == null)
             return;
 
-        DataContext = _wiredVm;
-        _wiredVm.PropertyChanged += VmOnPropertyChanged;
+        DataContext = wiredVm;
+        wiredVm.PropertyChanged += VmOnPropertyChanged;
 
         // DP -> VM sync
-        _wiredVm.IsLocked = IsLocked;
+        wiredVm.IsLocked = IsLocked;
 
-        WireItems(_wiredVm);
+        WireItems(wiredVm);
         ScheduleRedraw();
     }
 
-    private TimelineViewModel? _wiredVm;
+    private TimelineViewModel? wiredVm;
 
     private void VmOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -180,17 +180,17 @@ public partial class TimelineControl : UserControl
     {
         UnwireItems(vm);
 
-        _itemsChangedHandler = (_, __) => ScheduleRedraw();
-        vm.Items.CollectionChanged += _itemsChangedHandler;
+        itemsChangedHandler = (_, __) => ScheduleRedraw();
+        vm.Items.CollectionChanged += itemsChangedHandler;
     }
 
     private void UnwireItems(TimelineViewModel vm)
     {
-        if (_itemsChangedHandler == null)
+        if (itemsChangedHandler == null)
             return;
 
-        vm.Items.CollectionChanged -= _itemsChangedHandler;
-        _itemsChangedHandler = null;
+        vm.Items.CollectionChanged -= itemsChangedHandler;
+        itemsChangedHandler = null;
     }
 
     private void ScheduleRedraw()
@@ -210,7 +210,7 @@ public partial class TimelineControl : UserControl
 
         ThumbPanel.Children.Clear();
         LabelPanel.Children.Clear();
-        _selectedThumb = null;
+        selectedThumb = null;
 
         var vm = ViewModel ?? DataContext as TimelineViewModel;
         if (vm?.Items == null || vm.Items.Count == 0)
@@ -255,14 +255,14 @@ public partial class TimelineControl : UserControl
             border.PointerEntered += (_, __) =>
             {
                 if (IsLocked) return;
-                if (!ReferenceEquals(border, _selectedThumb))
+                if (!ReferenceEquals(border, selectedThumb))
                     border.BorderBrush = hover;
             };
 
             border.PointerExited += (_, __) =>
             {
                 if (IsLocked) return;
-                if (!ReferenceEquals(border, _selectedThumb))
+                if (!ReferenceEquals(border, selectedThumb))
                     border.BorderBrush = marker;
             };
 
@@ -304,19 +304,19 @@ public partial class TimelineControl : UserControl
         var marker = MarkerBrush ?? Brushes.DodgerBlue;
         var selected = SelectedBrush ?? Brushes.White;
 
-        if (_selectedThumb != null)
+        if (selectedThumb != null)
         {
-            _selectedThumb.BorderBrush = marker;
-            _selectedThumb.BorderThickness = new Thickness(2);
+            selectedThumb.BorderBrush = marker;
+            selectedThumb.BorderThickness = new Thickness(2);
 
-            var idx = ThumbPanel.Children.IndexOf(_selectedThumb);
+            var idx = ThumbPanel.Children.IndexOf(selectedThumb);
             if (idx >= 0 && idx < LabelPanel.Children.Count && LabelPanel.Children[idx] is TextBlock oldLbl)
             {
                 oldLbl.FontWeight = FontWeight.Normal;
                 oldLbl.Foreground = marker;
             }
 
-            _selectedThumb = null;
+            selectedThumb = null;
         }
 
         if (vm.SelectedTimeLineItem == null)
@@ -338,7 +338,7 @@ public partial class TimelineControl : UserControl
     {
         border.BorderBrush = selected;
         border.BorderThickness = new Thickness(4);
-        _selectedThumb = border;
+        selectedThumb = border;
 
         if (label != null)
         {

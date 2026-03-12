@@ -13,20 +13,20 @@ namespace App4di.Dotnet.ChronoView.AvaloniaUI.Helpers;
 /// </summary>
 public sealed class ActionObserver<T> : IObserver<T>
 {
-    private readonly Action<T> _onNext;
-    private readonly Action<Exception>? _onError;
-    private readonly Action? _onCompleted;
+    private readonly Action<T> onNext;
+    private readonly Action<Exception>? onError;
+    private readonly Action? onCompleted;
 
     public ActionObserver(Action<T> onNext, Action<Exception>? onError = null, Action? onCompleted = null)
     {
-        _onNext = onNext ?? throw new ArgumentNullException(nameof(onNext));
-        _onError = onError;
-        _onCompleted = onCompleted;
+        this.onNext = onNext ?? throw new ArgumentNullException(nameof(onNext));
+        this.onError = onError;
+        this.onCompleted = onCompleted;
     }
 
-    public void OnNext(T value) => _onNext(value);
+    public void OnNext(T value) => onNext(value);
 
-    public void OnError(Exception error) => _onError?.Invoke(error);
+    public void OnError(Exception error) => onError?.Invoke(error);
 
-    public void OnCompleted() => _onCompleted?.Invoke();
+    public void OnCompleted() => onCompleted?.Invoke();
 }

@@ -21,17 +21,17 @@ public partial class HomeView : UserControl
 {
     public HomeViewModel ViewModel { get; }
 
-    private DispatcherTimer? _slideshowTimer;
-    private EventHandler? _slideshowTick;
+    private DispatcherTimer? slideshowTimer;
+    private EventHandler? slideshowTick;
 
-    private IDisposable? _viewportSub;
-    private IDisposable? _extentSub;
+    private IDisposable? viewportSub;
+    private IDisposable? extentSub;
 
-    private bool _isAnimatingRotation;
+    private bool isAnimatingRotation;
 
-    private ScaleTransform? _imgScale;
-    private RotateTransform? _imgRotate;
-    private PropertyChangedEventHandler? _timelineViewModelHandler;
+    private ScaleTransform? imgScale;
+    private RotateTransform? imgRotate;
+    private PropertyChangedEventHandler? timelineViewModelHandler;
 
     public HomeView(HomeViewModel viewModel)
     {
@@ -43,7 +43,7 @@ public partial class HomeView : UserControl
         CacheTransforms();
 
         // Viewport changes (resize, layout)
-        _viewportSub = ImageScroller
+        viewportSub = ImageScroller
             .GetObservable(ScrollViewer.ViewportProperty)
             .Subscribe(new ActionObserver<Size>(_ =>
             {
@@ -53,7 +53,7 @@ public partial class HomeView : UserControl
             }));
 
         // Extent changes are a good proxy for content size updates
-        _extentSub = ImageScroller
+        extentSub = ImageScroller
             .GetObservable(ScrollViewer.ExtentProperty)
             .Subscribe(new ActionObserver<Size>(_ =>
             {
@@ -81,7 +81,7 @@ public partial class HomeView : UserControl
         };
 
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-        _timelineViewModelHandler = (_, e) =>
+        timelineViewModelHandler = (_, e) =>
         {
             if (e.PropertyName == nameof(TimelineViewModel.RedrawTrigger) ||
                 e.PropertyName == nameof(TimelineViewModel.Items) ||
@@ -90,7 +90,7 @@ public partial class HomeView : UserControl
                 Timeline.Refresh();
             }
         };
-        ViewModel.TimelineViewModel.PropertyChanged += _timelineViewModelHandler;
+        ViewModel.TimelineViewModel.PropertyChanged += timelineViewModelHandler;
 
         EnsureSlideshowTimer();
         HandleAutoPlayChanged();
@@ -107,20 +107,20 @@ public partial class HomeView : UserControl
         base.OnDetachedFromVisualTree(e);
 
         ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
-        if (_timelineViewModelHandler != null)
-            ViewModel.TimelineViewModel.PropertyChanged -= _timelineViewModelHandler;
+        if (timelineViewModelHandler != null)
+            ViewModel.TimelineViewModel.PropertyChanged -= timelineViewModelHandler;
 
-        if (_slideshowTimer != null && _slideshowTick != null)
-            _slideshowTimer.Tick -= _slideshowTick;
+        if (slideshowTimer != null && slideshowTick != null)
+            slideshowTimer.Tick -= slideshowTick;
 
-        _slideshowTimer?.Stop();
-        _slideshowTimer = null;
-        _slideshowTick = null;
+        slideshowTimer?.Stop();
+        slideshowTimer = null;
+        slideshowTick = null;
 
-        _viewportSub?.Dispose();
-        _extentSub?.Dispose();
-        _viewportSub = null;
-        _extentSub = null;
+        viewportSub?.Dispose();
+        extentSub?.Dispose();
+        viewportSub = null;
+        extentSub = null;
     }
 
     private void ViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -151,15 +151,15 @@ public partial class HomeView : UserControl
 
     private void EnsureSlideshowTimer()
     {
-        if (_slideshowTimer != null)
+        if (slideshowTimer != null)
             return;
 
-        _slideshowTimer = new DispatcherTimer
+        slideshowTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(2)
         };
 
-        _slideshowTick = (_, __) =>
+        slideshowTick = (_, __) =>
         {
             if (ViewModel.TimelineItems == null || ViewModel.TimelineItems.Count == 0)
                 return;
@@ -170,14 +170,14 @@ public partial class HomeView : UserControl
                 ViewModel.SelectedIndex = (ViewModel.SelectedIndex + 1) % ViewModel.TimelineItems.Count;
         };
 
-        _slideshowTimer.Tick += _slideshowTick;
+        slideshowTimer.Tick += slideshowTick;
     }
 
     private void HandleAutoPlayChanged()
     {
         EnsureSlideshowTimer();
 
-        if (_slideshowTimer == null)
+        if (slideshowTimer == null)
             return;
 
         if (ViewModel.IsAutoPlay)
@@ -185,11 +185,11 @@ public partial class HomeView : UserControl
             if (ViewModel.SelectedIndex < 0 && ViewModel.TimelineItems?.Count > 0)
                 ViewModel.SelectedIndex = 0;
 
-            _slideshowTimer.Start();
+            slideshowTimer.Start();
         }
         else
         {
-            _slideshowTimer.Stop();
+            slideshowTimer.Stop();
         }
     }
 
@@ -229,12 +229,12 @@ public partial class HomeView : UserControl
 
     private void ApplyZoom()
     {
-        if (_imgScale == null)
+        if (imgScale == null)
             return;
 
         var z = Math.Max(0.01, ViewModel.ZoomFactor);
-        _imgScale.ScaleX = z;
-        _imgScale.ScaleY = z;
+        imgScale.ScaleX = z;
+        imgScale.ScaleY = z;
     }
 
     private void FitToViewport(bool disableOffsetAnimation)
@@ -259,13 +259,13 @@ public partial class HomeView : UserControl
 
     private void AnimateRotation()
     {
-        if (_imgRotate == null || _isAnimatingRotation)
+        if (imgRotate == null || isAnimatingRotation)
             return;
 
         var from = ViewModel.CurrentRotationAngle;
         var to = ViewModel.TargetRotationAngle;
 
-        _isAnimatingRotation = true;
+        isAnimatingRotation = true;
 
         var start = DateTimeOffset.UtcNow;
         var duration = TimeSpan.FromMilliseconds(300);
@@ -276,9 +276,9 @@ public partial class HomeView : UserControl
             var t = (DateTimeOffset.UtcNow - start).TotalMilliseconds / duration.TotalMilliseconds;
             if (t >= 1.0)
             {
-                _imgRotate.Angle = to;
+                imgRotate.Angle = to;
                 timer.Stop();
-                _isAnimatingRotation = false;
+                isAnimatingRotation = false;
 
                 // keep VM in sync (matches WinUI Completed handler)
                 ViewModel.CurrentRotationAngle = to;
@@ -287,7 +287,7 @@ public partial class HomeView : UserControl
 
             // ease-in-out (quadratic-ish)
             var eased = t < 0.5 ? 2 * t * t : 1 - Math.Pow(-2 * t + 2, 2) / 2;
-            _imgRotate.Angle = from + (to - from) * eased;
+            imgRotate.Angle = from + (to - from) * eased;
         };
 
         timer.Start();
@@ -299,14 +299,14 @@ public partial class HomeView : UserControl
         {
             if (ImageView.RenderTransform is TransformGroup tg)
             {
-                _imgScale = tg.Children.OfType<ScaleTransform>().FirstOrDefault();
-                _imgRotate = tg.Children.OfType<RotateTransform>().FirstOrDefault();
+                imgScale = tg.Children.OfType<ScaleTransform>().FirstOrDefault();
+                imgRotate = tg.Children.OfType<RotateTransform>().FirstOrDefault();
             }
         }
         catch
         {
-            _imgScale = null;
-            _imgRotate = null;
+            imgScale = null;
+            imgRotate = null;
         }
     }
 }
