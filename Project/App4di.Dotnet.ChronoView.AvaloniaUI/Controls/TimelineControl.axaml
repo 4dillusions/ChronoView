@@ -54,7 +54,8 @@
         </Grid>
 
         <!-- Timeline -->
-        <Border Grid.Row="1"
+        <Border x:Name="TimelineContent"
+                Grid.Row="1"
                 Background="{DynamicResource App.SurfaceBrush}"
                 BorderBrush="{DynamicResource App.SurfaceBorderBrush}"
                 BorderThickness="1"

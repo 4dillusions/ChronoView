@@ -94,6 +94,7 @@ public partial class HomeView : UserControl
 
         EnsureSlideshowTimer();
         HandleAutoPlayChanged();
+        Timeline.SetTimelineInteractionEnabled(!ViewModel.IsAutoPlay);
 
         UpdateViewportSizes();
         UpdateImageSizes();
@@ -146,6 +147,7 @@ public partial class HomeView : UserControl
         else if (e.PropertyName == nameof(HomeViewModel.IsAutoPlay))
         {
             HandleAutoPlayChanged();
+            Timeline.SetTimelineInteractionEnabled(!ViewModel.IsAutoPlay);
         }
     }
 

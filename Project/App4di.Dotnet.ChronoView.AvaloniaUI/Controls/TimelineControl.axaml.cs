@@ -203,6 +203,13 @@ public partial class TimelineControl : UserControl
         ScheduleRedraw();
     }
 
+    public void SetTimelineInteractionEnabled(bool isEnabled)
+    {
+        IsLocked = !isEnabled;
+        TimelineContent.IsHitTestVisible = isEnabled;
+        TimelineContent.Opacity = isEnabled ? 1.0 : 0.65;
+    }
+
     private void RedrawTimeline()
     {
         if (ThumbPanel == null || LabelPanel == null)

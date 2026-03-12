@@ -148,7 +148,6 @@
                 Height="{Binding TimelineRowHeight}">
             <controls:TimelineControl x:Name="Timeline"
                                      Margin="8"
-                                     IsLocked="{Binding IsAutoPlay}"
                                      ViewModel="{Binding TimelineViewModel}"/>
         </Border>
 
