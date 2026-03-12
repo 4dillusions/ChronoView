@@ -199,6 +199,8 @@ public partial class HomeView : UserControl
         {
             ViewModel.ViewportWidth = ImageScroller.Viewport.Width;
             ViewModel.ViewportHeight = ImageScroller.Viewport.Height;
+            ImageViewportHost.MinWidth = Math.Max(0, ImageScroller.Viewport.Width);
+            ImageViewportHost.MinHeight = Math.Max(0, ImageScroller.Viewport.Height);
         }
         catch
         {
@@ -244,17 +246,30 @@ public partial class HomeView : UserControl
 
         ApplyZoom();
 
-        // Reset pan to top-left (closest to WinUI ChangeView(0,0,zoom))
-        try
-        {
-            ImageScroller.Offset = new Avalonia.Vector(0, 0);
-        }
-        catch
-        {
-            // ignore
-        }
+        CenterImageInViewport();
 
         ViewModel.ShouldFitToViewport = false;
+    }
+
+    private void CenterImageInViewport()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            try
+            {
+                var contentWidth = Math.Max(ImageRotateHost.Bounds.Width, ImageViewportHost.Bounds.Width);
+                var contentHeight = Math.Max(ImageRotateHost.Bounds.Height, ImageViewportHost.Bounds.Height);
+
+                var horizontalOffset = Math.Max(0, (contentWidth - ImageScroller.Viewport.Width) / 2.0);
+                var verticalOffset = Math.Max(0, (contentHeight - ImageScroller.Viewport.Height) / 2.0);
+
+                ImageScroller.Offset = new Vector(horizontalOffset, verticalOffset);
+            }
+            catch
+            {
+                // ignore transient layout states
+            }
+        }, DispatcherPriority.Background);
     }
 
     private void AnimateRotation()
@@ -297,7 +312,7 @@ public partial class HomeView : UserControl
     {
         try
         {
-            if (ImageView.RenderTransform is TransformGroup tg)
+            if (ImageRotateHost.LayoutTransform is TransformGroup tg)
             {
                 imgScale = tg.Children.OfType<ScaleTransform>().FirstOrDefault();
                 imgRotate = tg.Children.OfType<RotateTransform>().FirstOrDefault();
