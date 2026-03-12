@@ -25,8 +25,8 @@ namespace App4di.Dotnet.ChronoView.AvaloniaUI.Controls;
 
 public partial class TimelineControl : UserControl
 {
-    private const double ThumbHeight = 60;
-    private const double LabelHeight = 18;
+    private const double ThumbHeight = 52;
+    private const double LabelHeight = 14;
 
     private Border? selectedThumb;
     private bool isSyncingScroll;
@@ -272,7 +272,7 @@ public partial class TimelineControl : UserControl
             {
                 Text = item.Timestamp.ToString(TimeFormat, CultureInfo.InvariantCulture),
                 Height = LabelHeight,
-                FontSize = 10,
+                FontSize = 9,
                 Foreground = marker,
                 Opacity = 0.9,
                 TextAlignment = TextAlignment.Center,
