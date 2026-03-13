@@ -76,3 +76,37 @@ If the submodules have been updated and you want to fetch the latest changes:<br
 ```bash
 git submodule update --remote --merge
 ```
+
+## 📦 Publish
+
+To generate self-contained Avalonia builds for Windows and Linux, run the publish script:
+
+```bash
+bash scripts/publish-avalonia.sh
+```
+
+On Linux and macOS, run it directly from a terminal.
+
+On Windows, run it from a Bash-compatible shell such as:
+- Git Bash
+- WSL
+- MSYS2
+
+Example on Windows (Git Bash / WSL):
+
+```bash
+bash scripts/publish-avalonia.sh
+```
+
+This creates publish outputs under:
+
+```text
+artifacts/publish/avalonia/win-x64
+artifacts/publish/avalonia/linux-x64
+```
+
+You can also pass a build configuration explicitly:
+
+```bash
+bash scripts/publish-avalonia.sh Debug
+```
