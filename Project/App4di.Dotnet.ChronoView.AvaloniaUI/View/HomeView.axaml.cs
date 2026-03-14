@@ -7,6 +7,8 @@ Released under the terms of the GNU General Public License version 3 or later.
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -32,6 +34,7 @@ public partial class HomeView : UserControl
     private ScaleTransform? imgScale;
     private RotateTransform? imgRotate;
     private PropertyChangedEventHandler? timelineViewModelHandler;
+    private int imageLoadVersion;
 
     public HomeView(HomeViewModel viewModel)
     {
@@ -68,6 +71,8 @@ public partial class HomeView : UserControl
             if (ViewModel.ShouldFitToViewport)
                 FitToViewport(disableOffsetAnimation: true);
         };
+
+        _ = LoadSelectedImageAsync(ViewModel.SelectedImageItem?.ImagePath);
 
         ImageView.PropertyChanged += (_, e) =>
         {
@@ -138,6 +143,7 @@ public partial class HomeView : UserControl
         {
             // Same behavior as WinUI helper: on image switch request a fit.
             ViewModel.ShouldFitToViewport = true;
+            _ = LoadSelectedImageAsync(ViewModel.SelectedImageItem?.ImagePath);
         }
         else if (e.PropertyName == nameof(HomeViewModel.ShouldFitToViewport))
         {
@@ -229,6 +235,28 @@ public partial class HomeView : UserControl
         {
             // ignore
         }
+    }
+
+    private async Task LoadSelectedImageAsync(string? path)
+    {
+        var loadVersion = Interlocked.Increment(ref imageLoadVersion);
+
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            ImageView.Source = null;
+            UpdateImageSizes();
+            return;
+        }
+
+        var bitmap = await BitmapCache.GetFullImageAsync(path);
+        if (loadVersion != Volatile.Read(ref imageLoadVersion))
+            return;
+
+        ImageView.Source = bitmap;
+        UpdateImageSizes();
+
+        if (ViewModel.ShouldFitToViewport)
+            FitToViewport(disableOffsetAnimation: true);
     }
 
     private void ApplyZoom()

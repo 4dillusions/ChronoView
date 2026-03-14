@@ -13,7 +13,6 @@
     <UserControl.Resources>
         <conv:IntToGridLengthConverter x:Key="IntToGridLengthConverter"/>
         <conv:BoolToPlayPauseTextConverter x:Key="BoolToPlayPauseTextConverter"/>
-        <conv:ImagePathToBitmapConverter x:Key="ImagePathToBitmapConverter"/>
     </UserControl.Resources>
 
     <Grid RowDefinitions="*,Auto"
@@ -50,8 +49,7 @@
                             </LayoutTransformControl.LayoutTransform>
                             <Image x:Name="ImageView"
                                    Stretch="Uniform"
-                                   RenderTransformOrigin="0.5,0.5"
-                                   Source="{Binding SelectedImageItem.ImagePath, Converter={StaticResource ImagePathToBitmapConverter}}"/>
+                                   RenderTransformOrigin="0.5,0.5"/>
                         </LayoutTransformControl>
                     </Grid>
                 </ScrollViewer>

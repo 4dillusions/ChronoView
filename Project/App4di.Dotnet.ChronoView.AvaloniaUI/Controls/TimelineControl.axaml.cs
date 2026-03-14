@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -27,6 +28,7 @@ public partial class TimelineControl : UserControl
 {
     private const double ThumbHeight = 52;
     private const double LabelHeight = 14;
+    private const int ThumbnailDecodeWidth = 220;
 
     private Border? selectedThumb;
     private bool isSyncingScroll;
@@ -241,15 +243,8 @@ public partial class TimelineControl : UserControl
                 Tag = item
             };
 
-            var img = new Image { Stretch = Stretch.UniformToFill };
-            try
-            {
-                img.Source = new Bitmap(item.ImagePath);
-            }
-            catch
-            {
-                // ignore load errors
-            }
+            var img = new Image { Stretch = Stretch.UniformToFill, Tag = item };
+            _ = LoadThumbnailAsync(img, item);
 
             border.Child = img;
 
@@ -300,6 +295,15 @@ public partial class TimelineControl : UserControl
         TimelineScroller.InvalidateArrange();
         LabelScroller.InvalidateMeasure();
         LabelScroller.InvalidateArrange();
+    }
+
+    private async Task LoadThumbnailAsync(Image image, TimelineItemDTO item)
+    {
+        var bitmap = await BitmapCache.GetThumbnailAsync(item.ImagePath, ThumbnailDecodeWidth);
+        if (!ReferenceEquals(image.Tag, item))
+            return;
+
+        image.Source = bitmap;
     }
 
     private void UpdateSelectedVisual()
