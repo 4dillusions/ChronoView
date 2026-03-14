@@ -33,6 +33,7 @@ public partial class TimelineControl : UserControl
     private Border? selectedThumb;
     private bool isSyncingScroll;
     private NotifyCollectionChangedEventHandler? itemsChangedHandler;
+    private DispatcherTimer? centerAnimationTimer;
 
     public static readonly StyledProperty<TimelineViewModel?> ViewModelProperty =
         AvaloniaProperty.Register<TimelineControl, TimelineViewModel?>(nameof(ViewModel));
@@ -228,6 +229,7 @@ public partial class TimelineControl : UserControl
         var marker = MarkerBrush ?? Brushes.DodgerBlue;
         var hover = HoverBrush ?? Brushes.Gray;
         var selected = SelectedBrush ?? Brushes.White;
+        Border? selectedBorderToCenter = null;
 
         var sorted = vm.Items.OrderBy(i => i.Timestamp).ToList();
 
@@ -284,7 +286,10 @@ public partial class TimelineControl : UserControl
             LabelPanel.Children.Add(label);
 
             if (vm.SelectedTimeLineItem != null && ReferenceEquals(item, vm.SelectedTimeLineItem))
+            {
                 ApplySelectedVisual(border, label, marker, selected);
+                selectedBorderToCenter = border;
+            }
         }
 
         ThumbPanel.InvalidateMeasure();
@@ -295,6 +300,9 @@ public partial class TimelineControl : UserControl
         TimelineScroller.InvalidateArrange();
         LabelScroller.InvalidateMeasure();
         LabelScroller.InvalidateArrange();
+
+        if (selectedBorderToCenter != null)
+            CenterSelectedIntoView(selectedBorderToCenter);
     }
 
     private async Task LoadThumbnailAsync(Image image, TimelineItemDTO item)
@@ -363,22 +371,69 @@ public partial class TimelineControl : UserControl
         if (TimelineScroller == null || ThumbPanel == null)
             return;
 
-        // Defer until layout is stable
         Dispatcher.UIThread.Post(() =>
         {
             try
             {
                 var bounds = selected.Bounds;
                 var point = selected.TranslatePoint(new Point(0, 0), ThumbPanel) ?? new Point(0, 0);
+                var viewportWidth = TimelineScroller.Viewport.Width > 0
+                    ? TimelineScroller.Viewport.Width
+                    : TimelineScroller.Bounds.Width;
+                var contentWidth = Math.Max(ThumbPanel.Bounds.Width, TimelineScroller.Extent.Width);
+                var maxOffset = Math.Max(0, contentWidth - viewportWidth);
+                var target = point.X - viewportWidth / 2 + bounds.Width / 2;
+                target = Math.Clamp(target, 0, maxOffset);
 
-                var target = Math.Max(0, point.X - TimelineScroller.Viewport.Width / 2 + bounds.Width / 2);
-                TimelineScroller.Offset = new Vector(target, 0);
+                AnimateTimelineOffset(target);
             }
             catch
             {
                 // ignore
             }
-        }, DispatcherPriority.Background);
+        }, DispatcherPriority.Render);
+    }
+
+    private void AnimateTimelineOffset(double targetX)
+    {
+        if (TimelineScroller == null)
+            return;
+
+        centerAnimationTimer?.Stop();
+
+        var startX = TimelineScroller.Offset.X;
+        if (Math.Abs(startX - targetX) < 0.5)
+        {
+            TimelineScroller.Offset = new Vector(targetX, 0);
+            return;
+        }
+
+        var startedAt = DateTimeOffset.UtcNow;
+        var duration = TimeSpan.FromMilliseconds(220);
+
+        centerAnimationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        centerAnimationTimer.Tick += (_, __) =>
+        {
+            if (TimelineScroller == null || centerAnimationTimer == null)
+                return;
+
+            var progress = (DateTimeOffset.UtcNow - startedAt).TotalMilliseconds / duration.TotalMilliseconds;
+            if (progress >= 1.0)
+            {
+                TimelineScroller.Offset = new Vector(targetX, 0);
+                centerAnimationTimer.Stop();
+                centerAnimationTimer = null;
+                return;
+            }
+
+            var eased = progress < 0.5
+                ? 2 * progress * progress
+                : 1 - Math.Pow(-2 * progress + 2, 2) / 2;
+            var currentX = startX + ((targetX - startX) * eased);
+            TimelineScroller.Offset = new Vector(currentX, 0);
+        };
+
+        centerAnimationTimer.Start();
     }
 
     // Backward-compat convenience (used by WinUI)
