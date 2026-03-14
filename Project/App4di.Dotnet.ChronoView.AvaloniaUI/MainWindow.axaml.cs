@@ -6,6 +6,7 @@ Released under the terms of the GNU General Public License version 3 or later.
 
 using App4di.Dotnet.ChronoView.AvaloniaUI.View;
 using Avalonia.Controls;
+using Avalonia.Platform;
 using FW4di.Dotnet.Core.DependencyInjection;
 
 namespace App4di.Dotnet.ChronoView.AvaloniaUI;
@@ -21,5 +22,7 @@ public partial class MainWindow : Window
         SettingsViewControl = diManager.GetDependency<SettingsView>();
         
         InitializeComponent();
+        using var iconStream = AssetLoader.Open(new("avares://App4di.Dotnet.ChronoView.AvaloniaUI/Assets/ChronoViewLogo.png"));
+        Icon = new WindowIcon(iconStream);
     }
 }
