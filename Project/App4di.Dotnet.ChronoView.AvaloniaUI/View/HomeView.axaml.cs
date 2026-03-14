@@ -35,6 +35,7 @@ public partial class HomeView : UserControl
     private RotateTransform? imgRotate;
     private PropertyChangedEventHandler? timelineViewModelHandler;
     private int imageLoadVersion;
+    private bool isLifecycleWired;
 
     public HomeView(HomeViewModel viewModel)
     {
@@ -44,24 +45,6 @@ public partial class HomeView : UserControl
         InitializeComponent();
 
         CacheTransforms();
-
-        // Viewport changes (resize, layout)
-        viewportSub = ImageScroller
-            .GetObservable(ScrollViewer.ViewportProperty)
-            .Subscribe(new ActionObserver<Size>(_ =>
-            {
-                UpdateViewportSizes();
-                if (ViewModel.ShouldFitToViewport)
-                    FitToViewport(disableOffsetAnimation: true);
-            }));
-
-        // Extent changes are a good proxy for content size updates
-        extentSub = ImageScroller
-            .GetObservable(ScrollViewer.ExtentProperty)
-            .Subscribe(new ActionObserver<Size>(_ =>
-            {
-                UpdateViewportSizes();
-            }));
 
         ImageView.AttachedToVisualTree += (_, __) =>
         {
@@ -84,9 +67,43 @@ public partial class HomeView : UserControl
                     FitToViewport(disableOffsetAnimation: true);
             }
         };
+        AttachedToVisualTree += (_, __) => WireLifecycle();
+
+        WireLifecycle();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+
+        UnwireLifecycle();
+    }
+
+    private void WireLifecycle()
+    {
+        if (isLifecycleWired)
+            return;
+
+        isLifecycleWired = true;
+
+        viewportSub = ImageScroller
+            .GetObservable(ScrollViewer.ViewportProperty)
+            .Subscribe(new ActionObserver<Size>(_ =>
+            {
+                UpdateViewportSizes();
+                if (ViewModel.ShouldFitToViewport)
+                    FitToViewport(disableOffsetAnimation: true);
+            }));
+
+        extentSub = ImageScroller
+            .GetObservable(ScrollViewer.ExtentProperty)
+            .Subscribe(new ActionObserver<Size>(_ =>
+            {
+                UpdateViewportSizes();
+            }));
 
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-        timelineViewModelHandler = (_, e) =>
+        timelineViewModelHandler ??= (_, e) =>
         {
             if (e.PropertyName == nameof(TimelineViewModel.RedrawTrigger) ||
                 e.PropertyName == nameof(TimelineViewModel.Items) ||
@@ -108,9 +125,12 @@ public partial class HomeView : UserControl
             FitToViewport(disableOffsetAnimation: true);
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    private void UnwireLifecycle()
     {
-        base.OnDetachedFromVisualTree(e);
+        if (!isLifecycleWired)
+            return;
+
+        isLifecycleWired = false;
 
         ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         if (timelineViewModelHandler != null)
