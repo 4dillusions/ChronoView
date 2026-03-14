@@ -17,6 +17,7 @@ public class HomeViewModel : NotificationObject
     #region Constants
     private const int DefaultTimelineRowHeight = 150;
     private const int CollapsedTimelineRowHeight = 60;
+    private const float ZoomTolerance = 0.001f;
     #endregion
 
     #region Commands
@@ -36,6 +37,7 @@ public class HomeViewModel : NotificationObject
     private readonly IFileService file;
     private readonly ISettingsService settings;
     private readonly TimelineViewModel timelineViewModel;
+    private float baseZoomFactor = 1.0f;
 
     public TimelineViewModel TimelineViewModel => timelineViewModel;
 
@@ -206,6 +208,23 @@ public class HomeViewModel : NotificationObject
         set => SetProperty(ref field, value);
     }
 
+    private float BaseZoomFactor
+    {
+        get => baseZoomFactor;
+        set
+        {
+            if (Math.Abs(baseZoomFactor - value) < ZoomTolerance)
+                return;
+
+            baseZoomFactor = value;
+            (ZoomOutCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            (ResetZoomCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        }
+    }
+
+    bool CanZoomOut => SelectedImageItem != null && ZoomFactor > (BaseZoomFactor + ZoomTolerance) && !IsAutoPlay;
+    bool CanResetZoom => SelectedImageItem != null && Math.Abs(ZoomFactor - BaseZoomFactor) > ZoomTolerance && !IsAutoPlay;
+
     bool IsBackCanExecute
     {
         get
@@ -247,8 +266,8 @@ public class HomeViewModel : NotificationObject
         NextCommand = new RelayCommand(_ => Next(), _ => IsNextCanExecute);
         PlayPauseCommand = new RelayCommand(_ => PlayPause(), _ => IsPlayPauseCanExecute);
         ZoomInCommand = new RelayCommand(_ => ZoomIn(), _ => SelectedImageItem != null && ZoomFactor < settings.MaxZoom && !IsAutoPlay);
-        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => SelectedImageItem != null && ZoomFactor > settings.MinZoom && !IsAutoPlay);
-        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => SelectedImageItem != null && ZoomFactor != 1.0f && !IsAutoPlay);
+        ZoomOutCommand = new RelayCommand(_ => ZoomOut(), _ => CanZoomOut);
+        ResetZoomCommand = new RelayCommand(_ => ResetZoom(), _ => CanResetZoom);
         RotateCommand = new RelayCommand(_ => Rotate(), _ => SelectedImageItem != null && !IsAutoPlay);
         OpenFolderCommand = new RelayCommand(_ => OpenFolder(), _ => !IsAutoPlay);
         ImageOpenedCommand = new RelayCommand(_ => OnImageOpened());
@@ -335,7 +354,7 @@ public class HomeViewModel : NotificationObject
 
     void ZoomOut()
     {
-        ZoomFactor = Math.Max(ZoomFactor / settings.ZoomStep, settings.MinZoom);
+        ZoomFactor = Math.Max(ZoomFactor / settings.ZoomStep, BaseZoomFactor);
     }
 
     void ResetZoom()
@@ -411,7 +430,8 @@ public class HomeViewModel : NotificationObject
         scale = Math.Max(scale, 0.01);
         scale = Math.Clamp(scale, 0.1, settings.MaxZoom);
 
-        ZoomFactor = (float)scale;
+        BaseZoomFactor = (float)scale;
+        ZoomFactor = BaseZoomFactor;
         ShouldFitToViewport = true;
     }
     #endregion
